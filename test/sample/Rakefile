@@ -1,0 +1,26 @@
+
+require 'rake/clean'
+
+
+CLEAN.include 'create', 'print', 'sample.mp3'
+
+task :default => :create_sample
+
+task :create_sample => 'sample.mp3'
+file 'sample.mp3' => ['create'] do
+  rm 'sample.mp3', :force => true
+  sh './create sample.mp3'
+end
+
+file 'create' => ['create.cpp'] do
+  sh 'g++ -lid3 -o create create.cpp'
+end
+
+
+task :print_sample => ['print'] do
+  sh './print sample.mp3'
+end
+
+file 'print' => ['print.cpp'] do
+  sh 'g++ -lid3 -o print print.cpp'
+end

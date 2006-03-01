@@ -1,0 +1,6 @@
+= id3lib-ruby To Do List
+
+* Add method to check if frames and fields are valid.
+* Implement removing frames with direct access. tag.title = nil ?
+* Create Windows binary gem (id3lib.dll included).
+* Add UTF-8 support if id3lib can handle it.

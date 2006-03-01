@@ -1,0 +1,14 @@
+= id3lib-ruby Changes
+
+=== Before release
+
+* New: Everything.
+* Get rid of ID3::Frame and use normal Hash instead.
+* Clean up ID3::Frames and Fields -> replace them with an ID3::Info module.
+* How to set ID3 genre?
+* Replace Accessors.add with normal function definitions
+* Document library with RDOC.
+* Add more frame accessor methods (maybe there are now too much?).
+* Added reading and writing of UTF-16 frames. Works only with ID3v2.
+* Renamed extension ID3Lib to ID3Lib::API and module ID3 to ID3Lib.
+* Finish and test gem specification.

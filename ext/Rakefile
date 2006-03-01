@@ -1,0 +1,21 @@
+
+require 'rake/clean'
+
+
+CLEAN.include '*.o', 'Makefile', 'mkmf.log'
+CLOBBER.include 'id3lib_api.bundle'
+
+task :default => ['id3lib_api.bundle']
+task :swig    => ['id3lib_api_wrap.cxx']
+
+file 'id3lib_api.bundle' => ['id3lib_api_wrap.cxx', 'Makefile'] do
+  sh "make"
+end
+
+file 'id3lib_api_wrap.cxx' => ['id3lib_api.i'] do
+  sh "swig -c++ -ruby -feature id3lib_api id3lib_api.i"
+end
+
+file 'Makefile' do
+  ruby "extconf.rb"
+end

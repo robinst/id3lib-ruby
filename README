@@ -1,0 +1,70 @@
+
+= id3lib-ruby
+
+id3lib-ruby provides a Ruby interface to the id3lib C++ library for easily
+editing ID3 tags (v1 and v2) like with pyid3lib.
+
+The class documentation starts at ID3Lib::Tag.
+
+== Features
+
+* Read and write ID3v1 or ID3v2 tags
+* Simple interface for adding, changing and removing frames
+* Quick access to common text frames like title and performer
+* Support of custom data frames like attached picture
+
+See TODO for planned features.
+
+The CHANGES file contains a list of changes between versions.
+
+== Online Information
+
+The home of id3lib-ruby is http://id3lib-ruby.rubyforge.org
+
+== Installation
+
+   gem install id3lib-ruby
+
+== Usage
+
+   require 'rubygems'
+   require 'id3lib'
+
+   tag = ID3Lib::Tag.new('hungriges_herz.mp3')
+
+   # Remove comments
+   tag.delete_if{ |frame| frame[:id] == :COMM }
+
+   # Get title
+   tag.title  #=> "Hungriges Herz"
+
+   # Set album
+   tag.album = 'Stille Post'
+
+   # See what fields an APIC frame needs
+   ID3Lib::Info.frame(:APIC)[3]
+   #=> [:textenc, :mimetype, :picturetype, :description, :data]
+
+   # Add an attached picture
+   cover = {
+     :id          => :APIC,
+     :mimetype    => 'image/jpeg',
+     :picturetype => 3,
+     :description => 'A pretty picture',
+     :textenc     => 0,
+     :data        => File.read('cover.jpg')
+   }
+   tag << cover
+
+   # Apply changes
+   tag.update!
+
+== Licence
+
+This library has Ruby's licence:
+
+http://www.ruby-lang.org/en/LICENSE.txt
+
+== Author
+
+Robin Stocker <robin at nibor dot org>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en-us" />
+
+<title>id3lib-ruby</title>
+
+<meta name="ROBOTS" content="ALL" />
+<meta http-equiv="imagetoolbar" content="no" />
+<meta name="MSSmartTagsPreventParsing" content="true" />
+<meta name="Copyright" content="(c) 2006 Copyright content: Robin Stocker Copyright design: Robin Stocker" />
+<!-- (c) Copyright 2006 by Robin Stocker All Rights Reserved. -->
+
+<meta name="Keywords" content="id3lib-ruby, ruby id3lib, id3, tag, tags" />
+<meta name="Description"
+  content="id3lib-ruby, the Ruby interface to id3lib." />
+
+<link rel="stylesheet" type="text/css" href="red.css" />
+                
+</head>
+  
+<body>
+
+<div id="title">
+  <h1>id3lib-ruby</h1>
+</div>
+
+<hr class="red" />
+
+<div id="navigation">
+  <a href="#installation">Installation</a>
+  <a href="#usage">Usage</a>
+  <a href="doc/index.html">Documentation</a>
+  <a href="http://rubyforge.org/projects/id3lib-ruby/">Rubyforge Project</a>
+</div>
+
+<p>
+  id3lib-ruby provides a Ruby interface to the <a
+  href="http://id3lib.sourceforge.net/">id3lib</a> C++ library for easily
+  editing <a href="http://www.id3.org/">ID3</a> tags (v1 and v2) like with pyid3lib.
+</p>
+
+<h2>Features</h2>
+
+<ul>
+  <li>Read and write ID3v1 or ID3v2 tags</li>
+  <li>Simple interface for adding, changing and removing frames</li>
+  <li>Quick access to common text frames like title and performer</li>
+  <li>Custom data frames like attached picture (APIC)</li>
+  <li>UTF-16 support</li>
+</ul>
+
+<h2 id="installation">Installation</h2>
+
+<p>
+  Because id3lib-ruby is just an interface/wrapper for id3lib, you need to have
+  id3lib on your system in order to use it. Install it through your packaging
+  system, or download it from the <a
+  href="http://sourceforge.net/projects/id3lib/">sourceforge project page</a>.
+</p>
+
+<h3>Rubygems</h3>
+
+<p>
+  The easiest way to install id3lib-ruby is to use
+  <a href="http://rubygems.org/">Rubygems</a>. Just do:
+</p>
+
+<pre>gem install id3lib-ruby</pre>
+
+<h3>setup.rb</h3>
+
+<div class="todo">Tell where to download.</div>
+<p>
+  Another way is using the manual installation with setup.rb. When you have
+  downloaded and extracted the package, run the following command with root
+  rights.
+</p>
+
+<pre>sudo ruby setup.rb</pre>
+
+<h2 id="usage">Usage</h2>
+
+<pre>
+require 'rubygems'
+require 'id3lib'
+
+tag = ID3Lib::Tag.new('hungriges_herz.mp3')
+
+# Remove comments
+tag.delete_if{ |frame| frame[:id] == :COMM }
+
+# Get title
+tag.title  #=&gt; "Hungriges Herz"
+
+# Set album
+tag.album = 'Stille Post'
+
+# See what fields an APIC frame needs
+ID3Lib::Info.frame(:APIC)[3]
+#=&gt; [:textenc, :mimetype, :picturetype, :description, :data]
+
+# Add an attached picture
+cover = {
+  :id          =&gt; :APIC,
+  :mimetype    =&gt; 'image/jpeg',
+  :picturetype =&gt; 3,
+  :description =&gt; 'A pretty picture',
+  :textenc     =&gt; 0,
+  :data        =&gt; File.read('cover.jpg')
+}
+tag &lt;&lt; cover
+
+# Apply changes
+tag.update!
+</pre>
+
+<h2>Contact</h2>
+
+<p>
+  For bug reports or suggestions, just contact me.
+</p>
+
+<ul>
+  <li>Robin Stocker : robin <i>at</i> nibor <i>dot</i> org</li>
+</ul>
+
+</body>
+  
+</html>
