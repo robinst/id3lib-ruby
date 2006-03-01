@@ -54,3 +54,12 @@ pre {
   font-weight: bold;
   font-size: 0.8em;
 }
+
+.comment {
+  color: #777777;
+  font-style: italic;
+}
+
+.string, .symbol {
+  color: #990000;
+}

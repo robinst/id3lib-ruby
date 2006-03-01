@@ -88,39 +88,47 @@
 
 <h2 id="usage">Usage</h2>
 
-<pre>
-require 'rubygems'
-require 'id3lib'
+<pre><span class="ident">require</span> <span class="punct">'</span><span class="string">rubygems</span><span class="punct">'</span>
+<span class="ident">require</span> <span class="punct">'</span><span class="string">id3lib</span><span class="punct">'</span>
 
-tag = ID3Lib::Tag.new('hungriges_herz.mp3')
+<span class="comment"># Load a tag from a file</span>
+<span class="ident">tag</span> <span class="punct">=</span> <span class="constant">ID3Lib</span><span class="punct">::</span><span class="constant">Tag</span><span class="punct">.</span><span class="ident">new</span><span class="punct">('</span><span class="string">talk.mp3</span><span class="punct">')</span>
 
-# Remove comments
-tag.delete_if{ |frame| frame[:id] == :COMM }
+<span class="comment"># Get and set text frames with convenience methods</span>
+<span class="ident">tag</span><span class="punct">.</span><span class="ident">title</span>  <span class="comment">#=&gt; &quot;Talk&quot;</span>
+<span class="ident">tag</span><span class="punct">.</span><span class="ident">album</span> <span class="punct">=</span> <span class="punct">'</span><span class="string">X&amp;Y</span><span class="punct">'</span>
+<span class="ident">tag</span><span class="punct">.</span><span class="ident">track</span> <span class="punct">=</span> <span class="punct">'</span><span class="string">5/13</span><span class="punct">'</span>
 
-# Get title
-tag.title  #=&gt; "Hungriges Herz"
+<span class="comment"># Tag is a subclass of Array and each frame is a Hash</span>
+<span class="ident">tag</span><span class="punct">[</span><span class="number">0</span><span class="punct">]</span>
+<span class="comment">#=&gt; { :id =&gt; :TPE1, :textenc =&gt; 0, :text =&gt; &quot;Coldplay&quot; }</span>
 
-# Set album
-tag.album = 'Stille Post'
+<span class="comment"># Get the number of frames</span>
+<span class="ident">tag</span><span class="punct">.</span><span class="ident">length</span>  <span class="comment">#=&gt; 7</span>
 
-# See what fields an APIC frame needs
-ID3Lib::Info.frame(:APIC)[3]
-#=&gt; [:textenc, :mimetype, :picturetype, :description, :data]
+<span class="comment"># Remove all comment frames</span>
+<span class="ident">tag</span><span class="punct">.</span><span class="ident">delete_if</span><span class="punct">{</span> <span class="punct">|</span><span class="ident">frame</span><span class="punct">|</span> <span class="ident">frame</span><span class="punct">[</span><span class="symbol">:id</span><span class="punct">]</span> <span class="punct">==</span> <span class="symbol">:COMM</span> <span class="punct">}</span>
 
-# Add an attached picture
-cover = {
-  :id          =&gt; :APIC,
-  :mimetype    =&gt; 'image/jpeg',
-  :picturetype =&gt; 3,
-  :description =&gt; 'A pretty picture',
-  :textenc     =&gt; 0,
-  :data        =&gt; File.read('cover.jpg')
-}
-tag &lt;&lt; cover
+<span class="comment"># Get info about APIC frame to see which fields are allowed</span>
+<span class="constant">ID3Lib</span><span class="punct">::</span><span class="constant">Info</span><span class="punct">.</span><span class="ident">frame</span><span class="punct">(</span><span class="symbol">:APIC</span><span class="punct">)</span>
+<span class="comment">#=&gt; [ 2, :APIC, &quot;Attached picture&quot;,</span>
+      <span class="punct">[</span><span class="symbol">:textenc</span><span class="punct">,</span> <span class="symbol">:mimetype</span><span class="punct">,</span> <span class="symbol">:picturetype</span><span class="punct">,</span> <span class="symbol">:description</span><span class="punct">,</span> <span class="symbol">:data</span><span class="punct">]</span> <span class="punct">]</span>
 
-# Apply changes
-tag.update!
+<span class="comment"># Add an attached picture frame</span>
+<span class="ident">cover</span> <span class="punct">=</span> <span class="punct">{</span>
+  <span class="symbol">:id</span>          <span class="punct">=&gt;</span> <span class="symbol">:APIC</span><span class="punct">,</span>
+  <span class="symbol">:mimetype</span>    <span class="punct">=&gt;</span> <span class="punct">'</span><span class="string">image/jpeg</span><span class="punct">',</span>
+  <span class="symbol">:picturetype</span> <span class="punct">=&gt;</span> <span class="number">3</span><span class="punct">,</span>
+  <span class="symbol">:description</span> <span class="punct">=&gt;</span> <span class="punct">'</span><span class="string">A pretty picture</span><span class="punct">',</span>
+  <span class="symbol">:textenc</span>     <span class="punct">=&gt;</span> <span class="number">0</span><span class="punct">,</span>
+  <span class="symbol">:data</span>        <span class="punct">=&gt;</span> <span class="constant">File</span><span class="punct">.</span><span class="ident">read</span><span class="punct">('</span><span class="string">cover.jpg</span><span class="punct">')</span>
+<span class="punct">}</span>
+<span class="ident">tag</span> <span class="punct">&lt;&lt;</span> <span class="ident">cover</span>
+
+<span class="comment"># Last but not least, apply changes</span>
+<span class="ident">tag</span><span class="punct">.</span><span class="ident">update!</span>
 </pre>
+
 
 <h2>Contact</h2>
 
