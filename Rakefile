@@ -62,6 +62,16 @@ task :web => [:web_doc] do
   puts "scp -r web/doc robinstocker@rubyforge.org:/var/www/gforge-projects/id3lib-ruby/doc"
 end
 
+task :usage_html do
+  require 'syntax/convertors/html'
+
+  convertor = Syntax::Convertors::HTML.for_syntax('ruby')
+  html = convertor.convert(File.read('usage.rb'))
+
+  puts html
+end
+
+
 desc "Generate RDOC documentation on web."
 Rake::RDocTask.new :web_doc do |rdoc|
   rdoc.rdoc_dir = 'web/doc'

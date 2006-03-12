@@ -97,7 +97,8 @@
   <a href="doc/index.html">rdoc documentation</a>.
 </p>
 
-<pre><span class="ident">require</span> <span class="punct">'</span><span class="string">rubygems</span><span class="punct">'</span>
+<pre>
+<span class="ident">require</span> <span class="punct">'</span><span class="string">rubygems</span><span class="punct">'</span>
 <span class="ident">require</span> <span class="punct">'</span><span class="string">id3lib</span><span class="punct">'</span>
 
 <span class="comment"># Load a tag from a file</span>
@@ -121,7 +122,7 @@
 <span class="comment"># Get info about APIC frame to see which fields are allowed</span>
 <span class="constant">ID3Lib</span><span class="punct">::</span><span class="constant">Info</span><span class="punct">.</span><span class="ident">frame</span><span class="punct">(</span><span class="symbol">:APIC</span><span class="punct">)</span>
 <span class="comment">#=&gt; [ 2, :APIC, &quot;Attached picture&quot;,</span>
-      <span class="punct">[</span><span class="symbol">:textenc</span><span class="punct">,</span> <span class="symbol">:mimetype</span><span class="punct">,</span> <span class="symbol">:picturetype</span><span class="punct">,</span> <span class="symbol">:description</span><span class="punct">,</span> <span class="symbol">:data</span><span class="punct">]</span> <span class="punct">]</span>
+<span class="comment">#=&gt;   [:textenc, :mimetype, :picturetype, :description, :data] ]</span>
 
 <span class="comment"># Add an attached picture frame</span>
 <span class="ident">cover</span> <span class="punct">=</span> <span class="punct">{</span>

@@ -23,7 +23,7 @@ tag.delete_if{ |frame| frame[:id] == :COMM }
 # Get info about APIC frame to see which fields are allowed
 ID3Lib::Info.frame(:APIC)
 #=> [ 2, :APIC, "Attached picture",
-      [:textenc, :mimetype, :picturetype, :description, :data] ]
+#=>   [:textenc, :mimetype, :picturetype, :description, :data] ]
 
 # Add an attached picture frame
 cover = {
