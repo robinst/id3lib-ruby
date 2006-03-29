@@ -904,34 +904,35 @@ static VALUE ID3_Field_unicode(ID3_Field *self){
       if (size < 2) {
         size = 0;
       } else if (string[size-2] == '\0' && string[size-1] == '\0') {
-        // id3lib seems to be inconsistent, the unicode strings
-        // don't always end in 0x0000.
+        // id3lib seems to be inconsistent: the unicode strings
+        // don't always end in 0x0000. If they do, we don't want these
+        // trailing bytes.
         size -= 2;
       }
       return rb_str_new(string, size);
     }
 static size_t ID3_Field_set_binary(ID3_Field *self,VALUE data){
-      if (!RSTRING(data)) {
-        rb_raise(rb_eTypeError, "wrong argument type (expected String)");
-      } else {
-        return self->Set((const unsigned char *)RSTRING(data)->ptr, 
-          RSTRING(data)->len);
-      }
+      StringValue(data);
+      return self->Set( (const unsigned char *)RSTRING(data)->ptr, 
+        RSTRING(data)->len );
     }
 static size_t ID3_Field_set_unicode(ID3_Field *self,VALUE data){
-      if (!RSTRING(data)) {
-        rb_raise(rb_eTypeError, "wrong argument type (expected String)");
-      } else {
-        long len = RSTRING(data)->len / sizeof(unicode_t);
-        unicode_t *unicode = (unicode_t *)malloc(sizeof(unicode_t) * (len+1));
-        memcpy(unicode, RSTRING(data)->ptr, sizeof(unicode_t) * len);
-        // Unicode strings need 0x0000 at the end.
-        unicode[len] = '\0';
-        size_t retval = self->Set(unicode);
-        // Free Unicode! ;)
-        free(unicode);
-        return retval;
-      }
+      StringValue(data);
+
+      long len;
+      unicode_t *unicode;
+
+      len = RSTRING(data)->len / sizeof(unicode_t);
+      unicode = (unicode_t *)malloc(sizeof(unicode_t) * (len+1));
+      
+      memcpy(unicode, RSTRING(data)->ptr, sizeof(unicode_t) * len);
+      // Unicode strings need 0x0000 at the end.
+      unicode[len] = 0;
+      size_t retval = self->Set(unicode);
+
+      // Free Unicode! ;)
+      free(unicode);
+      return retval;
     }
 swig_class cTag;
 
@@ -1272,7 +1273,7 @@ _wrap_Tag_remove_frame(int argc, VALUE *argv, VALUE self) {
     rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc);
     SWIG_ConvertPtr(self, (void **) &arg1, SWIGTYPE_p_ID3_Tag, 1);
     SWIG_ConvertPtr(argv[0], (void **) &arg2, SWIGTYPE_p_ID3_Frame, 1);
-    result = (ID3_Frame *)(arg1)->RemoveFrame(arg2);
+    result = (ID3_Frame *)(arg1)->RemoveFrame((ID3_Frame const *)arg2);
     
     vresult = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_ID3_Frame,0);
     return vresult;
@@ -1288,7 +1289,7 @@ _wrap_Tag_add_frame(int argc, VALUE *argv, VALUE self) {
     rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc);
     SWIG_ConvertPtr(self, (void **) &arg1, SWIGTYPE_p_ID3_Tag, 1);
     SWIG_ConvertPtr(argv[0], (void **) &arg2, SWIGTYPE_p_ID3_Frame, 1);
-    (arg1)->AddFrame(arg2);
+    (arg1)->AddFrame((ID3_Frame const *)arg2);
     
     return Qnil;
 }
@@ -1303,7 +1304,7 @@ _wrap_Tag_filename(int argc, VALUE *argv, VALUE self) {
     if ((argc < 0) || (argc > 0))
     rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc);
     SWIG_ConvertPtr(self, (void **) &arg1, SWIGTYPE_p_ID3_Tag, 1);
-    result = (char *)(arg1)->GetFileName();
+    result = (char *)((ID3_Tag const *)arg1)->GetFileName();
     
     vresult = rb_str_new2(result);
     return vresult;
@@ -1321,7 +1322,7 @@ _wrap_Tag_find(int argc, VALUE *argv, VALUE self) {
     rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc);
     SWIG_ConvertPtr(self, (void **) &arg1, SWIGTYPE_p_ID3_Tag, 1);
     arg2 = (ID3_FrameID) NUM2INT(argv[0]);
-    result = (ID3_Frame *)(arg1)->Find(arg2);
+    result = (ID3_Frame *)((ID3_Tag const *)arg1)->Find(arg2);
     
     vresult = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_ID3_Frame,0);
     return vresult;
@@ -1449,7 +1450,7 @@ _wrap_Frame_field(int argc, VALUE *argv, VALUE self) {
     rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc);
     SWIG_ConvertPtr(self, (void **) &arg1, SWIGTYPE_p_ID3_Frame, 1);
     arg2 = (ID3_FieldID) NUM2INT(argv[0]);
-    result = (ID3_Field *)(arg1)->GetField(arg2);
+    result = (ID3_Field *)((ID3_Frame const *)arg1)->GetField(arg2);
     
     vresult = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_ID3_Field,0);
     return vresult;
@@ -1465,7 +1466,7 @@ _wrap_Frame_num(int argc, VALUE *argv, VALUE self) {
     if ((argc < 0) || (argc > 0))
     rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc);
     SWIG_ConvertPtr(self, (void **) &arg1, SWIGTYPE_p_ID3_Frame, 1);
-    result = (ID3_FrameID)(arg1)->GetID();
+    result = (ID3_FrameID)((ID3_Frame const *)arg1)->GetID();
     
     vresult = INT2NUM(result);
     return vresult;
@@ -1483,7 +1484,7 @@ _wrap_Field_type(int argc, VALUE *argv, VALUE self) {
     if ((argc < 0) || (argc > 0))
     rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc);
     SWIG_ConvertPtr(self, (void **) &arg1, SWIGTYPE_p_ID3_Field, 1);
-    result = (ID3_FieldType)(arg1)->GetType();
+    result = (ID3_FieldType)((ID3_Field const *)arg1)->GetType();
     
     vresult = INT2NUM(result);
     return vresult;
@@ -1499,7 +1500,7 @@ _wrap_Field_integer(int argc, VALUE *argv, VALUE self) {
     if ((argc < 0) || (argc > 0))
     rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc);
     SWIG_ConvertPtr(self, (void **) &arg1, SWIGTYPE_p_ID3_Field, 1);
-    result = (unsigned long)(arg1)->Get();
+    result = (unsigned long)((ID3_Field const *)arg1)->Get();
     
     vresult = UINT2NUM(result);
     return vresult;
@@ -1531,7 +1532,7 @@ _wrap_Field_ascii(int argc, VALUE *argv, VALUE self) {
     if ((argc < 0) || (argc > 0))
     rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc);
     SWIG_ConvertPtr(self, (void **) &arg1, SWIGTYPE_p_ID3_Field, 1);
-    result = (char *)(arg1)->GetRawText();
+    result = (char *)((ID3_Field const *)arg1)->GetRawText();
     
     vresult = rb_str_new2(result);
     return vresult;

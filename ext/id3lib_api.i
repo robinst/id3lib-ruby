@@ -1,4 +1,6 @@
+
 %module "ID3Lib::API"
+
 %{
 #include <id3/tag.h>
 %}
@@ -10,6 +12,7 @@ enum ID3_FieldType;
 enum ID3_TextEnc;
 
 typedef unsigned int flags_t;
+
 
 %rename (Tag) ID3_Tag;
 class ID3_Tag
@@ -32,16 +35,16 @@ class ID3_Tag
   void Clear();
   
   %rename (remove_frame) RemoveFrame;
-  ID3_Frame * RemoveFrame(ID3_Frame *frame);
+  ID3_Frame * RemoveFrame(const ID3_Frame *frame);
   
   %rename (add_frame) AddFrame;
-  void AddFrame(ID3_Frame *frame);
+  void AddFrame(const ID3_Frame *frame);
   
   %rename (filename) GetFileName;
-  const char * GetFileName();
+  const char * GetFileName() const;
   
   %rename (find) Find;
-  ID3_Frame * Find(ID3_FrameID name);
+  ID3_Frame * Find(ID3_FrameID name) const;
   
   %rename (iterator_new) CreateIterator;
   ID3_Tag::Iterator * CreateIterator();
@@ -64,10 +67,10 @@ class ID3_Frame
   ~ID3_Frame();
   
   %rename (field) GetField;
-  ID3_Field * GetField(ID3_FieldID name);
+  ID3_Field * GetField(ID3_FieldID name) const;
   
   %rename (num) GetID;
-  ID3_FrameID GetID();  
+  ID3_FrameID GetID() const;
 };
 
 
@@ -79,10 +82,10 @@ class ID3_Field
   // Getters
   
   %rename (type) GetType;
-  ID3_FieldType GetType();
+  ID3_FieldType GetType() const;
   
   %rename (integer) Get;
-  unsigned long Get();
+  unsigned long Get() const;
   
   %extend {
     VALUE binary() {
@@ -91,7 +94,7 @@ class ID3_Field
   }
     
   %rename (ascii) GetRawText;
-  const char * GetRawText();
+  const char * GetRawText() const;
   
   %extend {
     VALUE unicode() {
@@ -100,8 +103,9 @@ class ID3_Field
       if (size < 2) {
         size = 0;
       } else if (string[size-2] == '\0' && string[size-1] == '\0') {
-        // id3lib seems to be inconsistent, the unicode strings
-        // don't always end in 0x0000.
+        // id3lib seems to be inconsistent: the unicode strings
+        // don't always end in 0x0000. If they do, we don't want these
+        // trailing bytes.
         size -= 2;
       }
       return rb_str_new(string, size);
@@ -110,43 +114,41 @@ class ID3_Field
   
   // Setters
   
-  %rename (set_integer) Set(unsigned long i);
+  %rename (set_integer) Set(unsigned long);
   void Set(unsigned long i);
   
   %extend {
     size_t set_binary(VALUE data) {
-      if (!RSTRING(data)) {
-        rb_raise(rb_eTypeError, "wrong argument type (expected String)");
-      } else {
-        return self->Set((const unsigned char *)RSTRING(data)->ptr, 
-          RSTRING(data)->len);
-      }
+      StringValue(data);
+      return self->Set( (const unsigned char *)RSTRING(data)->ptr, 
+        RSTRING(data)->len );
     }
   }
     
-  %rename (set_ascii) Set(const char *string);
+  %rename (set_ascii) Set(const char *);
   size_t Set(const char *string);
   
-  %rename (set_encoding) SetEncoding(ID3_TextEnc enc);
+  %rename (set_encoding) SetEncoding(ID3_TextEnc);
   bool SetEncoding(ID3_TextEnc enc);
   
-  // May not work due to a bug in id3lib on OS X.
-  // http://www.wentnet.com/misc/id3lib.html
   %extend {
     size_t set_unicode(VALUE data) {
-      if (!RSTRING(data)) {
-        rb_raise(rb_eTypeError, "wrong argument type (expected String)");
-      } else {
-        long len = RSTRING(data)->len / sizeof(unicode_t);
-        unicode_t *unicode = (unicode_t *)malloc(sizeof(unicode_t) * (len+1));
-        memcpy(unicode, RSTRING(data)->ptr, sizeof(unicode_t) * len);
-        // Unicode strings need 0x0000 at the end.
-        unicode[len] = '\0';
-        size_t retval = self->Set(unicode);
-        // Free Unicode! ;)
-        free(unicode);
-        return retval;
-      }
+      StringValue(data);
+
+      long len;
+      unicode_t *unicode;
+
+      len = RSTRING(data)->len / sizeof(unicode_t);
+      unicode = (unicode_t *)malloc(sizeof(unicode_t) * (len+1));
+      
+      memcpy(unicode, RSTRING(data)->ptr, sizeof(unicode_t) * len);
+      // Unicode strings need 0x0000 at the end.
+      unicode[len] = 0;
+      size_t retval = self->Set(unicode);
+
+      // Free Unicode! ;)
+      free(unicode);
+      return retval;
     }
   }
     
@@ -155,3 +157,5 @@ class ID3_Field
   ID3_Field();
   ~ID3_Field();
 };
+
+// vim: filetype=cpp
