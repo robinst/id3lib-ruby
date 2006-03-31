@@ -4,10 +4,10 @@ require 'fileutils'
 require 'id3lib'
 
 
-class Writing < Test::Unit::TestCase
+class TestWriting < Test::Unit::TestCase
 
-  Sample = 'sample/sample.mp3'
-  Temp   = 'sample.tmp.mp3'
+  Sample = 'test/data/sample.mp3'
+  Temp   = 'test/data/tmp.sample.mp3'
 
   def setup
     FileUtils.cp Sample, Temp
@@ -137,7 +137,7 @@ class Writing < Test::Unit::TestCase
       :picturetype  => 3,
       :description  => 'A pretty picture.',
       :textenc      => 0,
-      :data         => File.read('cover.jpg')
+      :data         => File.read('test/data/cover.jpg')
     }
     @tag << pic
     @tag.update!
@@ -188,6 +188,13 @@ class Writing < Test::Unit::TestCase
     assert_equal nihao, @tag.title
     reload!(ID3Lib::V2)
     assert_equal nihao, @tag.title
+  end
+
+  def test_unicode_raise
+    nonstr = 1
+    @tag.reject!{ |f| f[:id] == :TIT2 }
+    @tag << {:id => :TIT2, :text => nonstr, :textenc => 1}
+    assert_raise(TypeError) { @tag.update!(ID3Lib::V2) }
   end
   
 end

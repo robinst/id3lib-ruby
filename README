@@ -12,7 +12,9 @@ The class documentation starts at ID3Lib::Tag.
 * Read and write ID3v1 or ID3v2 tags
 * Simple interface for adding, changing and removing frames
 * Quick access to common text frames like title and performer
-* Support of custom data frames like attached picture
+* Custom data frames like attached picture (APIC)
+* Pretty complete coverage of id3lib's features
+* UTF-16 support
 
 See TODO for planned features.
 

@@ -3,10 +3,10 @@ require 'test/unit'
 require 'id3lib'
 
 
-class Reading < Test::Unit::TestCase
+class TestReading < Test::Unit::TestCase
 
   def setup
-    @tag = ID3Lib::Tag.new('sample/sample.mp3')
+    @tag = ID3Lib::Tag.new('test/data/sample.mp3')
   end
   
   def test_array
@@ -41,7 +41,7 @@ class Reading < Test::Unit::TestCase
   end
   
   def test_unicode
-    @tag = ID3Lib::Tag.new('sample/unicode.mp3', ID3Lib::V2)
+    @tag = ID3Lib::Tag.new('test/data/unicode.mp3', ID3Lib::V2)
     assert_equal "\x4f\x60\x59\x7d", @tag.title
   end
   
