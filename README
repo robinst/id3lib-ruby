@@ -28,8 +28,13 @@ The home of id3lib-ruby is http://id3lib-ruby.rubyforge.org
 
 == Installation
 
-   gem install id3lib-ruby
+Installation through Rubygems:
 
+  gem install id3lib-ruby
+
+Manual installation:
+
+  ruby setup.rb
 
 == Usage
 

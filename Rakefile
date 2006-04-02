@@ -4,7 +4,7 @@ require 'rake/rdoctask'
 require 'rake/gempackagetask'
 
 
-VER = ENV['VER'] || '0.0.0'
+REL = ENV['REL'] || '0.0.0'
 
 
 task :default => [:ext]
@@ -44,12 +44,13 @@ PKG_FILES = FileList[
   'test/test_*.rb',
   'test/data/*.mp3',
   'test/data/cover.jpg',
-  'Rakefile'
+  'Rakefile',
+  'setup.rb'
 ]
 
 spec = Gem::Specification.new do |s|
   s.name        = 'id3lib-ruby'
-  s.version     = VER
+  s.version     = REL
   s.summary     =
     'id3lib-ruby provides a Ruby interface to the id3lib C++ library for ' +
     'easily editing ID3 tags (v1 and v2) like with pyid3lib.'
@@ -71,7 +72,6 @@ Rake::GemPackageTask.new(spec) do |p|
   p.need_tar_gz = true
   p.need_zip = true
 end
-task :pkg => [:package]
 
 
 task :web => [:web_doc] do

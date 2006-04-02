@@ -291,7 +291,7 @@ module ID3Lib
       field(libframe, :textenc).set_integer(textenc) if textenc
       frame.each do |field_id, value|
         unless Info.frame(frame[:id])[FIELDS].include?(field_id)
-          # TODO: warn or something
+          # TODO: Add method to check if frames are valid.
           next
         end
         next if field_id == :textenc
