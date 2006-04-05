@@ -18,7 +18,7 @@ class TestWriting < Test::Unit::TestCase
     FileUtils.rm Temp
   end
 
-  def reload!( *args )
+  def reload!(*args)
     @tag = ID3Lib::Tag.new(Temp, *args)
   end
 
@@ -190,11 +190,18 @@ class TestWriting < Test::Unit::TestCase
     assert_equal nihao, @tag.title
   end
 
-  def test_unicode_raise
+  def test_unicode_invalid_data
     nonstr = 1
     @tag.reject!{ |f| f[:id] == :TIT2 }
     @tag << {:id => :TIT2, :text => nonstr, :textenc => 1}
     assert_raise(TypeError) { @tag.update!(ID3Lib::V2) }
+  end
+
+  def test_padding
+    assert_equal 2176, File.size(Temp)
+    @tag.padding = false
+    @tag.update!
+    assert_equal 348, File.size(Temp)
   end
   
 end

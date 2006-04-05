@@ -10,6 +10,7 @@ enum ID3_FrameID;
 enum ID3_FieldID;
 enum ID3_FieldType;
 enum ID3_TextEnc;
+enum ID3_TagType;
 
 typedef unsigned int flags_t;
 
@@ -21,6 +22,9 @@ class ID3_Tag
   
   ID3_Tag(const char *name = NULL);
   ~ID3_Tag();
+
+  %rename (has_tag_type) HasTagType;
+  bool HasTagType(ID3_TagType type) const;
   
   %rename (link) Link;
   size_t Link(const char *filename, flags_t flags = ID3TT_ALL);
@@ -42,6 +46,12 @@ class ID3_Tag
   
   %rename (filename) GetFileName;
   const char * GetFileName() const;
+
+  %rename (set_padding) SetPadding;
+  bool SetPadding(bool padding);
+
+  %rename (size) Size;
+  size_t Size() const;
   
   %rename (find) Find;
   ID3_Frame * Find(ID3_FrameID name) const;
@@ -140,6 +150,10 @@ class ID3_Field
 
       len = RSTRING(data)->len / sizeof(unicode_t);
       unicode = (unicode_t *)malloc(sizeof(unicode_t) * (len+1));
+
+      if (unicode == NULL) {
+        rb_raise(rb_eNoMemError, "Couldn't allocate memory for unicode data.");
+      }
       
       memcpy(unicode, RSTRING(data)->ptr, sizeof(unicode_t) * len);
       // Unicode strings need 0x0000 at the end.

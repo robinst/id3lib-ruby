@@ -8,41 +8,49 @@ class TestReading < Test::Unit::TestCase
   def setup
     @tag = ID3Lib::Tag.new('test/data/sample.mp3')
   end
-  
+
   def test_array
-    assert_equal 'Dummy Title',     @tag.shift[:text]
-    assert_equal 'Dummy Artist',    @tag.shift[:text]
-    assert_equal 'Dummy Album',     @tag.shift[:text]
-    assert_equal '1/10',            @tag.shift[:text]
-    assert_equal '2000',            @tag.shift[:text]
-    assert_equal 'Dummy Comment',   @tag.shift[:text]
-    assert_equal 'Dummy Comment 2', @tag.shift[:text]
-    assert_equal 'Pop',             @tag.shift[:text]
+    assert_equal 'Dummy Title',     @tag[0][:text]
+    assert_equal 'Dummy Artist',    @tag[1][:text]
+    assert_equal 'Dummy Album',     @tag[2][:text]
+    assert_equal '1/10',            @tag[3][:text]
+    assert_equal '2000',            @tag[4][:text]
+    assert_equal 'Dummy Comment',   @tag[5][:text]
+    assert_equal 'Dummy Comment 2', @tag[6][:text]
+    assert_equal 'Pop',             @tag[7][:text]
   end
 
   def test_direct_access
-    assert_equal 'Dummy Title', @tag.title
-    assert_equal 'Dummy Artist', @tag.artist
-    assert_equal 'Dummy Artist', @tag.performer
-    assert_equal 'Dummy Album', @tag.album
-    assert_equal [1,10], @tag.track
-    assert_equal 2000, @tag.year
+    assert_equal 'Dummy Title',   @tag.title
+    assert_equal 'Dummy Artist',  @tag.artist
+    assert_equal 'Dummy Artist',  @tag.performer
+    assert_equal 'Dummy Album',   @tag.album
+    assert_equal [1,10],          @tag.track
+    assert_equal 2000,            @tag.year
     assert_equal 'Dummy Comment', @tag.comment
-    assert_equal 'Pop', @tag.genre
+    assert_equal 'Pop',           @tag.genre
   end
 
   def test_comments
-    comments = @tag.comment_frames
-    one, two = *comments
+    one, two = @tag.comment_frames
     assert_not_nil one
     assert_not_nil two
-    assert_equal 'Dummy Comment', one[:text]
+    assert_equal 'Dummy Comment',   one[:text]
     assert_equal 'Dummy Comment 2', two[:text]
   end
-  
+
   def test_unicode
     @tag = ID3Lib::Tag.new('test/data/unicode.mp3', ID3Lib::V2)
     assert_equal "\x4f\x60\x59\x7d", @tag.title
   end
-  
+
+  def test_has_tag
+    assert @tag.has_tag?(ID3Lib::V1)
+    assert @tag.has_tag?(ID3Lib::V2)
+  end
+
+  def test_size
+    assert_equal 2038, @tag.size
+  end
+
 end

@@ -924,6 +924,10 @@ static size_t ID3_Field_set_unicode(ID3_Field *self,VALUE data){
 
       len = RSTRING(data)->len / sizeof(unicode_t);
       unicode = (unicode_t *)malloc(sizeof(unicode_t) * (len+1));
+
+      if (unicode == NULL) {
+        rb_raise(rb_eNoMemError, "Couldn't allocate memory for unicode data.");
+      }
       
       memcpy(unicode, RSTRING(data)->ptr, sizeof(unicode_t) * len);
       // Unicode strings need 0x0000 at the end.
@@ -1010,6 +1014,24 @@ static void
 free_ID3_Tag(ID3_Tag *arg1) {
     delete arg1;
 }
+static VALUE
+_wrap_Tag_has_tag_type(int argc, VALUE *argv, VALUE self) {
+    ID3_Tag *arg1 = (ID3_Tag *) 0 ;
+    ID3_TagType arg2 ;
+    bool result;
+    VALUE vresult = Qnil;
+    
+    if ((argc < 1) || (argc > 1))
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc);
+    SWIG_ConvertPtr(self, (void **) &arg1, SWIGTYPE_p_ID3_Tag, 1);
+    arg2 = (ID3_TagType) NUM2INT(argv[0]);
+    result = (bool)((ID3_Tag const *)arg1)->HasTagType(arg2);
+    
+    vresult = result ? Qtrue : Qfalse;
+    return vresult;
+}
+
+
 static VALUE
 _wrap_Tag_link__SWIG_0(int argc, VALUE *argv, VALUE self) {
     ID3_Tag *arg1 = (ID3_Tag *) 0 ;
@@ -1307,6 +1329,40 @@ _wrap_Tag_filename(int argc, VALUE *argv, VALUE self) {
     result = (char *)((ID3_Tag const *)arg1)->GetFileName();
     
     vresult = rb_str_new2(result);
+    return vresult;
+}
+
+
+static VALUE
+_wrap_Tag_set_padding(int argc, VALUE *argv, VALUE self) {
+    ID3_Tag *arg1 = (ID3_Tag *) 0 ;
+    bool arg2 ;
+    bool result;
+    VALUE vresult = Qnil;
+    
+    if ((argc < 1) || (argc > 1))
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc);
+    SWIG_ConvertPtr(self, (void **) &arg1, SWIGTYPE_p_ID3_Tag, 1);
+    arg2 = RTEST(argv[0]);
+    result = (bool)(arg1)->SetPadding(arg2);
+    
+    vresult = result ? Qtrue : Qfalse;
+    return vresult;
+}
+
+
+static VALUE
+_wrap_Tag_size(int argc, VALUE *argv, VALUE self) {
+    ID3_Tag *arg1 = (ID3_Tag *) 0 ;
+    size_t result;
+    VALUE vresult = Qnil;
+    
+    if ((argc < 0) || (argc > 0))
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc);
+    SWIG_ConvertPtr(self, (void **) &arg1, SWIGTYPE_p_ID3_Tag, 1);
+    result = ((ID3_Tag const *)arg1)->Size();
+    
+    vresult = UINT2NUM(result);
     return vresult;
 }
 
@@ -1851,6 +1907,7 @@ SWIGEXPORT void Init_id3lib_api(void) {
     SWIG_TypeClientData(SWIGTYPE_p_ID3_Tag, (void *) &cTag);
     rb_define_alloc_func(cTag.klass, _wrap_Tag_allocate);
     rb_define_method(cTag.klass, "initialize", VALUEFUNC(_wrap_new_Tag), -1);
+    rb_define_method(cTag.klass, "has_tag_type", VALUEFUNC(_wrap_Tag_has_tag_type), -1);
     rb_define_method(cTag.klass, "link", VALUEFUNC(_wrap_Tag_link), -1);
     rb_define_method(cTag.klass, "update", VALUEFUNC(_wrap_Tag_update), -1);
     rb_define_method(cTag.klass, "strip", VALUEFUNC(_wrap_Tag_strip), -1);
@@ -1858,6 +1915,8 @@ SWIGEXPORT void Init_id3lib_api(void) {
     rb_define_method(cTag.klass, "remove_frame", VALUEFUNC(_wrap_Tag_remove_frame), -1);
     rb_define_method(cTag.klass, "add_frame", VALUEFUNC(_wrap_Tag_add_frame), -1);
     rb_define_method(cTag.klass, "filename", VALUEFUNC(_wrap_Tag_filename), -1);
+    rb_define_method(cTag.klass, "set_padding", VALUEFUNC(_wrap_Tag_set_padding), -1);
+    rb_define_method(cTag.klass, "size", VALUEFUNC(_wrap_Tag_size), -1);
     rb_define_method(cTag.klass, "find", VALUEFUNC(_wrap_Tag_find), -1);
     rb_define_method(cTag.klass, "iterator_new", VALUEFUNC(_wrap_Tag_iterator_new), -1);
     rb_define_method(cTag.klass, "iterator_next_frame", VALUEFUNC(_wrap_Tag_iterator_next_frame), -1);

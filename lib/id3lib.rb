@@ -15,10 +15,12 @@ module ID3Lib
   V1    = 1
   # ID3 version 2
   V2    = 2
+  # No tag type
+  V_NONE = 0
   # All tag types
-  Vall  = -1
+  V_ALL  = -1
   # Both ID3 versions
-  Vboth = V1 | V2
+  V_BOTH = V1 | V2
     
   NUM     = 0
   ID      = 1
@@ -31,14 +33,14 @@ module ID3Lib
   #
   # === Example of use
   #
-  #    tag = ID3Lib::Tag.new('hungriges_herz.mp3')
+  #    tag = ID3Lib::Tag.read('shy_boy.mp3')
   #
   #    # Remove comments
   #    tag.delete_if{ |frame| frame[:id] == :COMM }
   #
   #    # Set year
-  #    tag.year   #=> 2001
-  #    tag.year = 2004
+  #    tag.year   #=> 2000
+  #    tag.year = 2005
   #
   #    # Apply changes
   #    tag.update!
@@ -139,11 +141,14 @@ module ID3Lib
   class Tag < Array
     
     include Accessors
+
+    attr_accessor :padding
     
     #
     # Create a new Tag. When a _filename_ is supplied, the tag of the file
-    # is read. _tagtype_ specifies the tag type to read and defaults to Vall.
-    # Use one of ID3Lib::V1, ID3Lib::V2, ID3Lib::Vboth or ID3Lib::Vall.
+    # is read. _tagtype_ specifies the tag type to read and defaults to
+    # V_ALL.
+    # Use one of ID3Lib::V1, ID3Lib::V2, ID3Lib::V_BOTH or ID3Lib::V_ALL.
     #
     #    tag = ID3Lib::Tag.new('hungriges_herz.mp3')
     # 
@@ -151,12 +156,22 @@ module ID3Lib
     #
     #    id3v1_tag = ID3Lib::Tag.new('factory_city.mp3', ID3Lib::V1)
     #
-    def initialize(filename, readtype=Vall)
+    def initialize(filename, readtype = V_ALL)
       @filename = filename
       @readtype = readtype
+      @padding = true
+
       @tag = API::Tag.new
       @tag.link(@filename, @readtype)
       read_frames
+    end
+
+    #
+    # Returns an estimate of the number of bytes required to store the tag
+    # data.
+    #
+    def size
+      @tag.size
     end
     
     #
@@ -212,44 +227,51 @@ module ID3Lib
     #    tag.update!
     #    id3v1_tag.update!(ID3Lib::V1)
     #
-    def update!(writetype=@readtype)
+    def update!(writetype = @readtype)
       @tag.strip(writetype)
       # The following two lines are necessary because of the weird
       # behaviour of id3lib.
       @tag.clear
       @tag.link(@filename, writetype)
-      
-      written_frames = []
-      each do |frame|
+
+      delete_if do |frame|
         frame_info = Info.frame(frame[:id])
-        next unless frame_info
+        next true if not frame_info
         libframe = API::Frame.new(frame_info[NUM])
         Frame.write(frame, libframe)
         @tag.add_frame(libframe)
-        written_frames << frame
+        false
       end
-      replace(written_frames)
-      
+
+      @tag.set_padding(@padding)
       @tag.update(writetype)
     end
-    
+
     #
     # Strip tag from file. This is dangerous because you lose all tag
     # information. Specify _striptag_ to only strip a certain tag type.
-    # You do _not_ have to call #update! after #strip!.
+    # You don't have to call #update! after #strip!.
     #
     #    tag.strip!
     #    another_tag.strip!(ID3Lib::V1)
     #
-    def strip!(striptype=Vall)
+    def strip!(striptype = V_ALL)
       clear
       @tag.strip(striptype)
       @tag.clear
       @tag.link(@filename, @readtype)
     end
-    
+
+    #
+    # Check if there is a tag of type _type_.
+    # 
+    def has_tag?(type = V2)
+      @tag.link(@filename, V_ALL)
+      @tag.has_tag_type(type)
+    end
+
     private
-    
+
     def read_frames
       iterator = @tag.iterator_new
       while libframe = @tag.iterator_next_frame(iterator)
