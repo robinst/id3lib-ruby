@@ -27,15 +27,15 @@ module ID3Lib
   # suitable type (when reading) and back (when writing). For example,
   # the track information is converted to an array of one or two items.
   #
-  #    tag.track    #=> [3,11]
+  #    tag.track    #=> [1,12]
   #
   # and the year is an integer.
   #
-  #    tag.year     #=> 2004
+  #    tag.year     #=> 2005
   #
   # Use the Tag#frame_text method to get the raw text.
   #
-  #    tag.frame_text(:TRCK)  #=> "3/11"
+  #    tag.frame_text(:TRCK)  #=> "1/12"
   #
   module Accessors
     

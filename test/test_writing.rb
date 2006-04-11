@@ -203,5 +203,12 @@ class TestWriting < Test::Unit::TestCase
     @tag.update!
     assert_equal 348, File.size(Temp)
   end
+
+  def test_failing_update
+    # Note filename which is a directory -> update! should fail
+    @tag = ID3Lib::Tag.new("test/data/")
+    @tag.performer = "Nobody"
+    assert_equal nil, @tag.update!
+  end
   
 end

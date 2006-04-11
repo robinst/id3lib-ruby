@@ -11,10 +11,10 @@ require 'id3lib/accessors'
 module ID3Lib
   
   # ID3 version 1. All V constants can be used with the methods
-  # initialize, update or strip of ID3Lib::Tag. 
-  V1    = 1
+  # new, update! or strip! of ID3Lib::Tag. 
+  V1     = 1
   # ID3 version 2
-  V2    = 2
+  V2     = 2
   # No tag type
   V_NONE = 0
   # All tag types
@@ -57,12 +57,12 @@ module ID3Lib
   #    tag.each do |frame|
   #      p frame
   #    end
-  #    #=> {:id=>:TIT2, :text=>"Hungriges Herz", :textenc=>0}
-  #    #=> {:id=>:TPE1, :text=>"MIA.", :textenc=>0}
-  #    #=> {:id=>:TALB, :text=>"Stille Post", :textenc=>0}
-  #    #=> {:id=>:TRCK, :text=>"3/11", :textenc=>0}
-  #    #=> {:id=>:TYER, :text=>"2004", :textenc=>0}
-  #    #=> {:id=>:TCON, :text=>"Pop", :textenc=>0}
+  #    #=> {:id => :TIT2, :text => "Shy Boy", :textenc => 0}
+  #    #=> {:id => :TPE1, :text => "Katie Melua", :textenc => 0}
+  #    #=> {:id => :TALB, :text => "Piece By Piece", :textenc => 0}
+  #    #=> {:id => :TRCK, :text => "1/12", :textenc => 0}
+  #    #=> {:id => :TYER, :text => "2005", :textenc => 0}
+  #    #=> {:id => :TCON, :text => "Jazz/Blues", :textenc => 0}
   #
   # === Get and set frames
   #
@@ -70,27 +70,27 @@ module ID3Lib
   # title, performer, album, track, year, comment and genre. Have a look
   # at ID3Lib::Accessors for a complete list.
   #
-  #    tag.title    #=> Hungriges Herz
+  #    tag.title    #=> "Shy Boi"
   #
-  #    tag.title = 'Hungry Heart'
-  #    tag.title    #=> Hungry Heart
+  #    tag.title = 'Shy Boy'
+  #    tag.title    #=> "Shy Boy"
   #
-  #    tag.track    #=> [3,11]
-  #    tag.year     #=> 2004
+  #    tag.track    #=> [1,12]
+  #    tag.year     #=> 2005
   #
   # You can always read and write the raw text if you want. You just have
   # to use the "manual access". It is generally encouraged to use the
   # #frame_text method where possible, because the other two result in
   # an exception when the frame isn't found.
   #
-  #    tag.frame_text(:TRCK)                  #=> "3/11"
+  #    tag.frame_text(:TRCK)                  #=> "1/12"
   #    tag.frame_text(:TLAN)                  #=> nil
   #
-  #    tag.frame(:TRCK)[:text]                #=> "3/11"
+  #    tag.frame(:TRCK)[:text]                #=> "1/12"
   #    # Raises an exception, because nil[:text] isn't possible:
   #    tag.frame(:TLAN)[:text]
   #
-  #    tag.find{ |f| f[:id] == :TRCK }[:text] #=> "3/11"
+  #    tag.find{ |f| f[:id] == :TRCK }[:text] #=> "1/12"
   #    # Also raises an exception:
   #    tag.find{ |f| f[:id] == :TLAN }[:text]
   #
@@ -128,7 +128,9 @@ module ID3Lib
   # === Write changes to file
   #
   # When you've finished modifying a tag, don't forget to call #update! to
-  # write the modifications back to the file.
+  # write the modifications back to the file. You have to check the return
+  # value of update!, it returns nil on failure. This probably means that
+  # the file is not writeable or cannot be created.
   #
   #    tag.update!
   #
@@ -150,13 +152,13 @@ module ID3Lib
     # V_ALL.
     # Use one of ID3Lib::V1, ID3Lib::V2, ID3Lib::V_BOTH or ID3Lib::V_ALL.
     #
-    #    tag = ID3Lib::Tag.new('hungriges_herz.mp3')
+    #    tag = ID3Lib::Tag.new('shy_boy.mp3')
     # 
     # Only read ID3v1 tag:
     #
-    #    id3v1_tag = ID3Lib::Tag.new('factory_city.mp3', ID3Lib::V1)
+    #    id3v1_tag = ID3Lib::Tag.new('piece_by_piece.mp3', ID3Lib::V1)
     #
-    def initialize(filename, readtype = V_ALL)
+    def initialize(filename, readtype=V_ALL)
       @filename = filename
       @readtype = readtype
       @padding = true
@@ -177,7 +179,8 @@ module ID3Lib
     #
     # Simple shortcut for getting a frame by its _id_.
     #
-    #    tag.frame(:TIT2)  #=> {:id => :TIT2, :text => "Was Es Ist", :textenc => 0}
+    #    tag.frame(:TIT2)
+    #    #=> {:id => :TIT2, :text => "Shy Boy", :textenc => 0}
     #
     # is the same as:
     #
@@ -191,8 +194,8 @@ module ID3Lib
     # Get the text of a frame specified by _id_. Returns nil if the
     # frame can't be found.
     #
-    #    tag.find{ |f| f[:id] == :TIT2 }[:text]  #=> "Was Es Ist"
-    #    tag.frame_text(:TIT2)                   #=> "Was Es Ist"
+    #    tag.find{ |f| f[:id] == :TIT2 }[:text]  #=> "Shy Boy"
+    #    tag.frame_text(:TIT2)                   #=> "Shy Boy"
     #
     #    tag.find{ |f| f[:id] == :TLAN }         #=> nil
     #    tag.frame_text(:TLAN)                   #=> nil
@@ -206,7 +209,7 @@ module ID3Lib
     # Set the text of a frame. First, all frames with the specified _id_ are
     # deleted and then a new frame with _text_ is appended.
     #
-    #    tag.set_frame_text(:TLAN, 'zho')
+    #    tag.set_frame_text(:TLAN, 'eng')
     #
     def set_frame_text(id, text)
       remove_frame(id)
@@ -224,10 +227,13 @@ module ID3Lib
     # Updates the tag. This change can't be undone. _writetype_ specifies
     # which tag type to write and defaults to _readtype_ (see #new).
     #
+    # Returns a number corresponding to the written tag type(s) or nil if
+    # the update failed.
+    #
     #    tag.update!
     #    id3v1_tag.update!(ID3Lib::V1)
     #
-    def update!(writetype = @readtype)
+    def update!(writetype=@readtype)
       @tag.strip(writetype)
       # The following two lines are necessary because of the weird
       # behaviour of id3lib.
@@ -244,7 +250,8 @@ module ID3Lib
       end
 
       @tag.set_padding(@padding)
-      @tag.update(writetype)
+      tags = @tag.update(writetype)
+      return tags == 0 ? nil : tags
     end
 
     #
@@ -255,17 +262,18 @@ module ID3Lib
     #    tag.strip!
     #    another_tag.strip!(ID3Lib::V1)
     #
-    def strip!(striptype = V_ALL)
+    def strip!(striptype=V_ALL)
       clear
-      @tag.strip(striptype)
+      tags = @tag.strip(striptype)
       @tag.clear
       @tag.link(@filename, @readtype)
+      tags
     end
 
     #
     # Check if there is a tag of type _type_.
     # 
-    def has_tag?(type = V2)
+    def has_tag?(type=V2)
       @tag.link(@filename, V_ALL)
       @tag.has_tag_type(type)
     end
