@@ -1,12 +1,30 @@
 
+begin
+  require 'rubygems'
+  require 'rake/gempackagetask'
+rescue Exception
+  nil
+end
+
 require 'rake/testtask'
 require 'rake/rdoctask'
-require 'rake/gempackagetask'
 
 
-REL = ENV['REL'] || '0.0.0'
+PKG_VERSION = '0.1.0'
+
+PKG_FILES = FileList[
+  'lib/**/*.rb',
+  'ext/extconf.rb',
+  'ext/*.cxx',
+  'test/test_*.rb',
+  'test/data/*.mp3',
+  'test/data/cover.jpg',
+  'Rakefile',
+  'setup.rb'
+]
 
 
+desc 'Default task is to build extension.'
 task :default => [:ext]
 
 
@@ -37,40 +55,30 @@ end
 task :doc => [:rdoc]
 
 
-PKG_FILES = FileList[
-  'lib/**/*.rb',
-  'ext/extconf.rb',
-  'ext/*.cxx',
-  'test/test_*.rb',
-  'test/data/*.mp3',
-  'test/data/cover.jpg',
-  'Rakefile',
-  'setup.rb'
-]
+if defined? Gem
+  spec = Gem::Specification.new do |s|
+    s.name        = 'id3lib-ruby'
+    s.version     = PKG_VERSION
+    s.summary     =
+      'id3lib-ruby provides a Ruby interface to the id3lib C++ library for ' +
+      'easily editing ID3 tags (v1 and v2) like with pyid3lib.'
+    s.requirements << 'id3lib C++ library'
+    s.files       = PKG_FILES
+    s.extensions  = ['ext/extconf.rb']
+    s.test_files  = FileList['test/test_*.rb']
+    s.has_rdoc    = true
+    s.extra_rdoc_files = FileList['README', 'CHANGES', 'TODO']
+    s.rdoc_options = RDOC_OPTS
+    s.author      = 'Robin Stocker'
+    s.email       = 'robin.stocker@nibor.org'
+    s.homepage    = 'http://id3lib-ruby.rubyforge.org'
+    s.rubyforge_project = "id3lib-ruby"
+  end
 
-spec = Gem::Specification.new do |s|
-  s.name        = 'id3lib-ruby'
-  s.version     = REL
-  s.summary     =
-    'id3lib-ruby provides a Ruby interface to the id3lib C++ library for ' +
-    'easily editing ID3 tags (v1 and v2) like with pyid3lib.'
-  s.requirements << 'id3lib C++ library'
-  s.files       = PKG_FILES
-  s.extensions  = ['ext/extconf.rb']
-  s.test_files  = FileList['test/test_*.rb']
-  s.has_rdoc    = true
-  s.extra_rdoc_files = FileList['README', 'CHANGES', 'TODO']
-  s.rdoc_options = RDOC_OPTS
-  s.author      = 'Robin Stocker'
-  s.email       = 'robin.stocker@nibor.org'
-  s.homepage    = 'http://id3lib-ruby.rubyforge.org'
-  s.rubyforge_project = "id3lib-ruby"
-end
-
-Rake::GemPackageTask.new(spec) do |p|
-  p.package_dir = 'pkg'
-  p.need_tar_gz = true
-  p.need_zip = true
+  Rake::GemPackageTask.new(spec) do |pkg|
+    pkg.need_tar_gz = true
+    pkg.need_zip = true
+  end
 end
 
 
