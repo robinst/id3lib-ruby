@@ -70,7 +70,7 @@ if defined? Gem
     s.extra_rdoc_files = FileList['README', 'CHANGES', 'TODO']
     s.rdoc_options = RDOC_OPTS
     s.author      = 'Robin Stocker'
-    s.email       = 'robin.stocker@nibor.org'
+    s.email       = 'robinstocker@rubyforge.org'
     s.homepage    = 'http://id3lib-ruby.rubyforge.org'
     s.rubyforge_project = "id3lib-ruby"
   end
