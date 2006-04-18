@@ -9,7 +9,7 @@ require 'id3lib/accessors'
 # Have a look at ID3Lib::Tag for an introduction on how to use this library.
 #
 module ID3Lib
-  
+
   # ID3 version 1. All V constants can be used with the methods
   # new, update! or strip! of ID3Lib::Tag. 
   V1     = 1
@@ -21,12 +21,12 @@ module ID3Lib
   V_ALL  = -1
   # Both ID3 versions
   V_BOTH = V1 | V2
-    
+
   NUM     = 0
   ID      = 1
   DESC    = 2
   FIELDS  = 3  
-  
+
   #
   # This class is the main frontend of the library.
   # Use it to read and write ID3 tag data of files.
@@ -141,11 +141,11 @@ module ID3Lib
   #    tag.strip!
   #
   class Tag < Array
-    
+
     include Accessors
 
     attr_accessor :padding
-    
+
     #
     # Create a new Tag. When a _filename_ is supplied, the tag of the file
     # is read. _tagtype_ specifies the tag type to read and defaults to
@@ -175,7 +175,7 @@ module ID3Lib
     def size
       @tag.size
     end
-    
+
     #
     # Simple shortcut for getting a frame by its _id_.
     #
@@ -189,7 +189,7 @@ module ID3Lib
     def frame(id)
       find{ |f| f[:id] == id }
     end
-    
+
     #
     # Get the text of a frame specified by _id_. Returns nil if the
     # frame can't be found.
@@ -204,7 +204,7 @@ module ID3Lib
       f = frame(id)
       f ? f[:text] : nil
     end
-    
+
     #
     # Set the text of a frame. First, all frames with the specified _id_ are
     # deleted and then a new frame with _text_ is appended.
@@ -222,7 +222,7 @@ module ID3Lib
     def remove_frame(id)
       delete_if{ |f| f[:id] == id }
     end
-    
+
     #
     # Updates the tag. This change can't be undone. _writetype_ specifies
     # which tag type to write and defaults to _readtype_ (see #new).
@@ -286,10 +286,10 @@ module ID3Lib
         self << Frame.read(libframe)
       end
     end
-    
+
   end
-  
-  
+
+
   module Frame #:nodoc:
 
     def self.read(libframe)
@@ -315,7 +315,7 @@ module ID3Lib
       end
       frame
     end
-    
+
     def self.write(frame, libframe)
       textenc = frame[:textenc]
       field(libframe, :textenc).set_integer(textenc) if textenc
@@ -338,12 +338,12 @@ module ID3Lib
         end
       end
     end
-    
+
     def self.field(libframe, id)
       libframe.field(Info.field(id)[NUM])
     end
             
   end
-  
-  
+
+
 end
