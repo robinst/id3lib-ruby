@@ -25,8 +25,8 @@ class TestReading < Test::Unit::TestCase
     assert_equal 'Dummy Artist',  @tag.artist
     assert_equal 'Dummy Artist',  @tag.performer
     assert_equal 'Dummy Album',   @tag.album
-    assert_equal [1,10],          @tag.track
-    assert_equal 2000,            @tag.year
+    assert_equal '1/10',          @tag.track
+    assert_equal '2000',          @tag.year
     assert_equal 'Dummy Comment', @tag.comment
     assert_equal 'Pop',           @tag.genre
   end

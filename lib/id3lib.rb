@@ -213,7 +213,9 @@ module ID3Lib
     #
     def set_frame_text(id, text)
       remove_frame(id)
-      self << { :id => id, :text => text }
+      if text
+        self << { :id => id, :text => text }
+      end
     end
 
     #

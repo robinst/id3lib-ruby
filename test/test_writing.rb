@@ -53,58 +53,29 @@ class TestWriting < Test::Unit::TestCase
     assert_equal genre_id, @tag.genre
   end
 
-  # The track can be set in various ways. Test them all :)
   def test_track
-    @tag.track = 1
-    assert_equal [1], @tag.track
-    @tag.update!
-    assert_equal [1], @tag.track
-    reload!
-    assert_equal [1], @tag.track
-    
-    @tag.track = [2]
-    assert_equal [2], @tag.track
-    @tag.update!
-    assert_equal [2], @tag.track
-    reload!
-    assert_equal [2], @tag.track
-    
-    @tag.track = [3,10]
-    assert_equal [3,10], @tag.track
-    @tag.update!
-    assert_equal [3,10], @tag.track
-    reload!
-    assert_equal [3,10], @tag.track
-    
     @tag.track = '4'
-    assert_equal [4], @tag.track
+    assert_equal '4', @tag.track
     @tag.update!
-    assert_equal [4], @tag.track
+    assert_equal '4', @tag.track
     reload!
-    assert_equal [4], @tag.track
+    assert_equal '4', @tag.track
     
     @tag.track = '5/12'
-    assert_equal [5,12], @tag.track
+    assert_equal '5/12', @tag.track
     @tag.update!
-    assert_equal [5,12], @tag.track
+    assert_equal '5/12', @tag.track
     reload!
-    assert_equal [5,12], @tag.track
+    assert_equal '5/12', @tag.track
   end
   
   def test_year
-    @tag.year = 2001
-    assert_equal 2001, @tag.year
+    @tag.year = '2001'
+    assert_equal '2001', @tag.year
     @tag.update!
-    assert_equal 2001, @tag.year
+    assert_equal '2001', @tag.year
     reload!
-    assert_equal 2001, @tag.year
-    
-    @tag.year = '2002'
-    assert_equal 2002, @tag.year
-    @tag.update!
-    assert_equal 2002, @tag.year
-    reload!
-    assert_equal 2002, @tag.year
+    assert_equal '2001', @tag.year
   end
 
   def test_comments
@@ -148,6 +119,11 @@ class TestWriting < Test::Unit::TestCase
   
   def test_remove_frame
     @tag.remove_frame(:TIT2)
+    assert_nil @tag.frame(:TIT2)
+  end
+  
+  def test_remove_frame_with_direct_access
+    @tag.title = nil
     assert_nil @tag.frame(:TIT2)
   end
   
@@ -210,5 +186,5 @@ class TestWriting < Test::Unit::TestCase
     @tag.performer = "Nobody"
     assert_equal nil, @tag.update!
   end
-  
+
 end
