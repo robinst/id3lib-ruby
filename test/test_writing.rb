@@ -60,13 +60,20 @@ class TestWriting < Test::Unit::TestCase
     assert_equal '4', @tag.track
     reload!
     assert_equal '4', @tag.track
-    
+
     @tag.track = '5/12'
     assert_equal '5/12', @tag.track
     @tag.update!
     assert_equal '5/12', @tag.track
     reload!
     assert_equal '5/12', @tag.track
+
+    @tag.track = 6
+    assert_equal '6', @tag.track
+    @tag.update!
+    assert_equal '6', @tag.track
+    reload!
+    assert_equal '6', @tag.track
   end
   
   def test_year
@@ -76,6 +83,13 @@ class TestWriting < Test::Unit::TestCase
     assert_equal '2001', @tag.year
     reload!
     assert_equal '2001', @tag.year
+
+    @tag.year = 2002
+    assert_equal '2002', @tag.year
+    @tag.update!
+    assert_equal '2002', @tag.year
+    reload!
+    assert_equal '2002', @tag.year
   end
 
   def test_comments
@@ -185,6 +199,39 @@ class TestWriting < Test::Unit::TestCase
     @tag = ID3Lib::Tag.new("test/data/")
     @tag.performer = "Nobody"
     assert_equal nil, @tag.update!
+  end
+
+  def test_accessors
+    accessors = %w[
+      title performer album genre year track part_of_set comment composer
+      grouping bpm subtitle date time language lyrics lyricist band
+      conductor interpreted_by publisher encoded_by
+    ]
+    do_tests_for_accessors(accessors)
+  end
+
+  def test_accessor_aliases
+    aliases = %w[ artist content_type disc remixed_by ]
+    do_tests_for_accessors(aliases)
+  end
+
+  def do_tests_for_accessors(accessors)
+    accessors.each do |m|
+      @tag.send("#{m}=", "#{m} test")
+      assert_equal "#{m} test", @tag.send(m)
+    end
+
+    @tag.update!
+
+    accessors.each do |m|
+      assert_equal "#{m} test", @tag.send(m)
+    end
+
+    reload!
+
+    accessors.each do |m|
+      assert_equal "#{m} test", @tag.send(m)
+    end
   end
 
 end

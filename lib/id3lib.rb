@@ -214,7 +214,7 @@ module ID3Lib
     def set_frame_text(id, text)
       remove_frame(id)
       if text
-        self << { :id => id, :text => text }
+        self << { :id => id, :text => text.to_s }
       end
     end
 
@@ -228,6 +228,9 @@ module ID3Lib
     #
     # Updates the tag. This change can't be undone. _writetype_ specifies
     # which tag type to write and defaults to _readtype_ (see #new).
+    #
+    # Invalid frames or frame data is ignored. Use #invalid_frames before
+    # update! if you want to know if you have invalid data.
     #
     # Returns a number corresponding to the written tag type(s) or nil if
     # the update failed.
@@ -278,6 +281,34 @@ module ID3Lib
     def has_tag?(type=V2)
       @tag.link(@filename, V_ALL)
       @tag.has_tag_type(type)
+    end
+
+    #
+    # Returns an Array of invalid frames and fields. If a frame ID is
+    # invalid, it alone is in the resulting array. If a frame ID is valid
+    # but has invalid fields, the frame ID and the invalid field IDs are
+    # included.
+    #
+    #    tag.invalid_frames
+    #    #=> [ [:TITS], [:TALB, :invalid] ]
+    #
+    def invalid_frames
+      invalid = []
+      each do |frame|
+        if not info = Info.frame(frame[:id])
+          # Frame ID doesn't exist.
+          invalid << [frame[:id]]
+          next
+        end
+        # Frame ID is ok, but are all fields ok?
+        invalid_fields = frame.keys.reject { |id|
+          info[FIELDS].include?(id) or id == :id
+        }
+        if not invalid_fields.empty?
+          invalid << [frame[:id], *invalid_fields]
+        end
+      end
+      invalid.empty? ? nil : invalid
     end
 
     private
@@ -344,7 +375,7 @@ module ID3Lib
     def self.field(libframe, id)
       libframe.field(Info.field(id)[NUM])
     end
-            
+
   end
 
 

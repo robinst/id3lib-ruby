@@ -53,4 +53,18 @@ class TestReading < Test::Unit::TestCase
     assert_equal 2038, @tag.size
   end
 
+  def test_invalid_frames
+    assert_nil @tag.invalid_frames
+
+    @tag << { :id => :TITS }
+    assert_equal [[:TITS]], @tag.invalid_frames
+
+    @tag << { :id => :TALB, :invalid => 'text' }
+    assert_equal [[:TITS], [:TALB, :invalid]], @tag.invalid_frames
+
+    @tag << { :id => :APIC, :text => 'invalid' }
+    assert_equal [[:TITS], [:TALB, :invalid], [:APIC, :text]],
+      @tag.invalid_frames
+  end
+
 end

@@ -1,11 +1,15 @@
 = id3lib-ruby changes
 
-=== not yet released
+=== 0.2.0 (r21)
 
 * Overhauled direct access methods
-  * Remove frames by setting them to nil: tag.title = nil
+  * Remove frames by setting them to nil, e.g. tag.title = nil
   * Removed methods for rarely used frames.
-  * All methods use string now; no special cases like track anymore.
+  * All methods use strings now, no special cases like track anymore.
+  * Explicit call of to_s in set_frame_text.
+* More unit tests
+* Added method invalid_frames which is useful to detect invalid frame
+  data before calling update!.
 
 === 0.1.0 (r19)
 
