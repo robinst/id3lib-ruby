@@ -1,5 +1,9 @@
 = id3lib-ruby changes
 
+=== 0.2.1 (r23)
+
+* Fixed extconf.rb to print a message and abort if id3lib can't be found.
+
 === 0.2.0 (r21)
 
 * Overhauled direct access methods
