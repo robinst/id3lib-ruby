@@ -55,33 +55,39 @@ module ID3Lib
   #
   module Info
     
+    #
+    # Please note that these frames are not fully supported by id3lib:
+    #   AENC, ASPI, COMR, EQUA, ETCO, LINK, MLLT,
+    #   OWNE, POSS, RBUF, RVA2, RVAD, RVRB, SEEK
+    #
     Frames = [
       # Special frames
-      [1, :AENC, "Audio encryption", [:owner, :data]], # not fully supported by id3lib
+      [0, :"????", "No known frame", []],
+      [1, :AENC, "Audio encryption", [:owner, :data]],
       [2, :APIC, "Attached picture", [:textenc, :mimetype, :picturetype, :description, :data]],
-      [3, :ASPI, "Audio seek point index", [:data]], # not fully supported by id3lib
+      [3, :ASPI, "Audio seek point index", [:data]],
       [4, :COMM, "Comments", [:textenc, :language, :description, :text]],
-      [5, :COMR, "Commercial frame", [:data]], # not fully supported by id3lib
+      [5, :COMR, "Commercial frame", [:data]],
       [6, :ENCR, "Encryption method registration", [:owner, :id, :data]],
       [7, :EQU2, "Equalisation (2)", [:id, :text]],
-      [8, :EQUA, "Equalization", [:data]], # not fully supported by id3lib
-      [9, :ETCO, "Event timing codes", [:data]], # not fully supported by id3lib
+      [8, :EQUA, "Equalization", [:data]],
+      [9, :ETCO, "Event timing codes", [:data]],
       [10, :GEOB, "General encapsulated object", [:textenc, :mimetype, :filename, :description, :data]],
       [11, :GRID, "Group identification registration", [:owner, :id, :data]],
       [12, :IPLS, "Involved people list", [:textenc, :text]],
-      [13, :LINK, "Linked information", [:data]], # not fully supported by id3lib
+      [13, :LINK, "Linked information", [:data]],
       [14, :MCDI, "Music CD identifier", [:data]],
-      [15, :MLLT, "MPEG location lookup table", [:data]], # not fully supported by id3lib
-      [16, :OWNE, "Ownership frame", [:data]], # not fully supported by id3lib
+      [15, :MLLT, "MPEG location lookup table", [:data]],
+      [16, :OWNE, "Ownership frame", [:data]],
       [17, :PRIV, "Private frame", [:owner, :data]],
       [18, :PCNT, "Play counter", [:counter]],
       [19, :POPM, "Popularimeter", [:email, :rating, :counter]],
-      [20, :POSS, "Position synchronisation frame", [:data]], # not fully supported by id3lib
-      [21, :RBUF, "Recommended buffer size", [:data]], # not fully supported by id3lib
-      [22, :RVA2, "Relative volume adjustment (2)", [:data]], # not fully supported by id3lib
-      [23, :RVAD, "Relative volume adjustment", [:data]], # not fully supported by id3lib
-      [24, :RVRB, "Reverb", [:data]], # not fully supported by id3lib
-      [25, :SEEK, "Seek frame", [:data]], # not fully supported by id3lib
+      [20, :POSS, "Position synchronisation frame", [:data]],
+      [21, :RBUF, "Recommended buffer size", [:data]],
+      [22, :RVA2, "Relative volume adjustment (2)", [:data]],
+      [23, :RVAD, "Relative volume adjustment", [:data]],
+      [24, :RVRB, "Reverb", [:data]],
+      [25, :SEEK, "Seek frame", [:data]],
       [26, :SIGN, "Signature frame", [:id, :data]],
       [27, :SYLT, "Synchronized lyric/text", [:textenc, :language, :timestampformat, :contenttype, :description, :data]],
       [28, :SYTC, "Synchronized tempo codes", [:timestampformat, :data]],
@@ -151,8 +157,104 @@ module ID3Lib
       [89, :WORS, "Official internet radio station homepage", [:text]],
       [90, :WPAY, "Payment", [:text]],
       [91, :WPUB, "Official publisher webpage", [:text]],
-      [92, :WXXX, "User defined URL link", [:textenc, :description, :url]]
+      [92, :WXXX, "User defined URL link", [:textenc, :description, :url]],
     ]
+
+    FramesByID = {
+      :"????" => Frames[0],
+      :AENC => Frames[1],
+      :APIC => Frames[2],
+      :ASPI => Frames[3],
+      :COMM => Frames[4],
+      :COMR => Frames[5],
+      :ENCR => Frames[6],
+      :EQU2 => Frames[7],
+      :EQUA => Frames[8],
+      :ETCO => Frames[9],
+      :GEOB => Frames[10],
+      :GRID => Frames[11],
+      :IPLS => Frames[12],
+      :LINK => Frames[13],
+      :MCDI => Frames[14],
+      :MLLT => Frames[15],
+      :OWNE => Frames[16],
+      :PRIV => Frames[17],
+      :PCNT => Frames[18],
+      :POPM => Frames[19],
+      :POSS => Frames[20],
+      :RBUF => Frames[21],
+      :RVA2 => Frames[22],
+      :RVAD => Frames[23],
+      :RVRB => Frames[24],
+      :SEEK => Frames[25],
+      :SIGN => Frames[26],
+      :SYLT => Frames[27],
+      :SYTC => Frames[28],
+      :TALB => Frames[29],
+      :TBPM => Frames[30],
+      :TCOM => Frames[31],
+      :TCON => Frames[32],
+      :TCOP => Frames[33],
+      :TDAT => Frames[34],
+      :TDEN => Frames[35],
+      :TDLY => Frames[36],
+      :TDOR => Frames[37],
+      :TDRC => Frames[38],
+      :TDRL => Frames[39],
+      :TDTG => Frames[40],
+      :TIPL => Frames[41],
+      :TENC => Frames[42],
+      :TEXT => Frames[43],
+      :TFLT => Frames[44],
+      :TIME => Frames[45],
+      :TIT1 => Frames[46],
+      :TIT2 => Frames[47],
+      :TIT3 => Frames[48],
+      :TKEY => Frames[49],
+      :TLAN => Frames[50],
+      :TLEN => Frames[51],
+      :TMCL => Frames[52],
+      :TMED => Frames[53],
+      :TMOO => Frames[54],
+      :TOAL => Frames[55],
+      :TOFN => Frames[56],
+      :TOLY => Frames[57],
+      :TOPE => Frames[58],
+      :TORY => Frames[59],
+      :TOWN => Frames[60],
+      :TPE1 => Frames[61],
+      :TPE2 => Frames[62],
+      :TPE3 => Frames[63],
+      :TPE4 => Frames[64],
+      :TPOS => Frames[65],
+      :TPRO => Frames[66],
+      :TPUB => Frames[67],
+      :TRCK => Frames[68],
+      :TRDA => Frames[69],
+      :TRSN => Frames[70],
+      :TRSO => Frames[71],
+      :TSIZ => Frames[72],
+      :TSOA => Frames[73],
+      :TSOP => Frames[74],
+      :TSOT => Frames[75],
+      :TSRC => Frames[76],
+      :TSSE => Frames[77],
+      :TSST => Frames[78],
+      :TXXX => Frames[79],
+      :TYER => Frames[80],
+      :UFID => Frames[81],
+      :USER => Frames[82],
+      :USLT => Frames[83],
+      :WCOM => Frames[84],
+      :WCOP => Frames[85],
+      :WOAF => Frames[86],
+      :WOAR => Frames[87],
+      :WOAS => Frames[88],
+      :WORS => Frames[89],
+      :WPAY => Frames[90],
+      :WPUB => Frames[91],
+      :WXXX => Frames[92],
+    }
     
     Fields = [
       [0, :nofield, "No field"],
@@ -180,7 +282,34 @@ module ID3Lib
       [22, :timestampformat, "SYLT Timestamp Format"],
       [23, :contenttype, "SYLT content type"]
     ]
-    
+
+    FieldsByID = {
+      :nofield         => Fields[0],
+      :textenc         => Fields[1],
+      :text            => Fields[2],
+      :url             => Fields[3],
+      :data            => Fields[4],
+      :description     => Fields[5],
+      :owner           => Fields[6],
+      :email           => Fields[7],
+      :rating          => Fields[8],
+      :filename        => Fields[9],
+      :language        => Fields[10],
+      :picturetype     => Fields[11],
+      :imageformat     => Fields[12],
+      :mimetype        => Fields[13],
+      :counter         => Fields[14],
+      :id              => Fields[15],
+      :volumeadj       => Fields[16],
+      :numbits         => Fields[17],
+      :volchgright     => Fields[18],
+      :volchgleft      => Fields[19],
+      :peakvolright    => Fields[20],
+      :peakvolleft     => Fields[21],
+      :timestampformat => Fields[22],
+      :contenttype     => Fields[23],
+    }
+
     FieldType = {
       0 => :integer, 
       1 => :binary, 
@@ -225,8 +354,9 @@ module ID3Lib
       "Britpop", "Negerpunk", "Polsk Punk", "Beat",
       "Christian Gangsta Rap", "Heavy Metal", "Black Metal", "Crossover",
       "Contemporary Christian", "Christian Rock ", "Merengue", "Salsa",
-      "Trash Metal", "Anime", "JPop", "Synthpop"
+      "Trash Metal", "Anime", "JPop", "Synthpop",
     ]
+
     
     #
     # Get information of frame specified by _id_.
@@ -234,8 +364,11 @@ module ID3Lib
     #    ID3Lib::Info.frame(:TIT2)  #=> [47, :TIT2, "Title/songname/content description", [:textenc, :text]]
     #
     def self.frame(id)
-      index = id.is_a?(Integer) ? NUM : ID
-      Frames.find{ |f| f[index] == id }
+      FramesByID[id]
+    end
+
+    def self.frame_num(num)
+      Frames[num]
     end
     
     #
@@ -244,8 +377,11 @@ module ID3Lib
     #    ID3Lib::Info.field(:text)  #=> [2, :text, "Text field"]
     #
     def self.field(id)
-      index = id.is_a?(Integer) ? NUM : ID
-      Fields.find{ |f| f[index] == id }
+      FieldsByID[id]
+    end
+
+    def self.field_num(num)
+      Fields[num]
     end
             
   end

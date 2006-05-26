@@ -1,3 +1,4 @@
+require 'enumerator'
 
 file = ARGV.first || '/usr/local/include/id3/globals.h'
 
@@ -24,6 +25,7 @@ data.scan(/ID3_ENUM\((\w+)\)\s+\{\s+(.+?)\s+\}/m) do |name, enum|
       id = newid.to_i if newid
       possible_fields =
       case frame.to_sym
+      when :"????" : []
       when :AENC : [:owner, :data]
       when :APIC : [:textenc, :mimetype, :picturetype, :description, :data]
       when :ASPI, :COMR, :EQUA, :ETCO, :LINK,
@@ -63,34 +65,45 @@ data.scan(/(ID3_v1_genre_description).+?\{(.+?)\}/m) do |name, list|
   end
 end
 
-# remove NOFRAME
-frames.shift
+
+def indent level, text
+  puts ' ' * level + text
+end
+
+indent 4, "Frames = ["
 frames.each do |f|
-  case f[1]
-  when :AENC : puts "# Special frames"
-  when :TALB : puts "# Text information frames"
-  when :UFID : puts "# Special frames again"
-  when :WCOM : puts "# URL link frames"
+  comment = case f[1]
+  when :"????" : "# Special frames"
+  when :TALB : "# Text information frames"
+  when :UFID : "# Special frames again"
+  when :WCOM : "# URL link frames"
   end
-  print f.inspect + ","
-  case f[1]
-  when :AENC, :ASPI, :COMR, :EQUA, :ETCO,
-    :LINK, :MLLT, :OWNE, :POSS, :RBUF,
-    :RVA2, :RVAD, :RVRB, :SEEK
-    print " # not fully supported by id3lib"
-  end
-  puts
+  indent 6, comment if comment
+  indent 6, f.inspect + ","
 end
+indent 4, "]"
 
-puts
+indent 4, "FramesByID = {"
+frames.each do |f|
+  indent 6, f[1].inspect + " => Frames[" + f[0].to_s + "],"
+end
+indent 4, "}"
 
+indent 4, "Fields = ["
 fields.each do |f|
-  puts f.inspect + ","
+  indent 6, f.inspect + ","
 end
+indent 4, "]"
 
-puts
-
-until genres.empty?
-  puts "# Winamp extensions" if genres.first == "Folk"
-  puts genres.slice!(0..3).collect{ |g| g.inspect }.join(", ") + ","
+indent 4, "FieldsByID = {"
+fields.each do |f|
+  indent 6, f[1].inspect.ljust(16) + " => Fields[" + f[0].to_s + "],"
 end
+indent 4, "}"
+
+indent 4, "Genres = ["
+genres.each_slice(4) do |gs|
+  indent 6, "# Winamp extensions" if gs.first == "Folk"
+  indent 6, gs.map{ |g| g.inspect }.join(", ") + ","
+end
+indent 4, "]"

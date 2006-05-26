@@ -327,7 +327,7 @@ module ID3Lib
 
     def self.read(libframe)
       frame = {}
-      info = Info.frame(libframe.num)
+      info = Info.frame_num(libframe.num)
       frame[:id] = info[ID]
       if info[FIELDS].include?(:textenc)
         textenc = field(libframe, :textenc).integer
@@ -350,16 +350,18 @@ module ID3Lib
     end
 
     def self.write(frame, libframe)
-      textenc = frame[:textenc]
-      field(libframe, :textenc).set_integer(textenc) if textenc
+      if textenc = frame[:textenc]
+        field(libframe, :textenc).set_integer(textenc)
+      end
       frame.each do |field_id, value|
+        next if field_id == :textenc
         unless Info.frame(frame[:id])[FIELDS].include?(field_id)
-          # TODO: Add method to check if frames are valid.
+          # Ignore invalid fields
           next
         end
-        next if field_id == :textenc
         libfield = field(libframe, field_id)
         if textenc and textenc > 0
+          # Special treatment for Unicode
           libfield.set_encoding(textenc)
           libfield.set_unicode(value)
         else
