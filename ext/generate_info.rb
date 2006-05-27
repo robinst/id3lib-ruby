@@ -23,9 +23,14 @@ data.scan(/ID3_ENUM\((\w+)\)\s+\{\s+(.+?)\s+\}/m) do |name, enum|
     id = 0
     enum.scan(/\/\* (\S+) \*\/ [^\s,]+(?: = (\d+),|,)\s*\/\*\*< ([^*]+)\s+\*\//m) do |frame, newid, description|
       id = newid.to_i if newid
+      if frame == '????'
+        frame = :____
+      else
+        frame = frame.to_sym
+      end
       possible_fields =
-      case frame.to_sym
-      when :"????" : []
+      case frame
+      when :____ : []
       when :AENC : [:owner, :data]
       when :APIC : [:textenc, :mimetype, :picturetype, :description, :data]
       when :ASPI, :COMR, :EQUA, :ETCO, :LINK,
@@ -51,7 +56,7 @@ data.scan(/ID3_ENUM\((\w+)\)\s+\{\s+(.+?)\s+\}/m) do |name, enum|
       when :WXXX : [:textenc, :description, :url]
       else [:textenc, :text]
       end
-      frames << [id, frame.to_sym, description, possible_fields]
+      frames << [id, frame, description, possible_fields]
       id += 1
     end
   end
@@ -73,7 +78,7 @@ end
 indent 4, "Frames = ["
 frames.each do |f|
   comment = case f[1]
-  when :"????" : "# Special frames"
+  when :____ : "# Special frames"
   when :TALB : "# Text information frames"
   when :UFID : "# Special frames again"
   when :WCOM : "# URL link frames"

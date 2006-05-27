@@ -62,7 +62,7 @@ module ID3Lib
     #
     Frames = [
       # Special frames
-      [0, :"????", "No known frame", []],
+      [0, :____, "No known frame", []],
       [1, :AENC, "Audio encryption", [:owner, :data]],
       [2, :APIC, "Attached picture", [:textenc, :mimetype, :picturetype, :description, :data]],
       [3, :ASPI, "Audio seek point index", [:data]],
@@ -161,7 +161,7 @@ module ID3Lib
     ]
 
     FramesByID = {
-      :"????" => Frames[0],
+      :____ => Frames[0],
       :AENC => Frames[1],
       :APIC => Frames[2],
       :ASPI => Frames[3],
