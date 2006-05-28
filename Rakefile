@@ -10,12 +10,10 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 
 
-PKG_VERSION = '0.2.1'
+PKG_VERSION = '0.3.0'
 
-PKG_FILES = FileList[
+PKG_COMMON = FileList[
   'lib/**/*.rb',
-  'ext/extconf.rb',
-  'ext/*.cxx',
   'test/test_*.rb',
   'test/data/*.mp3',
   'test/data/cover.jpg',
@@ -24,13 +22,15 @@ PKG_FILES = FileList[
 ]
 
 
-desc 'Default task is to build extension.'
-task :default => [:ext]
-
-
 desc "Build extension."
 task :ext do
   sh "cd ext && rake"
+  puts "(end)"
+end
+
+desc "Build mswin32 extension."
+task :ext_mswin32 do
+  sh 'cd ext/mswin32; rake'
   puts "(end)"
 end
 
@@ -63,7 +63,7 @@ if defined? Gem
       'id3lib-ruby provides a Ruby interface to the id3lib C++ library for ' +
       'easily editing ID3 tags (v1 and v2) like with pyid3lib.'
     s.requirements << 'id3lib C++ library'
-    s.files       = PKG_FILES
+    s.files       = PKG_COMMON + FileList['ext/extconf.rb', 'ext/*.cxx']
     s.extensions  = ['ext/extconf.rb']
     s.test_files  = FileList['test/test_*.rb']
     s.has_rdoc    = true
@@ -79,7 +79,21 @@ if defined? Gem
     pkg.need_tar_gz = true
     pkg.need_zip = true
   end
-end
+
+  spec_mswin32 = spec.clone
+  spec_mswin32.files = PKG_COMMON + FileList['ext/mswin32/id3lib_api.so']
+  spec_mswin32.extensions = []
+  spec_mswin32.require_paths = ['lib', 'ext/mswin32']
+  spec_mswin32.platform = Gem::Platform::WIN32
+
+  desc "Build mswin32 gem."
+  task :gem_mswin32 => [:ext_mswin32] do
+    Gem::Builder.new(spec_mswin32).build
+    mkdir_p "pkg"
+    mv "id3lib-ruby-#{PKG_VERSION}-mswin32.gem", "pkg/"
+  end
+
+end  # defined? Gem
 
 
 task :web => [:web_doc] do
@@ -97,12 +111,9 @@ Rake::RDocTask.new :web_doc do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-
 task :usage_html do
   require 'syntax/convertors/html'
-
   convertor = Syntax::Convertors::HTML.for_syntax('ruby')
   html = convertor.convert(File.read('usage.rb'))
-
   puts html
 end

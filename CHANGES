@@ -1,8 +1,16 @@
 = id3lib-ruby changes
 
+=== 0.3.0 (r29)
+
+* Added generation of mswin32 binary gem. This means that
+  installing on Windows is a piece of cake. No dependencies, no
+  compiling, just a gem installation.
+* Changed Info.frame to use hash access instead of find -> faster.
+
 === 0.2.1 (r23)
 
-* Fixed extconf.rb to print a message and abort if id3lib can't be found.
+* Fixed extconf.rb to print a message and abort if id3lib can't be
+  found.
 
 === 0.2.0 (r21)
 

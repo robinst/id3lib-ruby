@@ -15,6 +15,7 @@ The class documentation starts at ID3Lib::Tag.
 * Custom data frames like attached picture (APIC)
 * Pretty complete coverage of id3lib's features
 * UTF-16 support
+* Windows binary gem available
 
 See TODO for planned features.
 
@@ -28,7 +29,10 @@ The home of id3lib-ruby is http://id3lib-ruby.rubyforge.org
 
 == Installation
 
-Installation through Rubygems:
+Note that id3lib has to be installed before running any of the following
+commands, unless you use the Windows binary gem.
+
+Installation through RubyGems:
 
   gem install id3lib-ruby
 

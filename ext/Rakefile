@@ -3,7 +3,7 @@ require 'rake/clean'
 
 
 CLEAN.include '*.o', 'Makefile', 'mkmf.log'
-CLOBBER.include 'id3lib_api.bundle'
+CLOBBER.include 'id3lib_api.so', 'id3lib_api.bundle'
 
 task :default => ['id3lib_api.bundle']
 task :swig    => ['id3lib_api_wrap.cxx']

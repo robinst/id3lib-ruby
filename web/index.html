@@ -42,7 +42,8 @@ with pyid3lib.
 </p>
 
 <p>
-Note that id3lib has to be installed in order to use id3lib-ruby.
+Note that id3lib has to be installed in order to use id3lib-ruby, unless you
+are on Windows and use the provided binary gem.
 </p>
 
 
@@ -55,6 +56,7 @@ Note that id3lib has to be installed in order to use id3lib-ruby.
   <li>Custom data frames like attached picture (APIC)</li>
   <li>Pretty complete coverage of id3lib's features</li>
   <li>UTF-16 support</li>
+  <li>Windows binary gem available</li>
 </ul>
 
 <p>
@@ -65,23 +67,38 @@ things.
 
 <h2 id="installation">Installation</h2>
 
-<p>
-Because id3lib-ruby is just an interface/wrapper for id3lib, you need to
-have id3lib on your system in order to use it. Install it through your
-packaging system, or download it from the <a
-href="http://sourceforge.net/projects/id3lib/">sourceforge project page</a>.
-</p>
-
-<h3>Rubygems</h3>
+<h3>Windows</h3>
 
 <p>
-The easiest way to install id3lib-ruby is to use
-<a href="http://rubygems.org/">Rubygems</a>. Just do:
+There are precompiled binary gems available for Windows, so the installation
+is as simple as follows:
 </p>
 
 <pre>gem install id3lib-ruby</pre>
 
-<h3>setup.rb</h3>
+<p>
+Then select the newest gem ending in mswin32.
+</p>
+
+<h3>Other systems</h3>
+
+<p>
+Because id3lib-ruby is just an interface/wrapper for id3lib, you need to
+have id3lib on your system in order to use it. Install it through your
+packaging system, or download it from its <a
+href="http://sourceforge.net/projects/id3lib/">sourceforge project page</a>.
+Then either use RubyGems or setup.rb.
+</p>
+
+<h4>RubyGems</h4>
+
+<p>
+When using <a href="http://rubygems.org/">RubyGems</a>, just do:
+</p>
+
+<pre>gem install id3lib-ruby</pre>
+
+<h4>setup.rb</h4>
 
 <p>
 Another way is using the manual installation with setup.rb. When you have

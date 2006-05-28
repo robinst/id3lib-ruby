@@ -1,0 +1,14 @@
+--- id3lib-3.8.3.orig/configure	2006-05-21 18:49:03.000000000 +0200
++++ id3lib-3.8.3/configure	2006-05-21 18:50:55.000000000 +0200
+@@ -11499,11 +11499,6 @@
+ #define `echo "HAVE_$ac_func" | $as_tr_cpp` 1
+ _ACEOF
+ 
+-else
+-  { { echo "$as_me:$LINENO: error: Missing a vital function for id3lib" >&5
+-echo "$as_me: error: Missing a vital function for id3lib" >&2;}
+-   { (exit 1); exit 1; }; }
+-
+ fi
+ done
+ 
