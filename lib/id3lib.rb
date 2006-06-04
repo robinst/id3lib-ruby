@@ -18,7 +18,7 @@ module ID3Lib
   # No tag type
   V_NONE = 0
   # All tag types
-  V_ALL  = -1
+  V_ALL  = 0xff
   # Both ID3 versions
   V_BOTH = V1 | V2
 
