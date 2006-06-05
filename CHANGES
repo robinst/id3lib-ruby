@@ -1,6 +1,6 @@
 = id3lib-ruby changes
 
-=== 0.3.1 (r31)
+=== 0.3.1 (r32)
 
 * Added check and messages for -lstdc++ and -lz to extconf.rb.
 * Updated to SWIG 1.3.29.
