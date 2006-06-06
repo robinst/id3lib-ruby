@@ -12,13 +12,20 @@ require 'rake/rdoctask'
 
 PKG_VERSION = '0.3.1'
 
-PKG_COMMON = FileList[
+FILES_COMMON = FileList[
   'lib/**/*.rb',
   'test/test_*.rb',
   'test/data/*.mp3',
   'test/data/cover.jpg',
   'Rakefile',
-  'setup.rb'
+  '*.rb'
+]
+
+FILES_EXT = FileList[
+  'ext/*.rb',
+  'ext/*.cxx',
+  'ext/*.i',
+  'ext/Rakefile'
 ]
 
 
@@ -63,7 +70,7 @@ if defined? Gem
       'id3lib-ruby provides a Ruby interface to the id3lib C++ library for ' +
       'easily editing ID3 tags (v1 and v2) like with pyid3lib.'
     s.requirements << 'id3lib C++ library'
-    s.files       = PKG_COMMON + FileList['ext/extconf.rb', 'ext/*.cxx']
+    s.files       = FILES_COMMON + FILES_EXT
     s.extensions  = ['ext/extconf.rb']
     s.test_files  = FileList['test/test_*.rb']
     s.has_rdoc    = true
@@ -81,7 +88,7 @@ if defined? Gem
   end
 
   spec_mswin32 = spec.clone
-  spec_mswin32.files = PKG_COMMON + FileList['ext/mswin32/id3lib_api.so']
+  spec_mswin32.files = FILES_COMMON + FileList['ext/mswin32/id3lib_api.so']
   spec_mswin32.extensions = []
   spec_mswin32.require_paths = ['lib', 'ext/mswin32']
   spec_mswin32.platform = Gem::Platform::WIN32
