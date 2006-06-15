@@ -329,23 +329,24 @@ module ID3Lib
       frame = {}
       info = Info.frame_num(libframe.num)
       frame[:id] = info[ID]
-      if info[FIELDS].include?(:textenc)
-        textenc = field(libframe, :textenc).integer
-        frame[:textenc] = textenc
-      end
+
       info[FIELDS].each do |field_id|
-        next if field_id == :textenc
         libfield = field(libframe, field_id)
-        frame[field_id] = if textenc and textenc > 0
-          libfield.unicode
-        else
+        frame[field_id] =
           case Info::FieldType[libfield.type]
-          when :integer : libfield.integer
-          when :binary  : libfield.binary
-          when :text    : libfield.ascii
+          when :integer
+            libfield.integer
+          when :binary
+            libfield.binary
+          when :text
+            if libfield.encoding > 0
+              libfield.unicode
+            else
+              libfield.ascii
+            end
           end
-        end
       end
+
       frame
     end
 
@@ -353,22 +354,28 @@ module ID3Lib
       if textenc = frame[:textenc]
         field(libframe, :textenc).set_integer(textenc)
       end
+
       frame.each do |field_id, value|
         next if field_id == :textenc
         unless Info.frame(frame[:id])[FIELDS].include?(field_id)
           # Ignore invalid fields
           next
         end
+
         libfield = field(libframe, field_id)
-        if textenc and textenc > 0
-          # Special treatment for Unicode
-          libfield.set_encoding(textenc)
-          libfield.set_unicode(value)
-        else
-          case Info::FieldType[libfield.type]
-          when :integer : libfield.set_integer(value)
-          when :binary  : libfield.set_binary(value)
-          when :text    : libfield.set_ascii(value)
+        case Info::FieldType[libfield.type]
+        when :integer
+          libfield.set_integer(value)
+        when :binary
+          libfield.set_binary(value)
+        when :text
+          if textenc and textenc > 0 and
+             [:text, :description, :filename].include?(field_id)
+            # Special treatment for Unicode
+            libfield.set_encoding(textenc)
+            libfield.set_unicode(value)
+          else
+            libfield.set_ascii(value)
           end
         end
       end

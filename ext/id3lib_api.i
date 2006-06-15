@@ -93,6 +93,9 @@ class ID3_Field
   
   %rename (type) GetType;
   ID3_FieldType GetType() const;
+
+  %rename (encoding) GetEncoding;
+  ID3_TextEnc GetEncoding() const;
   
   %rename (integer) Get;
   unsigned long Get() const;
@@ -109,11 +112,12 @@ class ID3_Field
   %extend {
     VALUE unicode() {
       const char *string = (const char *)self->GetRawUnicodeText();
+      if (string == NULL) return rb_str_new("", 0);
       long size = self->Size();
       if (size < 2) {
         size = 0;
       } else if (string[size-2] == '\0' && string[size-1] == '\0') {
-        // id3lib seems to be inconsistent: the unicode strings
+        // id3lib seems to be inconsistent: the Unicode strings
         // don't always end in 0x0000. If they do, we don't want these
         // trailing bytes.
         size -= 2;
@@ -152,7 +156,7 @@ class ID3_Field
       unicode = (unicode_t *)malloc(sizeof(unicode_t) * (len+1));
 
       if (unicode == NULL) {
-        rb_raise(rb_eNoMemError, "Couldn't allocate memory for unicode data.");
+        rb_raise(rb_eNoMemError, "Couldn't allocate memory for Unicode data.");
       }
       
       memcpy(unicode, RSTRING(data)->ptr, sizeof(unicode_t) * len);

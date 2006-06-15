@@ -1809,6 +1809,7 @@ SWIGINTERN VALUE ID3_Field_binary(ID3_Field *self){
     }
 SWIGINTERN VALUE ID3_Field_unicode(ID3_Field *self){
       const char *string = (const char *)self->GetRawUnicodeText();
+      if (string == NULL) return rb_str_new("", 0);
       long size = self->Size();
       if (size < 2) {
         size = 0;
@@ -2721,6 +2722,30 @@ fail:
 
 
 SWIGINTERN VALUE
+_wrap_Field_encoding(int argc, VALUE *argv, VALUE self) {
+  ID3_Field *arg1 = (ID3_Field *) 0 ;
+  ID3_TextEnc result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_ID3_Field, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetEncoding" "', argument " "1"" of type '" "ID3_Field const *""'"); 
+  }
+  arg1 = reinterpret_cast< ID3_Field * >(argp1);
+  result = (ID3_TextEnc)((ID3_Field const *)arg1)->GetEncoding();
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_Field_integer(int argc, VALUE *argv, VALUE self) {
   ID3_Field *arg1 = (ID3_Field *) 0 ;
   unsigned long result;
@@ -3266,6 +3291,7 @@ SWIGEXPORT void Init_id3lib_api(void) {
   SWIG_TypeClientData(SWIGTYPE_p_ID3_Field, (void *) &cField);
   rb_undef_alloc_func(cField.klass);
   rb_define_method(cField.klass, "type", VALUEFUNC(_wrap_Field_type), -1);
+  rb_define_method(cField.klass, "encoding", VALUEFUNC(_wrap_Field_encoding), -1);
   rb_define_method(cField.klass, "integer", VALUEFUNC(_wrap_Field_integer), -1);
   rb_define_method(cField.klass, "binary", VALUEFUNC(_wrap_Field_binary), -1);
   rb_define_method(cField.klass, "ascii", VALUEFUNC(_wrap_Field_ascii), -1);

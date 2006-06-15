@@ -172,12 +172,19 @@ class TestWriting < Test::Unit::TestCase
   
   def test_unicode
     nihao = "\x4f\x60\x59\x7d"
-    @tag.reject!{ |f| f[:id] == :TIT2 }
-    @tag << {:id => :TIT2, :text => nihao, :textenc => 1}
+    frame = {
+      :id          => :COMM,
+      :text        => nihao,
+      :description => nihao,
+      :language    => "zho",
+      :textenc     => 1
+    }
+    @tag.comment = nil
+    @tag << frame
     @tag.update!(ID3Lib::V2)
-    assert_equal nihao, @tag.title
+    assert_equal frame, @tag.frame(:COMM)
     reload!(ID3Lib::V2)
-    assert_equal nihao, @tag.title
+    assert_equal frame, @tag.frame(:COMM)
   end
 
   def test_unicode_invalid_data
