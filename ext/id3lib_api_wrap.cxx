@@ -1804,17 +1804,17 @@ SWIG_From_int  (int value)
   return SWIG_From_long  (value);
 }
 
-SWIGINTERN VALUE ID3_Field_binary(ID3_Field *self){
+SWIGINTERN VALUE ID3_Field_get_binary(ID3_Field *self){
       return rb_str_new((const char *)self->GetRawBinary(), self->Size());
     }
-SWIGINTERN VALUE ID3_Field_unicode(ID3_Field *self){
+SWIGINTERN VALUE ID3_Field_get_unicode(ID3_Field *self){
       const char *string = (const char *)self->GetRawUnicodeText();
       if (string == NULL) return rb_str_new("", 0);
       long size = self->Size();
       if (size < 2) {
         size = 0;
       } else if (string[size-2] == '\0' && string[size-1] == '\0') {
-        // id3lib seems to be inconsistent: the unicode strings
+        // id3lib seems to be inconsistent: the Unicode strings
         // don't always end in 0x0000. If they do, we don't want these
         // trailing bytes.
         size -= 2;
@@ -1836,7 +1836,7 @@ SWIGINTERN size_t ID3_Field_set_unicode(ID3_Field *self,VALUE data){
       unicode = (unicode_t *)malloc(sizeof(unicode_t) * (len+1));
 
       if (unicode == NULL) {
-        rb_raise(rb_eNoMemError, "Couldn't allocate memory for unicode data.");
+        rb_raise(rb_eNoMemError, "Couldn't allocate memory for Unicode data.");
       }
       
       memcpy(unicode, RSTRING(data)->ptr, sizeof(unicode_t) * len);
@@ -2380,7 +2380,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Tag_filename(int argc, VALUE *argv, VALUE self) {
+_wrap_Tag_get_filename(int argc, VALUE *argv, VALUE self) {
   ID3_Tag *arg1 = (ID3_Tag *) 0 ;
   char *result = 0 ;
   void *argp1 = 0 ;
@@ -2640,7 +2640,7 @@ free_ID3_Frame(ID3_Frame *arg1) {
 }
 
 SWIGINTERN VALUE
-_wrap_Frame_field(int argc, VALUE *argv, VALUE self) {
+_wrap_Frame_get_field(int argc, VALUE *argv, VALUE self) {
   ID3_Frame *arg1 = (ID3_Frame *) 0 ;
   ID3_FieldID arg2 ;
   ID3_Field *result = 0 ;
@@ -2672,7 +2672,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Frame_num(int argc, VALUE *argv, VALUE self) {
+_wrap_Frame_get_id(int argc, VALUE *argv, VALUE self) {
   ID3_Frame *arg1 = (ID3_Frame *) 0 ;
   ID3_FrameID result;
   void *argp1 = 0 ;
@@ -2698,7 +2698,7 @@ fail:
 swig_class cField;
 
 SWIGINTERN VALUE
-_wrap_Field_type(int argc, VALUE *argv, VALUE self) {
+_wrap_Field_get_type(int argc, VALUE *argv, VALUE self) {
   ID3_Field *arg1 = (ID3_Field *) 0 ;
   ID3_FieldType result;
   void *argp1 = 0 ;
@@ -2722,7 +2722,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Field_encoding(int argc, VALUE *argv, VALUE self) {
+_wrap_Field_get_encoding(int argc, VALUE *argv, VALUE self) {
   ID3_Field *arg1 = (ID3_Field *) 0 ;
   ID3_TextEnc result;
   void *argp1 = 0 ;
@@ -2746,7 +2746,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Field_integer(int argc, VALUE *argv, VALUE self) {
+_wrap_Field_get_integer(int argc, VALUE *argv, VALUE self) {
   ID3_Field *arg1 = (ID3_Field *) 0 ;
   unsigned long result;
   void *argp1 = 0 ;
@@ -2770,7 +2770,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Field_binary(int argc, VALUE *argv, VALUE self) {
+_wrap_Field_get_binary(int argc, VALUE *argv, VALUE self) {
   ID3_Field *arg1 = (ID3_Field *) 0 ;
   VALUE result;
   void *argp1 = 0 ;
@@ -2782,10 +2782,10 @@ _wrap_Field_binary(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_ID3_Field, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "binary" "', argument " "1"" of type '" "ID3_Field *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "get_binary" "', argument " "1"" of type '" "ID3_Field *""'"); 
   }
   arg1 = reinterpret_cast< ID3_Field * >(argp1);
-  result = (VALUE)ID3_Field_binary(arg1);
+  result = (VALUE)ID3_Field_get_binary(arg1);
   vresult = result;
   return vresult;
 fail:
@@ -2794,7 +2794,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Field_ascii(int argc, VALUE *argv, VALUE self) {
+_wrap_Field_get_ascii(int argc, VALUE *argv, VALUE self) {
   ID3_Field *arg1 = (ID3_Field *) 0 ;
   char *result = 0 ;
   void *argp1 = 0 ;
@@ -2818,7 +2818,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Field_unicode(int argc, VALUE *argv, VALUE self) {
+_wrap_Field_get_unicode(int argc, VALUE *argv, VALUE self) {
   ID3_Field *arg1 = (ID3_Field *) 0 ;
   VALUE result;
   void *argp1 = 0 ;
@@ -2830,10 +2830,10 @@ _wrap_Field_unicode(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_ID3_Field, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "unicode" "', argument " "1"" of type '" "ID3_Field *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "get_unicode" "', argument " "1"" of type '" "ID3_Field *""'"); 
   }
   arg1 = reinterpret_cast< ID3_Field * >(argp1);
-  result = (VALUE)ID3_Field_unicode(arg1);
+  result = (VALUE)ID3_Field_get_unicode(arg1);
   vresult = result;
   return vresult;
 fail:
@@ -3267,7 +3267,7 @@ SWIGEXPORT void Init_id3lib_api(void) {
   rb_define_method(cTag.klass, "clear", VALUEFUNC(_wrap_Tag_clear), -1);
   rb_define_method(cTag.klass, "remove_frame", VALUEFUNC(_wrap_Tag_remove_frame), -1);
   rb_define_method(cTag.klass, "add_frame", VALUEFUNC(_wrap_Tag_add_frame), -1);
-  rb_define_method(cTag.klass, "filename", VALUEFUNC(_wrap_Tag_filename), -1);
+  rb_define_method(cTag.klass, "get_filename", VALUEFUNC(_wrap_Tag_get_filename), -1);
   rb_define_method(cTag.klass, "set_padding", VALUEFUNC(_wrap_Tag_set_padding), -1);
   rb_define_method(cTag.klass, "size", VALUEFUNC(_wrap_Tag_size), -1);
   rb_define_method(cTag.klass, "find", VALUEFUNC(_wrap_Tag_find), -1);
@@ -3281,8 +3281,8 @@ SWIGEXPORT void Init_id3lib_api(void) {
   SWIG_TypeClientData(SWIGTYPE_p_ID3_Frame, (void *) &cFrame);
   rb_define_alloc_func(cFrame.klass, _wrap_Frame_allocate);
   rb_define_method(cFrame.klass, "initialize", VALUEFUNC(_wrap_new_Frame), -1);
-  rb_define_method(cFrame.klass, "field", VALUEFUNC(_wrap_Frame_field), -1);
-  rb_define_method(cFrame.klass, "num", VALUEFUNC(_wrap_Frame_num), -1);
+  rb_define_method(cFrame.klass, "get_field", VALUEFUNC(_wrap_Frame_get_field), -1);
+  rb_define_method(cFrame.klass, "get_id", VALUEFUNC(_wrap_Frame_get_id), -1);
   cFrame.mark = 0;
   cFrame.destroy = (void (*)(void *)) free_ID3_Frame;
   cFrame.trackObjects = 0;
@@ -3290,12 +3290,12 @@ SWIGEXPORT void Init_id3lib_api(void) {
   cField.klass = rb_define_class_under(mAPI, "Field", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_ID3_Field, (void *) &cField);
   rb_undef_alloc_func(cField.klass);
-  rb_define_method(cField.klass, "type", VALUEFUNC(_wrap_Field_type), -1);
-  rb_define_method(cField.klass, "encoding", VALUEFUNC(_wrap_Field_encoding), -1);
-  rb_define_method(cField.klass, "integer", VALUEFUNC(_wrap_Field_integer), -1);
-  rb_define_method(cField.klass, "binary", VALUEFUNC(_wrap_Field_binary), -1);
-  rb_define_method(cField.klass, "ascii", VALUEFUNC(_wrap_Field_ascii), -1);
-  rb_define_method(cField.klass, "unicode", VALUEFUNC(_wrap_Field_unicode), -1);
+  rb_define_method(cField.klass, "get_type", VALUEFUNC(_wrap_Field_get_type), -1);
+  rb_define_method(cField.klass, "get_encoding", VALUEFUNC(_wrap_Field_get_encoding), -1);
+  rb_define_method(cField.klass, "get_integer", VALUEFUNC(_wrap_Field_get_integer), -1);
+  rb_define_method(cField.klass, "get_binary", VALUEFUNC(_wrap_Field_get_binary), -1);
+  rb_define_method(cField.klass, "get_ascii", VALUEFUNC(_wrap_Field_get_ascii), -1);
+  rb_define_method(cField.klass, "get_unicode", VALUEFUNC(_wrap_Field_get_unicode), -1);
   rb_define_method(cField.klass, "set_integer", VALUEFUNC(_wrap_Field_set_integer), -1);
   rb_define_method(cField.klass, "set_binary", VALUEFUNC(_wrap_Field_set_binary), -1);
   rb_define_method(cField.klass, "set_ascii", VALUEFUNC(_wrap_Field_set_ascii), -1);

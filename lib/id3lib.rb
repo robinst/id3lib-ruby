@@ -327,22 +327,22 @@ module ID3Lib
 
     def self.read(libframe)
       frame = {}
-      info = Info.frame_num(libframe.num)
+      info = Info.frame_num(libframe.get_id)
       frame[:id] = info[ID]
 
       info[FIELDS].each do |field_id|
         libfield = field(libframe, field_id)
         frame[field_id] =
-          case Info::FieldType[libfield.type]
+          case Info::FieldType[libfield.get_type]
           when :integer
-            libfield.integer
+            libfield.get_integer
           when :binary
-            libfield.binary
+            libfield.get_binary
           when :text
-            if libfield.encoding > 0
-              libfield.unicode
+            if libfield.get_encoding > 0
+              libfield.get_unicode
             else
-              libfield.ascii
+              libfield.get_ascii
             end
           end
       end
@@ -363,7 +363,7 @@ module ID3Lib
         end
 
         libfield = field(libframe, field_id)
-        case Info::FieldType[libfield.type]
+        case Info::FieldType[libfield.get_type]
         when :integer
           libfield.set_integer(value)
         when :binary
@@ -382,7 +382,7 @@ module ID3Lib
     end
 
     def self.field(libframe, id)
-      libframe.field(Info.field(id)[NUM])
+      libframe.get_field(Info.field(id)[NUM])
     end
 
   end

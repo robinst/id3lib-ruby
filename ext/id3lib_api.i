@@ -44,7 +44,7 @@ class ID3_Tag
   %rename (add_frame) AddFrame;
   void AddFrame(const ID3_Frame *frame);
   
-  %rename (filename) GetFileName;
+  %rename (get_filename) GetFileName;
   const char * GetFileName() const;
 
   %rename (set_padding) SetPadding;
@@ -76,10 +76,10 @@ class ID3_Frame
   ID3_Frame(ID3_FrameID id = ID3FID_NOFRAME);
   ~ID3_Frame();
   
-  %rename (field) GetField;
+  %rename (get_field) GetField;
   ID3_Field * GetField(ID3_FieldID name) const;
   
-  %rename (num) GetID;
+  %rename (get_id) GetID;
   ID3_FrameID GetID() const;
 };
 
@@ -91,26 +91,26 @@ class ID3_Field
   
   // Getters
   
-  %rename (type) GetType;
+  %rename (get_type) GetType;
   ID3_FieldType GetType() const;
 
-  %rename (encoding) GetEncoding;
+  %rename (get_encoding) GetEncoding;
   ID3_TextEnc GetEncoding() const;
   
-  %rename (integer) Get;
+  %rename (get_integer) Get;
   unsigned long Get() const;
   
   %extend {
-    VALUE binary() {
+    VALUE get_binary() {
       return rb_str_new((const char *)self->GetRawBinary(), self->Size());
     }
   }
     
-  %rename (ascii) GetRawText;
+  %rename (get_ascii) GetRawText;
   const char * GetRawText() const;
   
   %extend {
-    VALUE unicode() {
+    VALUE get_unicode() {
       const char *string = (const char *)self->GetRawUnicodeText();
       if (string == NULL) return rb_str_new("", 0);
       long size = self->Size();
@@ -128,6 +128,9 @@ class ID3_Field
   
   // Setters
   
+  %rename (set_encoding) SetEncoding(ID3_TextEnc);
+  bool SetEncoding(ID3_TextEnc enc);
+  
   %rename (set_integer) Set(unsigned long);
   void Set(unsigned long i);
   
@@ -141,9 +144,6 @@ class ID3_Field
     
   %rename (set_ascii) Set(const char *);
   size_t Set(const char *string);
-  
-  %rename (set_encoding) SetEncoding(ID3_TextEnc);
-  bool SetEncoding(ID3_TextEnc enc);
   
   %extend {
     size_t set_unicode(VALUE data) {
