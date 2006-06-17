@@ -49,7 +49,7 @@ Rake::TestTask.new do |t|
 end
 
 
-RDOC_OPTS = ['--line-numbers', '--main', 'README']
+RDOC_OPTS = ['--inline-source', '--line-numbers', '--main', 'README']
 
 desc "Generate RDOC documentation."
 Rake::RDocTask.new :rdoc do |rdoc|
@@ -113,7 +113,8 @@ desc "Generate RDOC documentation on web."
 Rake::RDocTask.new :web_doc do |rdoc|
   rdoc.rdoc_dir = 'web/doc'
   rdoc.title = 'id3lib-ruby'
-  rdoc.options << '--line-numbers' << '--main' << 'ID3Lib::Tag'
+  rdoc.options = RDOC_OPTS.clone
+  rdoc.options << '--main' << 'ID3Lib::Tag'
   rdoc.rdoc_files.include('README', 'TODO', 'CHANGES')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
