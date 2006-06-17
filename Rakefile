@@ -106,7 +106,7 @@ end  # defined? Gem
 task :web => [:web_doc] do
   puts "# Now execute the following:"
   puts "scp web/* robinstocker@rubyforge.org:/var/www/gforge-projects/id3lib-ruby/"
-  puts "scp -r web/doc robinstocker@rubyforge.org:/var/www/gforge-projects/id3lib-ruby/doc"
+  puts "scp -r web/doc robinstocker@rubyforge.org:/var/www/gforge-projects/id3lib-ruby/"
 end
 
 desc "Generate RDOC documentation on web."
