@@ -1795,8 +1795,8 @@ SWIG_AsVal_bool (VALUE obj, bool *val)
 }
 
 SWIGINTERN ID3_Frame *ID3_Tag_iterator_next_frame(ID3_Tag *self,ID3_Tag::Iterator *iterator){
-      return iterator->GetNext();
-    }
+			return iterator->GetNext();
+		}
 
 SWIGINTERNINLINE VALUE
 SWIG_From_int  (int value)
@@ -1805,49 +1805,47 @@ SWIG_From_int  (int value)
 }
 
 SWIGINTERN VALUE ID3_Field_get_binary(ID3_Field *self){
-      return rb_str_new((const char *)self->GetRawBinary(), self->Size());
-    }
+			return rb_str_new((const char *)self->GetRawBinary(), self->Size());
+		}
 SWIGINTERN VALUE ID3_Field_get_unicode(ID3_Field *self){
-      const char *string = (const char *)self->GetRawUnicodeText();
-      if (string == NULL) return rb_str_new("", 0);
-      long size = self->Size();
-      if (size < 2) {
-        size = 0;
-      } else if (string[size-2] == '\0' && string[size-1] == '\0') {
-        // id3lib seems to be inconsistent: the Unicode strings
-        // don't always end in 0x0000. If they do, we don't want these
-        // trailing bytes.
-        size -= 2;
-      }
-      return rb_str_new(string, size);
-    }
+			const char *string = (const char *)self->GetRawUnicodeText();
+			if (string == NULL) return rb_str_new("", 0);
+			long size = self->Size();
+			if (size >= 2 && string[size-2] == '\0' && string[size-1] == '\0') {
+				// id3lib seems to be inconsistent: the Unicode strings
+				// don't always end in 0x0000. If they do, we don't want these
+				// trailing bytes.
+				size -= 2;
+			}
+			return rb_str_new(string, size);
+		}
 SWIGINTERN size_t ID3_Field_set_binary(ID3_Field *self,VALUE data){
-      StringValue(data);
-      return self->Set( (const unsigned char *)RSTRING(data)->ptr, 
-        RSTRING(data)->len );
-    }
+			StringValue(data);
+			return self->Set((const unsigned char *)RSTRING(data)->ptr,
+			                 RSTRING(data)->len);
+		}
 SWIGINTERN size_t ID3_Field_set_unicode(ID3_Field *self,VALUE data){
-      StringValue(data);
+			StringValue(data);
 
-      long len;
-      unicode_t *unicode;
+			long len;
+			unicode_t *unicode;
 
-      len = RSTRING(data)->len / sizeof(unicode_t);
-      unicode = (unicode_t *)malloc(sizeof(unicode_t) * (len+1));
+			len = RSTRING(data)->len / sizeof(unicode_t);
+			unicode = (unicode_t *)malloc(sizeof(unicode_t) * (len+1));
 
-      if (unicode == NULL) {
-        rb_raise(rb_eNoMemError, "Couldn't allocate memory for Unicode data.");
-      }
-      
-      memcpy(unicode, RSTRING(data)->ptr, sizeof(unicode_t) * len);
-      // Unicode strings need 0x0000 at the end.
-      unicode[len] = 0;
-      size_t retval = self->Set(unicode);
+			if (unicode == NULL) {
+				rb_raise(rb_eNoMemError, "Couldn't allocate memory for Unicode data.");
+			}
 
-      // Free Unicode! ;)
-      free(unicode);
-      return retval;
-    }
+			memcpy(unicode, RSTRING(data)->ptr, sizeof(unicode_t) * len);
+			// Unicode strings need 0x0000 at the end.
+			unicode[len] = 0;
+			size_t retval = self->Set(unicode);
+
+			// Free Unicode! ;)
+			free(unicode);
+			return retval;
+		}
 swig_class cTag;
 
 SWIGINTERN VALUE
@@ -2770,30 +2768,6 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Field_get_binary(int argc, VALUE *argv, VALUE self) {
-  ID3_Field *arg1 = (ID3_Field *) 0 ;
-  VALUE result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_ID3_Field, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "get_binary" "', argument " "1"" of type '" "ID3_Field *""'"); 
-  }
-  arg1 = reinterpret_cast< ID3_Field * >(argp1);
-  result = (VALUE)ID3_Field_get_binary(arg1);
-  vresult = result;
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
 _wrap_Field_get_ascii(int argc, VALUE *argv, VALUE self) {
   ID3_Field *arg1 = (ID3_Field *) 0 ;
   char *result = 0 ;
@@ -2811,6 +2785,30 @@ _wrap_Field_get_ascii(int argc, VALUE *argv, VALUE self) {
   arg1 = reinterpret_cast< ID3_Field * >(argp1);
   result = (char *)((ID3_Field const *)arg1)->GetRawText();
   vresult = SWIG_FromCharPtr(result);
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Field_get_binary(int argc, VALUE *argv, VALUE self) {
+  ID3_Field *arg1 = (ID3_Field *) 0 ;
+  VALUE result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_ID3_Field, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "get_binary" "', argument " "1"" of type '" "ID3_Field *""'"); 
+  }
+  arg1 = reinterpret_cast< ID3_Field * >(argp1);
+  result = (VALUE)ID3_Field_get_binary(arg1);
+  vresult = result;
   return vresult;
 fail:
   return Qnil;
@@ -2842,6 +2840,38 @@ fail:
 
 
 SWIGINTERN VALUE
+_wrap_Field_set_encoding(int argc, VALUE *argv, VALUE self) {
+  ID3_Field *arg1 = (ID3_Field *) 0 ;
+  ID3_TextEnc arg2 ;
+  bool result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_ID3_Field, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SetEncoding" "', argument " "1"" of type '" "ID3_Field *""'"); 
+  }
+  arg1 = reinterpret_cast< ID3_Field * >(argp1);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SetEncoding" "', argument " "2"" of type '" "ID3_TextEnc""'");
+  } 
+  arg2 = static_cast< ID3_TextEnc >(val2);
+  result = (bool)(arg1)->SetEncoding(arg2);
+  vresult = SWIG_From_bool(static_cast< bool >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_Field_set_integer(int argc, VALUE *argv, VALUE self) {
   ID3_Field *arg1 = (ID3_Field *) 0 ;
   unsigned long arg2 ;
@@ -2865,32 +2895,6 @@ _wrap_Field_set_integer(int argc, VALUE *argv, VALUE self) {
   arg2 = static_cast< unsigned long >(val2);
   (arg1)->Set(arg2);
   return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_Field_set_binary(int argc, VALUE *argv, VALUE self) {
-  ID3_Field *arg1 = (ID3_Field *) 0 ;
-  VALUE arg2 = (VALUE) 0 ;
-  size_t result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_ID3_Field, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "set_binary" "', argument " "1"" of type '" "ID3_Field *""'"); 
-  }
-  arg1 = reinterpret_cast< ID3_Field * >(argp1);
-  arg2 = argv[0];
-  result = ID3_Field_set_binary(arg1,arg2);
-  vresult = SWIG_From_size_t(static_cast< size_t >(result));
-  return vresult;
 fail:
   return Qnil;
 }
@@ -2932,14 +2936,12 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Field_set_encoding(int argc, VALUE *argv, VALUE self) {
+_wrap_Field_set_binary(int argc, VALUE *argv, VALUE self) {
   ID3_Field *arg1 = (ID3_Field *) 0 ;
-  ID3_TextEnc arg2 ;
-  bool result;
+  VALUE arg2 = (VALUE) 0 ;
+  size_t result;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
   VALUE vresult = Qnil;
   
   if ((argc < 1) || (argc > 1)) {
@@ -2947,16 +2949,12 @@ _wrap_Field_set_encoding(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_ID3_Field, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SetEncoding" "', argument " "1"" of type '" "ID3_Field *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "set_binary" "', argument " "1"" of type '" "ID3_Field *""'"); 
   }
   arg1 = reinterpret_cast< ID3_Field * >(argp1);
-  ecode2 = SWIG_AsVal_int(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SetEncoding" "', argument " "2"" of type '" "ID3_TextEnc""'");
-  } 
-  arg2 = static_cast< ID3_TextEnc >(val2);
-  result = (bool)(arg1)->SetEncoding(arg2);
-  vresult = SWIG_From_bool(static_cast< bool >(result));
+  arg2 = argv[0];
+  result = ID3_Field_set_binary(arg1,arg2);
+  vresult = SWIG_From_size_t(static_cast< size_t >(result));
   return vresult;
 fail:
   return Qnil;
@@ -3293,13 +3291,13 @@ SWIGEXPORT void Init_id3lib_api(void) {
   rb_define_method(cField.klass, "get_type", VALUEFUNC(_wrap_Field_get_type), -1);
   rb_define_method(cField.klass, "get_encoding", VALUEFUNC(_wrap_Field_get_encoding), -1);
   rb_define_method(cField.klass, "get_integer", VALUEFUNC(_wrap_Field_get_integer), -1);
-  rb_define_method(cField.klass, "get_binary", VALUEFUNC(_wrap_Field_get_binary), -1);
   rb_define_method(cField.klass, "get_ascii", VALUEFUNC(_wrap_Field_get_ascii), -1);
+  rb_define_method(cField.klass, "get_binary", VALUEFUNC(_wrap_Field_get_binary), -1);
   rb_define_method(cField.klass, "get_unicode", VALUEFUNC(_wrap_Field_get_unicode), -1);
-  rb_define_method(cField.klass, "set_integer", VALUEFUNC(_wrap_Field_set_integer), -1);
-  rb_define_method(cField.klass, "set_binary", VALUEFUNC(_wrap_Field_set_binary), -1);
-  rb_define_method(cField.klass, "set_ascii", VALUEFUNC(_wrap_Field_set_ascii), -1);
   rb_define_method(cField.klass, "set_encoding", VALUEFUNC(_wrap_Field_set_encoding), -1);
+  rb_define_method(cField.klass, "set_integer", VALUEFUNC(_wrap_Field_set_integer), -1);
+  rb_define_method(cField.klass, "set_ascii", VALUEFUNC(_wrap_Field_set_ascii), -1);
+  rb_define_method(cField.klass, "set_binary", VALUEFUNC(_wrap_Field_set_binary), -1);
   rb_define_method(cField.klass, "set_unicode", VALUEFUNC(_wrap_Field_set_unicode), -1);
   cField.mark = 0;
   cField.trackObjects = 0;
