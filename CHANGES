@@ -1,5 +1,11 @@
 = id3lib-ruby changes
 
+=== 0.4.0 (r41)
+
+* Fixed Unicode problems (bug 4768).
+* Renamed ID3Lib::API methods to be more like the id3lib method names.
+  For example, the GetType() method is now named get_type instead of type.
+
 === 0.3.1 (r32)
 
 * Added check and messages for -lstdc++ and -lz to extconf.rb.

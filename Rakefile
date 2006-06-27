@@ -10,7 +10,7 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 
 
-PKG_VERSION = '0.3.1'
+PKG_VERSION = '0.4.0'
 
 FILES_COMMON = FileList[
   'lib/**/*.rb',
