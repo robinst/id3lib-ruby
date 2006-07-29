@@ -39,11 +39,6 @@ class TestReading < Test::Unit::TestCase
     assert_equal 'Dummy Comment 2', two[:text]
   end
 
-  def test_unicode
-    @tag = ID3Lib::Tag.new('test/data/unicode.mp3', ID3Lib::V2)
-    assert_equal "\x4f\x60\x59\x7d", @tag.title
-  end
-
   def test_has_tag
     assert @tag.has_tag?(ID3Lib::V1)
     assert @tag.has_tag?(ID3Lib::V2)
