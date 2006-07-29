@@ -32,7 +32,7 @@ class TestWriting < Test::Unit::TestCase
     reload!
     assert_equal 'New Title', @tag.title
   end
-  
+
   def test_genre
     @tag.genre = 'Rock'
     assert_equal 'Rock', @tag.genre
@@ -41,7 +41,7 @@ class TestWriting < Test::Unit::TestCase
     reload!
     assert_equal 'Rock', @tag.genre
   end
-  
+
   def test_id3v1_genre
     @tag.strip!(ID3Lib::V2)
     genre_id = '(' + ID3Lib::Info::Genres.index('Rock').to_s + ')'
@@ -75,7 +75,7 @@ class TestWriting < Test::Unit::TestCase
     reload!
     assert_equal '6', @tag.track
   end
-  
+
   def test_year
     @tag.year = '2001'
     assert_equal '2001', @tag.year
@@ -105,7 +105,7 @@ class TestWriting < Test::Unit::TestCase
     reload!
     assert_equal 'New Comment', @tag.comment
   end
-  
+
   def test_manual_frame
     @tag << {:id => :TLAN, :text => 'zho'}
     assert_equal 'zho', @tag.frame_text(:TLAN)
@@ -114,7 +114,7 @@ class TestWriting < Test::Unit::TestCase
     reload!
     assert_equal 'zho', @tag.frame_text(:TLAN)
   end
-  
+
   def test_apic
     pic = {
       :id           => :APIC,
@@ -130,17 +130,17 @@ class TestWriting < Test::Unit::TestCase
     reload!
     assert_equal pic, @tag.frame(:APIC)
   end
-  
+
   def test_remove_frame
     @tag.remove_frame(:TIT2)
     assert_nil @tag.frame(:TIT2)
   end
-  
+
   def test_remove_frame_with_direct_access
     @tag.title = nil
     assert_nil @tag.frame(:TIT2)
   end
-  
+
   def test_wrong_frame
     l = @tag.length
     @tag << {:id => :WRONG, :text => "Test"}
@@ -149,14 +149,14 @@ class TestWriting < Test::Unit::TestCase
     reload!
     assert_equal l, @tag.length
   end
-  
+
   def test_strip
     @tag.strip!
     assert @tag.empty?
     reload!
     assert @tag.empty?
   end
-  
+
   def test_tagtype
     @tag.strip!(ID3Lib::V1)
     reload!(ID3Lib::V1)
@@ -168,30 +168,6 @@ class TestWriting < Test::Unit::TestCase
     assert @tag.empty?
     reload!
     assert @tag.empty?
-  end
-  
-  def test_unicode
-    nihao = "\x4f\x60\x59\x7d"
-    frame = {
-      :id          => :COMM,
-      :text        => nihao,
-      :description => nihao,
-      :language    => "zho",
-      :textenc     => 1
-    }
-    @tag.comment = nil
-    @tag << frame
-    @tag.update!(ID3Lib::V2)
-    assert_equal frame, @tag.frame(:COMM)
-    reload!(ID3Lib::V2)
-    assert_equal frame, @tag.frame(:COMM)
-  end
-
-  def test_unicode_invalid_data
-    nonstr = 1
-    @tag.reject!{ |f| f[:id] == :TIT2 }
-    @tag << {:id => :TIT2, :text => nonstr, :textenc => 1}
-    assert_raise(TypeError) { @tag.update!(ID3Lib::V2) }
   end
 
   def test_padding
