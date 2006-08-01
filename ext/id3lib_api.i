@@ -112,16 +112,16 @@ public:
 
 		VALUE get_unicode()
 		{
-			const char *string = (const char *)self->GetRawUnicodeText();
-			if (string == NULL) return rb_str_new("", 0);
+			const char *str = (const char *)self->GetRawUnicodeText();
+			if (str == NULL) return rb_str_new("", 0);
 			long size = self->Size();
-			if (size >= 2 && string[size-2] == '\0' && string[size-1] == '\0') {
+			if (size >= 2 && str[size-2] == '\0' && str[size-1] == '\0') {
 				// id3lib seems to be inconsistent: the Unicode strings
 				// don't always end in 0x0000. If they do, we don't want these
 				// trailing bytes.
 				size -= 2;
 			}
-			return rb_str_new(string, size);
+			return rb_str_new(str, size);
 		}
 	}
 

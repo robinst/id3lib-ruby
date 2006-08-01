@@ -1808,16 +1808,16 @@ SWIGINTERN VALUE ID3_Field_get_binary(ID3_Field *self){
 			return rb_str_new((const char *)self->GetRawBinary(), self->Size());
 		}
 SWIGINTERN VALUE ID3_Field_get_unicode(ID3_Field *self){
-			const char *string = (const char *)self->GetRawUnicodeText();
-			if (string == NULL) return rb_str_new("", 0);
+			const char *str = (const char *)self->GetRawUnicodeText();
+			if (str == NULL) return rb_str_new("", 0);
 			long size = self->Size();
-			if (size >= 2 && string[size-2] == '\0' && string[size-1] == '\0') {
+			if (size >= 2 && str[size-2] == '\0' && str[size-1] == '\0') {
 				// id3lib seems to be inconsistent: the Unicode strings
 				// don't always end in 0x0000. If they do, we don't want these
 				// trailing bytes.
 				size -= 2;
 			}
-			return rb_str_new(string, size);
+			return rb_str_new(str, size);
 		}
 SWIGINTERN size_t ID3_Field_set_binary(ID3_Field *self,VALUE data){
 			StringValue(data);
