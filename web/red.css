@@ -3,12 +3,12 @@ body {
   margin-right: 20%;
   font-family: Verdana, Helvetica, Sans-serif;
   color: black;
-  background: white;
+  background: #fff;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: Georgia, Serif;
-  color: #333333;
+  color: #333;
 }
 
 h1 {
@@ -17,7 +17,7 @@ h1 {
 
 h2 {
   font-size: 1.4em;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #ccc;
   margin-top: 1.2em;
 }
 
@@ -29,9 +29,9 @@ hr {
 }
 
 a         { text-decoration: underline; }
-a:link    { color: #333333; }
-a:visited { color: #333333; }
-a:hover   { color: #dd0000; }
+a:link    { color: #333; }
+a:visited { color: #333; }
+a:hover   { color: #d00; }
 
 pre {
   color: black;
@@ -56,7 +56,7 @@ img {
 }
 
 #navigation {
-  color: #444444;
+  color: #444;
   text-align: center;
   margin-bottom: 2.5em;
 }
@@ -68,9 +68,9 @@ img {
 }
 
 .comment {
-  color: #777777;
+  color: #777;
 }
 
 .string, .symbol {
-  color: #990000;
+  color: #900;
 }
