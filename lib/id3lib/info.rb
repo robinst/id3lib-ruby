@@ -142,7 +142,7 @@ module ID3Lib
       [76, :TSRC, "ISRC (international standard recording code)", [:textenc, :text]],
       [77, :TSSE, "Software/Hardware and settings used for encoding", [:textenc, :text]],
       [78, :TSST, "Set subtitle", [:textenc, :text]],
-      [79, :TXXX, "User defined text information", [:textenc, :text]],
+      [79, :TXXX, "User defined text information", [:textenc, :description, :text]],
       [80, :TYER, "Year", [:textenc, :text]],
       # Special frames again
       [81, :UFID, "Unique file identifier", [:owner, :data]],
