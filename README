@@ -8,12 +8,12 @@ The class documentation starts at ID3Lib::Tag.
 
 == Features
 
-* Read and write ID3v1 or ID3v2 tags
+* Read and write ID3v1 and ID3v2 tags
 * Simple interface for adding, changing and removing frames
 * Quick access to common text frames like title and performer
 * Custom data frames like attached picture (APIC)
 * Pretty complete coverage of id3lib's features
-* UTF-16 support
+* UTF-16 support (warning: id3lib writes broken UTF-16 frames)
 * Windows binary gem available
 
 See TODO for planned features.
