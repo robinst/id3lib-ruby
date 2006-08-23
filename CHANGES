@@ -1,5 +1,10 @@
 = id3lib-ruby changes
 
+=== 0.4.1 (r53)
+
+* Added :description to the allowed fields of :TXXX frames (patch 5484).
+* Added more tests and a warning in README for writing of UTF-16 frames.
+
 === 0.4.0 (r41)
 
 * Fixed Unicode problems (bug 4768).

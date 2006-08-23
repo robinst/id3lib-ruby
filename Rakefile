@@ -10,7 +10,7 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 
 
-PKG_VERSION = '0.4.0'
+PKG_VERSION = '0.4.1'
 
 FILES_COMMON = FileList[
   'lib/**/*.rb',
@@ -109,7 +109,7 @@ task :web => [:web_doc] do
   puts "scp -r web/doc robinstocker@rubyforge.org:/var/www/gforge-projects/id3lib-ruby/"
 end
 
-desc "Generate RDOC documentation on web."
+desc "Generate RDOC documentation for web."
 Rake::RDocTask.new :web_doc do |rdoc|
   rdoc.rdoc_dir = 'web/doc'
   rdoc.title = 'id3lib-ruby'
