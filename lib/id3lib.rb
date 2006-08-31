@@ -332,6 +332,7 @@ module ID3Lib
 
       info[FIELDS].each do |field_id|
         libfield = field(libframe, field_id)
+        next unless libfield
         frame[field_id] =
           case Info::FieldType[libfield.get_type]
           when :integer
@@ -363,6 +364,7 @@ module ID3Lib
         end
 
         libfield = field(libframe, field_id)
+        next unless libfield
         case Info::FieldType[libfield.get_type]
         when :integer
           libfield.set_integer(value)
