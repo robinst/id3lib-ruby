@@ -97,7 +97,7 @@ class TestWriting < Test::Unit::TestCase
     assert_equal 'New Comment', @tag.comment
     assert_equal 1, @tag.comment_frames.length
     one = @tag.comment_frames.first
-    assert_equal 'New Comment', one[:text]
+    assert_equal 'New Comment', one.text
     
     @tag.update!
     assert_equal 'New Comment', @tag.comment
@@ -107,7 +107,7 @@ class TestWriting < Test::Unit::TestCase
   end
 
   def test_manual_frame
-    @tag << {:id => :TLAN, :text => 'zho'}
+    @tag << ID3Lib::Frame.new(:TLAN) { |f| f.text = 'zho' }
     assert_equal 'zho', @tag.frame_text(:TLAN)
     @tag.update!
     assert_equal 'zho', @tag.frame_text(:TLAN)
@@ -116,13 +116,12 @@ class TestWriting < Test::Unit::TestCase
   end
 
   def test_apic
-    pic = {
-      :id           => :APIC,
-      :mimetype     => 'image/jpeg',
-      :picturetype  => 3,
-      :description  => 'A pretty picture.',
-      :textenc      => 0,
-      :data         => File.read('test/data/cover.jpg')
+    pic = ID3Lib::Frame.new(:APIC) { |f|
+      f.mimetype    = 'image/jpeg'
+      f.picturetype = 3
+      f.description = 'A pretty picture.'
+      f.textenc     = 0
+      f.data        = File.read('test/data/cover.jpg')
     }
     @tag << pic
     @tag.update!
@@ -139,15 +138,6 @@ class TestWriting < Test::Unit::TestCase
   def test_remove_frame_with_direct_access
     @tag.title = nil
     assert_nil @tag.frame(:TIT2)
-  end
-
-  def test_wrong_frame
-    l = @tag.length
-    @tag << {:id => :WRONG, :text => "Test"}
-    @tag.update!
-    assert_equal l, @tag.length
-    reload!
-    assert_equal l, @tag.length
   end
 
   def test_strip

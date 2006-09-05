@@ -10,14 +10,14 @@ class TestReading < Test::Unit::TestCase
   end
 
   def test_array
-    assert_equal 'Dummy Title',     @tag[0][:text]
-    assert_equal 'Dummy Artist',    @tag[1][:text]
-    assert_equal 'Dummy Album',     @tag[2][:text]
-    assert_equal '1/10',            @tag[3][:text]
-    assert_equal '2000',            @tag[4][:text]
-    assert_equal 'Dummy Comment',   @tag[5][:text]
-    assert_equal 'Dummy Comment 2', @tag[6][:text]
-    assert_equal 'Pop',             @tag[7][:text]
+    assert_equal 'Dummy Title',     @tag[0].text
+    assert_equal 'Dummy Artist',    @tag[1].text
+    assert_equal 'Dummy Album',     @tag[2].text
+    assert_equal '1/10',            @tag[3].text
+    assert_equal '2000',            @tag[4].text
+    assert_equal 'Dummy Comment',   @tag[5].text
+    assert_equal 'Dummy Comment 2', @tag[6].text
+    assert_equal 'Pop',             @tag[7].text
   end
 
   def test_direct_access
@@ -35,8 +35,8 @@ class TestReading < Test::Unit::TestCase
     one, two = @tag.comment_frames
     assert_not_nil one
     assert_not_nil two
-    assert_equal 'Dummy Comment',   one[:text]
-    assert_equal 'Dummy Comment 2', two[:text]
+    assert_equal 'Dummy Comment',   one.text
+    assert_equal 'Dummy Comment 2', two.text
   end
 
   def test_has_tag
@@ -51,15 +51,11 @@ class TestReading < Test::Unit::TestCase
   def test_invalid_frames
     assert_nil @tag.invalid_frames
 
-    @tag << { :id => :TITS }
+    @tag << ID3Lib::Frame.new(:TITS)
     assert_equal [[:TITS]], @tag.invalid_frames
 
-    @tag << { :id => :TALB, :invalid => 'text' }
-    assert_equal [[:TITS], [:TALB, :invalid]], @tag.invalid_frames
-
-    @tag << { :id => :APIC, :text => 'invalid' }
-    assert_equal [[:TITS], [:TALB, :invalid], [:APIC, :text]],
-      @tag.invalid_frames
+    @tag << ID3Lib::Frame.new(:APIC) { |f| f.text = 'invalid' }
+    assert_equal [[:TITS], [:APIC, :text]], @tag.invalid_frames
   end
 
 end

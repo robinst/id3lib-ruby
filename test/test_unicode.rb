@@ -55,14 +55,17 @@ class TestUnicode < Test::Unit::TestCase
   end
 
   def test_invalid_data
-    nonstr = 1
-    @tag.reject!{ |f| f[:id] == :TIT2 }
-    @tag << {:id => :TIT2, :text => nonstr, :textenc => 1}
+    @tag.remove_frame(:TIT2)
+    tit = ID3Lib::Frame.new(:TIT2) { |f|
+      f.text = 1
+      f.textenc = 1
+    }
+    @tag << tit
     assert_raise(TypeError) { @tag.update!(ID3Lib::V2) }
   end
 
   def do_unicode_test(opts)
-    frame = {:id => :TIT2}
+    frame = ID3Lib::Frame.new(:TIT2)
     frame.update(opts)
     @tag.title = nil
     @tag << frame
