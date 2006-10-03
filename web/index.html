@@ -6,16 +6,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-
   <title>id3lib-ruby</title>
 
   <meta name="author" content="Robin Stocker" />
   <meta name="keywords" content="id3lib-ruby,ruby,id3lib,id3,mp3,tag,tags" />
 
   <link rel="stylesheet" type="text/css" href="red.css" />
-              
 </head>
-
 
 <body>
 
@@ -62,49 +59,50 @@ are on Windows and use the provided binary gem.
 
 <p>
 Have a look at the <a href="doc/files/TODO.html">to-do list</a> for planned
-things.
+features.
 </p>
 
 
 <h2 id="installation">Installation</h2>
 
-<h3>Windows</h3>
+<h3>Binary package (Windows only)</h3>
 
 <p>
 There are precompiled binary gems available for Windows, so the installation
-is as simple as follows:
+is as simple as typing
 </p>
 
 <pre>gem install id3lib-ruby</pre>
 
 <p>
-Then select the newest mswin32 gem.
+and selecting the newest mswin32 gem.
 </p>
 
-<h3>Other systems</h3>
+<h3>Source package</h3>
 
 <p>
-Because id3lib-ruby is just an interface/wrapper for id3lib, you need to
-have id3lib on your system in order to use it. Install it through your
-packaging system, or download it from its <a
-href="http://sourceforge.net/projects/id3lib/">sourceforge project page</a>.
-Then either use RubyGems or setup.rb.
+Because id3lib-ruby is just an interface or wrapper, you need to
+have the id3lib library and header files on your system in order to use it.
+You also need a C++ compiler.
 </p>
 
-<h4>RubyGems</h4>
+<p>
+Install id3lib with your package manager, or
+<a href="http://sourceforge.net/projects/id3lib/">download the id3lib source
+code</a> and build it yourself.
+</p>
 
 <p>
-When using <a href="http://rubygems.org/">RubyGems</a>, just do:
+Next, install id3lib-ruby. When using
+<a href="http://rubygems.org/">RubyGems</a>, just do:
 </p>
 
 <pre>gem install id3lib-ruby</pre>
-
-<h4>setup.rb</h4>
 
 <p>
 Another way is using the manual installation with setup.rb. When you have
 <a href="http://rubyforge.org/projects/id3lib-ruby/">downloaded</a> and
-extracted the source, run the following command with super-user rights.
+extracted the source code, run the following command with super-user rights.
 </p>
 
 <pre>ruby setup.rb</pre>
@@ -113,8 +111,8 @@ extracted the source, run the following command with super-user rights.
 <h2 id="usage">Usage</h2>
 
 <p>
-For further explanation view the
-<a href="doc/index.html">RDoc documentation</a>.
+See the <a href="doc/index.html">documentation</a> for
+further explanation.
 </p>
 
 <pre>
@@ -188,6 +186,6 @@ For comments or other things, don't hesitate to contact me:
   </a>
 </p>
 
-</body>
 
+</body>
 </html>
