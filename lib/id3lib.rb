@@ -33,7 +33,7 @@ module ID3Lib
   #
   # === Example of use
   #
-  #    tag = ID3Lib::Tag.read('shy_boy.mp3')
+  #    tag = ID3Lib::Tag.new('shy_boy.mp3')
   #
   #    # Remove comments
   #    tag.delete_if{ |frame| frame[:id] == :COMM }
