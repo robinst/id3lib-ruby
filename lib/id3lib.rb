@@ -34,7 +34,7 @@ module ID3Lib
   #
   # === Example of use
   #
-  #    tag = ID3Lib::Tag.read('shy_boy.mp3')
+  #    tag = ID3Lib::Tag.new('shy_boy.mp3')
   #
   #    # Remove comments
   #    tag.delete_if{ |frame| frame[:id] == :COMM }
@@ -165,16 +165,12 @@ module ID3Lib
     attr_accessor :padding
 
     #
-    # Create a new Tag. When a _filename_ is supplied, the tag of the file
-    # is read. _tagtype_ specifies the tag type to read and defaults to
-    # V_ALL.
+    # Returns a tag object and tries to read and parse _filename_.
+    # _tagtype_ specifies the tag type to read and defaults to V_ALL.
     # Use one of ID3Lib::V1, ID3Lib::V2, ID3Lib::V_BOTH or ID3Lib::V_ALL.
     #
-    #    tag = ID3Lib::Tag.new('shy_boy.mp3')
-    # 
-    # Only read ID3v1 tag:
-    #
-    #    id3v1_tag = ID3Lib::Tag.new('piece_by_piece.mp3', ID3Lib::V1)
+    #   tag_a = ID3Lib::Tag.new('shy_boy.mp3')
+    #   tag_b = ID3Lib::Tag.new('piece_by_piece.mp3', ID3Lib::V1)
     #
     def initialize(filename, read_type=V_ALL)
       @filename = filename
