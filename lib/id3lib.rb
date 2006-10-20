@@ -27,6 +27,7 @@ module ID3Lib
   DESC    = 2
   FIELDS  = 3  
 
+
   #
   # This class is the main frontend of the library.
   # Use it to read and write ID3 tag data of files.
@@ -136,11 +137,28 @@ module ID3Lib
   #
   # === Getting rid of a tag
   #
-  # Use the #strip! method to completely remove a tag from a file.
+  # Use Tag.strip! to completely remove a tag from a file.
   #
-  #    tag.strip!
+  #    ID3Lib::Tag.strip!("urami_bushi.mp3")
   #
   class Tag < Array
+
+    #
+    # Strip tag(s) from file. Use the second parameter _type_ to only
+    # strip a certain tag type. Default is to strip all types.
+    #
+    # Returns a number (see the constants beginning with V in ID3Lib)
+    # representing the tag type(s) actually stripped from the file.
+    #
+    #   ID3Lib::Tag.strip!("misirlou.mp3")  #=> 3 (1 and 2 were stripped)
+    #   ID3Lib::Tag.strip!("misirlou.mp3")  #=> 0 (nothing stripped)
+    #
+    def self.strip!(filename, type=V_ALL)
+      tag = API::Tag.new
+      tag.link(filename, type)
+      return tag.strip(type)
+    end
+
 
     include Accessors
 
@@ -158,13 +176,13 @@ module ID3Lib
     #
     #    id3v1_tag = ID3Lib::Tag.new('piece_by_piece.mp3', ID3Lib::V1)
     #
-    def initialize(filename, readtype=V_ALL)
+    def initialize(filename, read_type=V_ALL)
       @filename = filename
-      @readtype = readtype
+      @read_type = read_type
       @padding = true
 
       @tag = API::Tag.new
-      @tag.link(@filename, @readtype)
+      @tag.link(@filename, @read_type)
       read_frames
     end
 
@@ -226,8 +244,8 @@ module ID3Lib
     end
 
     #
-    # Updates the tag. This change can't be undone. _writetype_ specifies
-    # which tag type to write and defaults to _readtype_ (see #new).
+    # Updates the tag. This change can't be undone. _write_type_ specifies
+    # which tag type to write and defaults to _read_type_ (see #new).
     #
     # Invalid frames or frame data is ignored. Use #invalid_frames before
     # update! if you want to know if you have invalid data.
@@ -238,12 +256,12 @@ module ID3Lib
     #    tag.update!
     #    id3v1_tag.update!(ID3Lib::V1)
     #
-    def update!(writetype=@readtype)
-      @tag.strip(writetype)
+    def update!(write_type=@read_type)
+      @tag.strip(write_type)
       # The following two lines are necessary because of the weird
       # behaviour of id3lib.
       @tag.clear
-      @tag.link(@filename, writetype)
+      @tag.link(@filename, write_type)
 
       delete_if do |frame|
         frame_info = Info.frame(frame[:id])
@@ -255,31 +273,41 @@ module ID3Lib
       end
 
       @tag.set_padding(@padding)
-      tags = @tag.update(writetype)
+      tags = @tag.update(write_type)
       return tags == 0 ? nil : tags
     end
 
     #
-    # Strip tag from file. This is dangerous because you lose all tag
-    # information. Specify _striptag_ to only strip a certain tag type.
-    # You don't have to call #update! after #strip!.
+    # Check if a V1 or V2 tag has been encountered when the file was read
+    # during object initialisation.
     #
-    #    tag.strip!
-    #    another_tag.strip!(ID3Lib::V1)
+    #   ID3Lib::Tag.new("was_besonderes.mp3").has_tag?
+    #   #=> true (there is a ID3v1 or v2 tag)
     #
-    def strip!(striptype=V_ALL)
-      clear
-      tags = @tag.strip(striptype)
-      @tag.clear
-      @tag.link(@filename, @readtype)
-      tags
+    # The note at has_tag_type? applies here too.
+    #
+    def has_tag?
+      @tag.has_tag_type(V1) or @tag.has_tag_type(V2)
     end
 
     #
-    # Check if there is a tag of type _type_.
+    # Check if a tag of type _type_ has been encountered when the file was
+    # read during object initialisation. Use one of the constants beginning
+    # with V in ID3Lib for _type_.
+    #
+    #   tag = ID3Lib::Tag.new("et_pourtant.mp3")
+    #   tag.has_tag_type?(ID3Lib::V1)  #=> false
+    #   tag.has_tag_type?(ID3Lib::V2)  #=> true
     # 
-    def has_tag?(type=V2)
-      @tag.link(@filename, V_ALL)
+    # Note: The result of this method depends on the used read_type
+    # parameter of #new at the creation of the Tag object. When #new was
+    # called with a read_type of ID3Lib::V1, then only a call of has_tag?
+    # with ID3Lib::V1 is meaningful.
+    #
+    #   tag = ID3Lib::Tag.new("et_pourtant.mp3", ID3Lib::V1)
+    #   tag.has_tag_type?(ID3Lib::V2)  #=> false (but meaningless)
+    #
+    def has_tag_type?(type)
       @tag.has_tag_type(type)
     end
 
