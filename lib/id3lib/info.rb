@@ -383,6 +383,10 @@ module ID3Lib
     def self.field_num(num)
       Fields[num]
     end
+
+    def self.field_type(num)
+      FieldType[num]
+    end
             
   end
   

@@ -52,7 +52,7 @@ module ID3Lib
     def comment=(v) set_frame_text(:COMM, v) end
 
     # Returns an array of comment frames.
-    def comment_frames() select{ |f| f[:id] == :COMM } end
+    def comment_frames() select{ |f| f.id == :COMM } end
 
     def composer()       frame_text(:TCOM) end
     def composer=(v) set_frame_text(:TCOM, v) end

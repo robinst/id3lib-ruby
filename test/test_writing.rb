@@ -43,7 +43,8 @@ class TestWriting < Test::Unit::TestCase
   end
 
   def test_id3v1_genre
-    @tag.strip!(ID3Lib::V2)
+    ID3Lib::Tag.strip!(Temp, ID3Lib::V2)
+    reload!
     genre_id = '(' + ID3Lib::Info::Genres.index('Rock').to_s + ')'
     @tag.genre = genre_id
     assert_equal genre_id, @tag.genre
@@ -141,30 +142,30 @@ class TestWriting < Test::Unit::TestCase
   end
 
   def test_strip
-    @tag.strip!
-    assert @tag.empty?
+    ID3Lib::Tag.strip!(Temp)
     reload!
-    assert @tag.empty?
+    assert !@tag.has_tag?
   end
 
-  def test_tagtype
-    @tag.strip!(ID3Lib::V1)
+  def test_strip_and_tag_type
+    ID3Lib::Tag.strip!(Temp, ID3Lib::V1)
     reload!(ID3Lib::V1)
-    assert @tag.empty?
+    assert !@tag.has_tag_type?(ID3Lib::V1)
     reload!
-    assert !@tag.empty?
-    @tag.strip!(ID3Lib::V2)
+    assert @tag.has_tag?
+
+    ID3Lib::Tag.strip!(Temp, ID3Lib::V2)
     reload!(ID3Lib::V2)
-    assert @tag.empty?
+    assert !@tag.has_tag_type?(ID3Lib::V2)
     reload!
-    assert @tag.empty?
+    assert !@tag.has_tag?
   end
 
   def test_padding
     assert_equal 2176, File.size(Temp)
     @tag.padding = false
     @tag.update!
-    assert_equal 348, File.size(Temp)
+    assert_equal 128, File.size(Temp)
   end
 
   def test_failing_update

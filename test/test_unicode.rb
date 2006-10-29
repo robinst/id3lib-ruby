@@ -66,7 +66,9 @@ class TestUnicode < Test::Unit::TestCase
 
   def do_unicode_test(opts)
     frame = ID3Lib::Frame.new(:TIT2)
-    frame.update(opts)
+    opts.each do |field, value|
+      frame.send("#{field}=", value)
+    end
     @tag.title = nil
     @tag << frame
     @tag.update!(ID3Lib::V2)

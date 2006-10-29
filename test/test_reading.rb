@@ -40,22 +40,13 @@ class TestReading < Test::Unit::TestCase
   end
 
   def test_has_tag
-    assert @tag.has_tag?(ID3Lib::V1)
-    assert @tag.has_tag?(ID3Lib::V2)
+    assert @tag.has_tag_type?(ID3Lib::V1)
+    assert @tag.has_tag_type?(ID3Lib::V2)
+    assert @tag.has_tag?
   end
 
   def test_size
     assert_equal 2038, @tag.size
-  end
-
-  def test_invalid_frames
-    assert_nil @tag.invalid_frames
-
-    @tag << ID3Lib::Frame.new(:TITS)
-    assert_equal [[:TITS]], @tag.invalid_frames
-
-    @tag << ID3Lib::Frame.new(:APIC) { |f| f.text = 'invalid' }
-    assert_equal [[:TITS], [:APIC, :text]], @tag.invalid_frames
   end
 
 end

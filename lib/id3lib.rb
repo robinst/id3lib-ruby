@@ -193,42 +193,44 @@ module ID3Lib
     #
     # Simple shortcut for getting a frame by its _id_.
     #
-    #    tag.frame(:TIT2)
-    #    #=> {:id => :TIT2, :text => "Shy Boy", :textenc => 0}
+    #   tag.frame(:TIT2)
+    #   #=> {:id => :TIT2, :text => "Shy Boy", :textenc => 0}
     #
     # is the same as:
     #
-    #    tag.find{ |f| f[:id] == :TIT2 }
+    #   tag.find{ |f| f[:id] == :TIT2 }
     #
     def frame(id)
-      find{ |f| f[:id] == id }
+      find{ |f| f.id == id }
     end
 
     #
     # Get the text of a frame specified by _id_. Returns nil if the
     # frame can't be found.
     #
-    #    tag.find{ |f| f[:id] == :TIT2 }[:text]  #=> "Shy Boy"
-    #    tag.frame_text(:TIT2)                   #=> "Shy Boy"
+    #   tag.find{ |f| f[:id] == :TIT2 }[:text]  #=> "Shy Boy"
+    #   tag.frame_text(:TIT2)                   #=> "Shy Boy"
     #
-    #    tag.find{ |f| f[:id] == :TLAN }         #=> nil
-    #    tag.frame_text(:TLAN)                   #=> nil
+    #   tag.find{ |f| f[:id] == :TLAN }         #=> nil
+    #   tag.frame_text(:TLAN)                   #=> nil
     #
     def frame_text(id)
       f = frame(id)
-      f ? f[:text] : nil
+      f ? f.text : nil
     end
 
     #
     # Set the text of a frame. First, all frames with the specified _id_ are
     # deleted and then a new frame with _text_ is appended.
     #
-    #    tag.set_frame_text(:TLAN, 'eng')
+    #   tag.set_frame_text(:TLAN, 'eng')
     #
     def set_frame_text(id, text)
       remove_frame(id)
       if text
-        self << { :id => id, :text => text.to_s }
+        f = Frame.new(id)
+        f.text = text.to_s
+        self << f
       end
     end
 
@@ -236,7 +238,7 @@ module ID3Lib
     # Remove all frames with the specified _id_.
     #
     def remove_frame(id)
-      delete_if{ |f| f[:id] == id }
+      delete_if{ |f| f.id == id }
     end
 
     #
@@ -253,24 +255,16 @@ module ID3Lib
     #    id3v1_tag.update!(ID3Lib::V1)
     #
     def update!(write_type=@read_type)
-      @tag.strip(write_type)
-      # The following two lines are necessary because of the weird
-      # behaviour of id3lib.
-      @tag.clear
-      @tag.link(@filename, write_type)
+      remove_all_api_frames
 
-      delete_if do |frame|
-        frame_info = Info.frame(frame[:id])
-        next true if not frame_info
-        libframe = API::Frame.new(frame_info[NUM])
-        Frame.write(frame, libframe)
-        @tag.add_frame(libframe)
-        false
+      each do |frame|
+        api_frame = frame.write_api_frame
+        @tag.add_frame(api_frame)
       end
 
       @tag.set_padding(@padding)
-      tags = @tag.update(write_type)
-      return tags == 0 ? nil : tags
+      tags_written = @tag.update(write_type)
+      return tags_written == 0 ? nil : tags_written
     end
 
     #
@@ -307,108 +301,187 @@ module ID3Lib
       @tag.has_tag_type(type)
     end
 
-    #
-    # Returns an Array of invalid frames and fields. If a frame ID is
-    # invalid, it alone is in the resulting array. If a frame ID is valid
-    # but has invalid fields, the frame ID and the invalid field IDs are
-    # included.
-    #
-    #    tag.invalid_frames
-    #    #=> [ [:TITS], [:TALB, :invalid] ]
-    #
-    def invalid_frames
-      invalid = []
-      each do |frame|
-        if not info = Info.frame(frame[:id])
-          # Frame ID doesn't exist.
-          invalid << [frame[:id]]
-          next
-        end
-        # Frame ID is ok, but are all fields ok?
-        invalid_fields = frame.keys.reject { |id|
-          info[FIELDS].include?(id) or id == :id
-        }
-        if not invalid_fields.empty?
-          invalid << [frame[:id], *invalid_fields]
-        end
-      end
-      invalid.empty? ? nil : invalid
-    end
-
     private
 
     def read_frames
       iterator = @tag.iterator_new
-      while libframe = @tag.iterator_next_frame(iterator)
-        self << Frame.read(libframe)
+      while api_frame = @tag.iterator_next_frame(iterator)
+        frame = Frame.new(api_frame)
+        self << frame
+      end
+    end
+
+    def remove_all_api_frames
+      iterator = @tag.iterator_new
+      while api_frame = @tag.iterator_next_frame(iterator)
+        @tag.remove_frame(api_frame)
       end
     end
 
   end
 
 
-  module Frame #:nodoc:
+  class Frame
 
-    def self.read(libframe)
-      frame = {}
-      info = Info.frame_num(libframe.get_id)
-      frame[:id] = info[ID]
+    # Frame ID
+    attr_reader :id
+    # Array of allowed fields for frame
+    attr_reader :fields_allowed
 
-      info[FIELDS].each do |field_id|
-        libfield = field(libframe, field_id)
-        next unless libfield
-        frame[field_id] =
-          case Info::FieldType[libfield.get_type]
-          when :integer
-            libfield.get_integer
-          when :binary
-            libfield.get_binary
-          when :text
-            if libfield.get_encoding > 0
-              libfield.get_unicode
-            else
-              libfield.get_ascii
-            end
-          end
+    def initialize(id_or_frame)
+      if id_or_frame.is_a? API::Frame
+        @api_frame = id_or_frame
+        info = Info.frame_num(@api_frame.get_id)
+      else
+        @api_frame = nil
+        info = Info.frame(id_or_frame)
       end
+      info or raise ArgumentError, "Invalid frame ID"
 
-      frame
+      @id = info[ID]
+      @fields_allowed = info[FIELDS]
+      @fields = {}
+
+      read_api_frame if @api_frame
+
+      # create_accessor_methods(info[FIELDS])
+
+      yield self if block_given?
     end
 
-    def self.write(frame, libframe)
-      if textenc = frame[:textenc]
-        field(libframe, :textenc).set_integer(textenc)
+    def method_missing(meth, *args)
+      m = meth.to_s
+      assignment = m.chomp!('=')
+      m = m.to_sym
+      if @fields_allowed.include?(m)
+        if assignment
+          @fields[m] = args.first
+        else
+          @fields[m]
+        end
+      else
+        super
+      end
+    end
+
+    def create_accessor_methods(fields)
+      (class << self; self; end).class_eval do
+        fields.each do |field_name|
+          define_method field_name do
+            @fields[field_name]
+          end
+          define_method "#{field_name}=" do |val|
+            @fields[field_name] = val
+          end
+        end
+      end
+    end
+
+    #
+    # Returns the text of the frame or '' if there is no text.
+    #
+    def to_s
+      @fields[:text] or ''
+    end
+
+    #
+    # Example output:
+    #
+    #   p title_frame
+    #   (TIT2 textenc=0, text="Title")
+    #
+    def inspect_test
+      str = "(#{id} "
+      str << @fields_allowed.map { |f|
+        "#{f}=#{@fields[f].inspect}"
+      }.join(', ')
+      str << ')'
+      str
+    end
+
+    def changed?
+      if @fields_hashcode
+        @fields_hashcode != @fields.to_a.hash
+      else
+        true
+      end
+    end
+
+    def == other
+      other.fields_equal?(@fields)
+    end
+
+    def fields_equal?(fields)
+      @fields == fields
+    end
+    protected :fields_equal?
+
+    def write_api_frame
+      return unless changed?
+
+      unless @api_frame
+        @api_frame = API::Frame.new(Info.frame(@id)[NUM])
       end
 
-      frame.each do |field_id, value|
-        next if field_id == :textenc
-        unless Info.frame(frame[:id])[FIELDS].include?(field_id)
-          # Ignore invalid fields
-          next
-        end
+      if textenc = @fields[:textenc]
+        f = @api_frame.get_field(Info.field(:textenc)[NUM])
+        f.set_integer(textenc)
+      end
 
-        libfield = field(libframe, field_id)
-        next unless libfield
-        case Info::FieldType[libfield.get_type]
+      @fields.each do |field_id, value|
+        next if field_id == :textenc
+        # Ignore invalid fields.
+        next unless @fields_allowed.include? field_id
+
+        api_field = @api_frame.get_field(Info.field(field_id)[NUM])
+        next unless api_field
+
+        case Info.field_type(api_field.get_type)
         when :integer
-          libfield.set_integer(value)
+          api_field.set_integer(value)
         when :binary
-          libfield.set_binary(value)
+          api_field.set_binary(value)
         when :text
           if textenc and textenc > 0 and
              [:text, :description, :filename].include?(field_id)
             # Special treatment for Unicode
-            libfield.set_encoding(textenc)
-            libfield.set_unicode(value)
+            api_field.set_encoding(textenc)
+            api_field.set_unicode(value)
           else
-            libfield.set_ascii(value)
+            api_field.set_ascii(value)
           end
         end
       end
+
+      @fields_hashcode = @fields.to_a.hash
+      @api_frame
     end
 
-    def self.field(libframe, id)
-      libframe.get_field(Info.field(id)[NUM])
+    private
+
+    def read_api_frame
+      info = Info.frame(@id)
+
+      @fields_allowed.each do |field_name|
+        api_field = @api_frame.get_field(Info.field(field_name)[NUM])
+        next unless api_field
+        @fields[field_name] =
+          case Info::FieldType[api_field.get_type]
+          when :integer
+            api_field.get_integer
+          when :binary
+            api_field.get_binary
+          when :text
+            if api_field.get_encoding > 0
+              api_field.get_unicode
+            else
+              api_field.get_ascii
+            end
+          end
+      end
+
+      @fields_hashcode = @fields.to_a.hash
+      @fields
     end
 
   end
