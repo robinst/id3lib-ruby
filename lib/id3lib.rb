@@ -367,18 +367,17 @@ module ID3Lib
     end
 
     #
-    # Returns a readable representation of the frame.
+    # Returns a string containing a readable representation of the frame.
     #
     #   p title_frame
-    #   (TIT2 textenc=0, text="Title")
+    #   #<ID3Lib::Frame:TIT2 textenc=0, text="Title">
     #
-    def inspect_test
-      str = "(#{id} "
-      str << @allowed_fields.map { |f|
-        "#{f}=#{@fields[f].inspect}"
-      }.join(', ')
-      str << ')'
-      str
+    def inspect
+      [ "#<#{self.class}:#{@id} ",
+        @allowed_fields.map{ |f|
+          "#{f}=#{@fields[f].inspect}"
+        }.join(', '),
+        ">" ].join
     end
 
     def changed?
