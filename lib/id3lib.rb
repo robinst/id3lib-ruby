@@ -265,7 +265,7 @@ module ID3Lib
     end
 
     #
-    # Check if a V1 or V2 tag has been encountered when the file was read
+    # Checks if a V1 or V2 tag has been encountered when the file was read
     # during object initialisation.
     #
     #   ID3Lib::Tag.new("was_besonderes.mp3").has_tag?
@@ -278,7 +278,7 @@ module ID3Lib
     end
 
     #
-    # Check if a tag of type _type_ has been encountered when the file was
+    # Checks if a tag of type _type_ has been encountered when the file was
     # read during object initialisation. Use one of the constants beginning
     # with V in ID3Lib for _type_.
     #
@@ -367,7 +367,7 @@ module ID3Lib
     end
 
     #
-    # Example output:
+    # Returns a readable representation of the frame.
     #
     #   p title_frame
     #   (TIT2 textenc=0, text="Title")
