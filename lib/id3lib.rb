@@ -144,7 +144,7 @@ module ID3Lib
   class Tag < Array
 
     #
-    # Strip tag(s) from file. Use the second parameter _type_ to only
+    # Strips tag(s) from file. Use the second parameter _type_ to only
     # strip a certain tag type. Default is to strip all types.
     #
     # Returns a number (see the constants beginning with V in ID3Lib)
@@ -245,14 +245,11 @@ module ID3Lib
     # Updates the tag. This change can't be undone. _write_type_ specifies
     # which tag type to write and defaults to _read_type_ (see #new).
     #
-    # Invalid frames or frame data is ignored. Use #invalid_frames before
-    # update! if you want to know if you have invalid data.
-    #
     # Returns a number corresponding to the written tag type(s) or nil if
     # the update failed.
     #
-    #    tag.update!
-    #    id3v1_tag.update!(ID3Lib::V1)
+    #   tag.update!
+    #   id3v1_tag.update!(ID3Lib::V1)
     #
     def update!(write_type=@read_type)
       remove_all_api_frames
