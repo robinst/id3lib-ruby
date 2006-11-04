@@ -333,13 +333,17 @@ module ID3Lib
         @api_frame = nil
         info = Info.frame(id_or_frame)
       end
-      info or raise ArgumentError, "Invalid frame ID"
+      if not info
+        raise ArgumentError, "invalid frame ID #{id_or_frame.inspect}"
+      end
 
       @id = info[ID]
       @allowed_fields = info[FIELDS]
       @fields = {}
 
-      read_api_frame if @api_frame
+      if @api_frame
+        read_api_frame
+      end
 
       yield self if block_given?
     end
@@ -357,6 +361,17 @@ module ID3Lib
       else
         super
       end
+    end
+
+    def field(name)
+      @fields[name]
+    end
+
+    def set_field(name, val)
+      if not @allowed_fields.include?(name)
+        raise ArgumentError, "invalid field name #{name.inspect}"
+      end
+      @fields[name] = val
     end
 
     #
