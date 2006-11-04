@@ -10,8 +10,8 @@ require 'id3lib/accessors'
 #
 module ID3Lib
 
-  # ID3 version 1. All V constants can be used with the methods
-  # new, update! or strip! of ID3Lib::Tag. 
+  # ID3 version 1. The V constants are used with the methods
+  # new, update!, strip! and has_tag_type? of ID3Lib::Tag. 
   V1     = 1
   # ID3 version 2
   V2     = 2
