@@ -344,8 +344,6 @@ module ID3Lib
 
       read_api_frame if @api_frame
 
-      # create_accessor_methods(info[FIELDS])
-
       yield self if block_given?
     end
 
@@ -361,19 +359,6 @@ module ID3Lib
         end
       else
         super
-      end
-    end
-
-    def create_accessor_methods(fields)
-      (class << self; self; end).class_eval do
-        fields.each do |field_name|
-          define_method field_name do
-            @fields[field_name]
-          end
-          define_method "#{field_name}=" do |val|
-            @fields[field_name] = val
-          end
-        end
       end
     end
 
