@@ -326,7 +326,7 @@ module ID3Lib
     # Frame ID
     attr_reader :id
     # Array of allowed fields for frame
-    attr_reader :fields_allowed
+    attr_reader :allowed_fields
 
     def initialize(id_or_frame)
       if id_or_frame.is_a? API::Frame
@@ -339,7 +339,7 @@ module ID3Lib
       info or raise ArgumentError, "Invalid frame ID"
 
       @id = info[ID]
-      @fields_allowed = info[FIELDS]
+      @allowed_fields = info[FIELDS]
       @fields = {}
 
       read_api_frame if @api_frame
@@ -351,7 +351,7 @@ module ID3Lib
       m = meth.to_s
       assignment = m.chomp!('=')
       m = m.to_sym
-      if @fields_allowed.include?(m)
+      if @allowed_fields.include?(m)
         if assignment
           @fields[m] = args.first
         else
@@ -377,7 +377,7 @@ module ID3Lib
     #
     def inspect_test
       str = "(#{id} "
-      str << @fields_allowed.map { |f|
+      str << @allowed_fields.map { |f|
         "#{f}=#{@fields[f].inspect}"
       }.join(', ')
       str << ')'
@@ -416,7 +416,7 @@ module ID3Lib
       @fields.each do |field_id, value|
         next if field_id == :textenc
         # Ignore invalid fields.
-        next unless @fields_allowed.include? field_id
+        next unless @allowed_fields.include? field_id
 
         api_field = @api_frame.get_field(Info.field(field_id)[NUM])
         next unless api_field
@@ -447,7 +447,7 @@ module ID3Lib
     def read_api_frame
       info = Info.frame(@id)
 
-      @fields_allowed.each do |field_name|
+      @allowed_fields.each do |field_name|
         api_field = @api_frame.get_field(Info.field(field_name)[NUM])
         next unless api_field
         @fields[field_name] =
