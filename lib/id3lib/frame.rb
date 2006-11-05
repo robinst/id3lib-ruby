@@ -1,6 +1,16 @@
 
 module ID3Lib
 
+  #
+  # This is the class of the frames in a Tag object. You can get the frame
+  # ID, find out which fields the frame has and get and set them.
+  #
+  #   apic = tag.frame(:APIC)
+  #   apic.id              #=> :APIC
+  #   apic.allowed_fields  #=> [:textenc, :mimetype, :picturetype, :description, :data]
+  #   apic.mimetype        #=> "image/jpeg"
+  #   apic.description = "Cover image"
+  #
   class Frame
 
     # Frame ID
@@ -8,6 +18,15 @@ module ID3Lib
     # Array of allowed fields for frame
     attr_reader :allowed_fields
 
+    #
+    # Returns a frame object. There are two ways to create a new object, but
+    # only the first one is relevant for a normal library user.
+    #
+    # With an ID (e.g. APIC) for _id_or_frame_, a new empty frame is
+    # created. If a block is given, the object itself is yielded.
+    #
+    #   apic = ID3Lib::Frame.new(:APIC)
+    #
     def initialize(id_or_frame)
       if id_or_frame.is_a? API::Frame
         @api_frame = id_or_frame
@@ -31,6 +50,15 @@ module ID3Lib
       yield self if block_given?
     end
 
+    #
+    # Used for field accessors like text and textenc. Which accessors are
+    # available depends on the frame type.
+    #
+    #   title = tag.frame(:title)
+    #   title.allowed_fields  #=> [:textenc, :text]
+    #   title.text = "Title"
+    #   title.textenc  #=> 0
+    #
     def method_missing(meth, *args)
       m = meth.to_s
       assignment = m.chomp!('=')
@@ -46,6 +74,10 @@ module ID3Lib
       end
     end
 
+    #
+    # Returns the value of the field _name_. Raises ArgumentError if called
+    # with an invalid field name.
+    #
     def field(name)
       if not @allowed_fields.include?(name)
         raise ArgumentError, "invalid field name #{name.inspect}"
@@ -53,11 +85,15 @@ module ID3Lib
       @fields[name]
     end
 
-    def set_field(name, val)
+    #
+    # Set value of field _name_ to _value_. Raises ArgumentError if called
+    # with an invalid field name.
+    #
+    def set_field(name, value)
       if not @allowed_fields.include?(name)
         raise ArgumentError, "invalid field name #{name.inspect}"
       end
-      @fields[name] = val
+      @fields[name] = value
     end
 
     #
@@ -81,6 +117,10 @@ module ID3Lib
         ">" ].join
     end
 
+    #
+    # Was the frame changed since reading it? For a newly created empty
+    # frame, this is always true.
+    #
     def changed?
       if @fields_hashcode
         @fields_hashcode != @fields.to_a.hash
@@ -98,7 +138,7 @@ module ID3Lib
     end
     protected :fields_equal?
 
-    def write_api_frame
+    def write_api_frame # :nodoc:
       return unless changed?
 
       unless @api_frame
