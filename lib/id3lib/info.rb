@@ -6,28 +6,36 @@ module ID3Lib
   #
   # === Frame information
   #
-  # Access the information through the #frame function or
-  # through direct access on the Frames array.
+  # Access frame information through the Frames array, or
+  # the FramesByName and FramesByID hashes.
   #
-  # For example to get all the frames which take a :textenc and a :text field:
+  # For example, to get all the frame names or IDs allowed for Tag.frame and
+  # Tag.text:
   #
-  #    ID3Lib::Info::Frames.select{ |f| f[3] == [:textenc, :text] }
+  #   # Names
+  #   ID3Lib::Info::FramesByName.keys
+  #   # IDs
+  #   ID3Lib::Info::FramesByID.keys
   #
-  # The frame information is stored in an array. Let's have a look at it:
+  # To get all the frames which take a :textenc and a :text field:
   #
-  #    f = ID3Lib::Info.frame(:AENC)
+  #   ID3Lib::Info::Frames.select{ |f| f[3] == [:textenc, :text] }
   #
-  #    f[0]  #=> 1
-  #          #=> internal ID for id3lib
+  # The information for a frame is stored in an array:
   #
-  #    f[1]  #=> :AENC
-  #          #=> frame ID as specified in ID3 standard
+  #   f = ID3Lib::Info::FramesByID[:AENC]
   #
-  #    f[2]  #=> "Audio encryption"
-  #          #=> description according to id3lib
+  #   f[0]  #=> 1
+  #         #=> internal ID for id3lib
   #
-  #    f[3]  #=> [:owner, :data]
-  #          #=> IDs of fields allowed in that frame
+  #   f[1]  #=> :AENC
+  #         #=> frame ID as specified in ID3 standard
+  #
+  #   f[2]  #=> "Audio encryption"
+  #         #=> description according to id3lib
+  #
+  #   f[3]  #=> [:owner, :data]
+  #         #=> IDs of fields allowed in that frame
   #
   # === Field information
   #
@@ -161,99 +169,82 @@ module ID3Lib
     ]
 
     FramesByID = {
-      :____ => Frames[0],
-      :AENC => Frames[1],
-      :APIC => Frames[2],
-      :ASPI => Frames[3],
-      :COMM => Frames[4],
-      :COMR => Frames[5],
-      :ENCR => Frames[6],
-      :EQU2 => Frames[7],
-      :EQUA => Frames[8],
-      :ETCO => Frames[9],
-      :GEOB => Frames[10],
-      :GRID => Frames[11],
-      :IPLS => Frames[12],
-      :LINK => Frames[13],
-      :MCDI => Frames[14],
-      :MLLT => Frames[15],
-      :OWNE => Frames[16],
-      :PRIV => Frames[17],
-      :PCNT => Frames[18],
-      :POPM => Frames[19],
-      :POSS => Frames[20],
-      :RBUF => Frames[21],
-      :RVA2 => Frames[22],
-      :RVAD => Frames[23],
-      :RVRB => Frames[24],
-      :SEEK => Frames[25],
-      :SIGN => Frames[26],
-      :SYLT => Frames[27],
-      :SYTC => Frames[28],
-      :TALB => Frames[29],
-      :TBPM => Frames[30],
-      :TCOM => Frames[31],
-      :TCON => Frames[32],
-      :TCOP => Frames[33],
-      :TDAT => Frames[34],
-      :TDEN => Frames[35],
-      :TDLY => Frames[36],
-      :TDOR => Frames[37],
-      :TDRC => Frames[38],
-      :TDRL => Frames[39],
-      :TDTG => Frames[40],
-      :TIPL => Frames[41],
-      :TENC => Frames[42],
-      :TEXT => Frames[43],
-      :TFLT => Frames[44],
-      :TIME => Frames[45],
-      :TIT1 => Frames[46],
-      :TIT2 => Frames[47],
-      :TIT3 => Frames[48],
-      :TKEY => Frames[49],
-      :TLAN => Frames[50],
-      :TLEN => Frames[51],
-      :TMCL => Frames[52],
-      :TMED => Frames[53],
-      :TMOO => Frames[54],
-      :TOAL => Frames[55],
-      :TOFN => Frames[56],
-      :TOLY => Frames[57],
-      :TOPE => Frames[58],
-      :TORY => Frames[59],
-      :TOWN => Frames[60],
-      :TPE1 => Frames[61],
-      :TPE2 => Frames[62],
-      :TPE3 => Frames[63],
-      :TPE4 => Frames[64],
-      :TPOS => Frames[65],
-      :TPRO => Frames[66],
-      :TPUB => Frames[67],
-      :TRCK => Frames[68],
-      :TRDA => Frames[69],
-      :TRSN => Frames[70],
-      :TRSO => Frames[71],
-      :TSIZ => Frames[72],
-      :TSOA => Frames[73],
-      :TSOP => Frames[74],
-      :TSOT => Frames[75],
-      :TSRC => Frames[76],
-      :TSSE => Frames[77],
-      :TSST => Frames[78],
-      :TXXX => Frames[79],
-      :TYER => Frames[80],
-      :UFID => Frames[81],
-      :USER => Frames[82],
-      :USLT => Frames[83],
-      :WCOM => Frames[84],
-      :WCOP => Frames[85],
-      :WOAF => Frames[86],
-      :WOAR => Frames[87],
-      :WOAS => Frames[88],
-      :WORS => Frames[89],
-      :WPAY => Frames[90],
-      :WPUB => Frames[91],
+      :____ => Frames[0], :AENC => Frames[1],
+      :APIC => Frames[2], :ASPI => Frames[3],
+      :COMM => Frames[4], :COMR => Frames[5],
+      :ENCR => Frames[6], :EQU2 => Frames[7],
+      :EQUA => Frames[8], :ETCO => Frames[9],
+      :GEOB => Frames[10], :GRID => Frames[11],
+      :IPLS => Frames[12], :LINK => Frames[13],
+      :MCDI => Frames[14], :MLLT => Frames[15],
+      :OWNE => Frames[16], :PRIV => Frames[17],
+      :PCNT => Frames[18], :POPM => Frames[19],
+      :POSS => Frames[20], :RBUF => Frames[21],
+      :RVA2 => Frames[22], :RVAD => Frames[23],
+      :RVRB => Frames[24], :SEEK => Frames[25],
+      :SIGN => Frames[26], :SYLT => Frames[27],
+      :SYTC => Frames[28], :TALB => Frames[29],
+      :TBPM => Frames[30], :TCOM => Frames[31],
+      :TCON => Frames[32], :TCOP => Frames[33],
+      :TDAT => Frames[34], :TDEN => Frames[35],
+      :TDLY => Frames[36], :TDOR => Frames[37],
+      :TDRC => Frames[38], :TDRL => Frames[39],
+      :TDTG => Frames[40], :TIPL => Frames[41],
+      :TENC => Frames[42], :TEXT => Frames[43],
+      :TFLT => Frames[44], :TIME => Frames[45],
+      :TIT1 => Frames[46], :TIT2 => Frames[47],
+      :TIT3 => Frames[48], :TKEY => Frames[49],
+      :TLAN => Frames[50], :TLEN => Frames[51],
+      :TMCL => Frames[52], :TMED => Frames[53],
+      :TMOO => Frames[54], :TOAL => Frames[55],
+      :TOFN => Frames[56], :TOLY => Frames[57],
+      :TOPE => Frames[58], :TORY => Frames[59],
+      :TOWN => Frames[60], :TPE1 => Frames[61],
+      :TPE2 => Frames[62], :TPE3 => Frames[63],
+      :TPE4 => Frames[64], :TPOS => Frames[65],
+      :TPRO => Frames[66], :TPUB => Frames[67],
+      :TRCK => Frames[68], :TRDA => Frames[69],
+      :TRSN => Frames[70], :TRSO => Frames[71],
+      :TSIZ => Frames[72], :TSOA => Frames[73],
+      :TSOP => Frames[74], :TSOT => Frames[75],
+      :TSRC => Frames[76], :TSSE => Frames[77],
+      :TSST => Frames[78], :TXXX => Frames[79],
+      :TYER => Frames[80], :UFID => Frames[81],
+      :USER => Frames[82], :USLT => Frames[83],
+      :WCOM => Frames[84], :WCOP => Frames[85],
+      :WOAF => Frames[86], :WOAR => Frames[87],
+      :WOAS => Frames[88], :WORS => Frames[89],
+      :WPAY => Frames[90], :WPUB => Frames[91],
       :WXXX => Frames[92],
+    }
+
+    FramesByName = {
+      :title        => FramesByID[:TIT2],
+      :performer    => FramesByID[:TPE1],
+      :artist       => FramesByID[:TPE1],
+      :album        => FramesByID[:TALB],
+      :genre        => FramesByID[:TCON],
+      :content_type => FramesByID[:TCON],
+      :year         => FramesByID[:TYER],
+      :track        => FramesByID[:TRCK],
+      :part_of_set  => FramesByID[:TPOS],
+      :disc         => FramesByID[:TPOS],
+      :comment      => FramesByID[:COMM],
+      :composer     => FramesByID[:TCOM],
+      :grouping     => FramesByID[:TIT1],
+      :bpm          => FramesByID[:TBPM],
+      :subtitle     => FramesByID[:TIT3],
+      :date         => FramesByID[:TDAT],
+      :time         => FramesByID[:TIME],
+      :language     => FramesByID[:TLAN],
+      :lyrics       => FramesByID[:USLT],
+      :lyricist     => FramesByID[:TEXT],
+      :band         => FramesByID[:TPE2],
+      :conductor    => FramesByID[:TPE3],
+      :interpreted_by => FramesByID[:TPE4],
+      :remixed_by   => FramesByID[:TPE4],
+      :publisher    => FramesByID[:TPUB],
+      :encoded_by   => FramesByID[:TENC]
     }
     
     Fields = [

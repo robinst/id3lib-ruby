@@ -22,109 +22,61 @@ class TestWriting < Test::Unit::TestCase
     @tag = ID3Lib::Tag.new(Temp, *args)
   end
 
-  # Test the title direct access. The others like performer or album
-  # work alike
-  def test_title
-    @tag.title = 'New Title'
-    assert_equal 'New Title', @tag.title
+  def test_set_text
+    assert_raise ArgumentError do
+      @tag.set_text(:arrrtist, '2000')
+    end
+    @tag.set_text(:title, 'New Title')
+    assert_equal 'New Title', @tag.text(:title)
     @tag.update!
-    assert_equal 'New Title', @tag.title
+    assert_equal 'New Title', @tag.text(:title)
     reload!
-    assert_equal 'New Title', @tag.title
+    assert_equal 'New Title', @tag.text(:title)
   end
 
-  def test_genre
-    @tag.genre = 'Rock'
-    assert_equal 'Rock', @tag.genre
+  def test_set_text_with_number
+    @tag.set_text(:track, 4)
+    assert_equal '4', @tag.text(:track)
     @tag.update!
-    assert_equal 'Rock', @tag.genre
+    assert_equal '4', @tag.text(:track)
     reload!
-    assert_equal 'Rock', @tag.genre
+    assert_equal '4', @tag.text(:track)
   end
 
   def test_id3v1_genre
     ID3Lib::Tag.strip!(Temp, ID3Lib::V2)
     reload!
     genre_id = '(' + ID3Lib::Info::Genres.index('Rock').to_s + ')'
-    @tag.genre = genre_id
-    assert_equal genre_id, @tag.genre
+    @tag.set_text(:genre, genre_id)
+    assert_equal genre_id, @tag.text(:genre)
     @tag.update!(ID3Lib::V1)
-    assert_equal genre_id, @tag.genre
+    assert_equal genre_id, @tag.text(:genre)
     reload!(ID3Lib::V1)
-    assert_equal genre_id, @tag.genre
+    assert_equal genre_id, @tag.text(:genre)
   end
 
-  def test_track
-    @tag.track = '4'
-    assert_equal '4', @tag.track
+  def test_set_frame
+    assert_raise ArgumentError do
+      @tag.set_frame(:yearrr)
+    end
+    @tag.set_frame(:TLAN) do |f|
+      f.text = 'zho'
+    end
+    assert_equal 'zho', @tag.text(:TLAN)
     @tag.update!
-    assert_equal '4', @tag.track
+    assert_equal 'zho', @tag.text(:TLAN)
     reload!
-    assert_equal '4', @tag.track
-
-    @tag.track = '5/12'
-    assert_equal '5/12', @tag.track
-    @tag.update!
-    assert_equal '5/12', @tag.track
-    reload!
-    assert_equal '5/12', @tag.track
-
-    @tag.track = 6
-    assert_equal '6', @tag.track
-    @tag.update!
-    assert_equal '6', @tag.track
-    reload!
-    assert_equal '6', @tag.track
-  end
-
-  def test_year
-    @tag.year = '2001'
-    assert_equal '2001', @tag.year
-    @tag.update!
-    assert_equal '2001', @tag.year
-    reload!
-    assert_equal '2001', @tag.year
-
-    @tag.year = 2002
-    assert_equal '2002', @tag.year
-    @tag.update!
-    assert_equal '2002', @tag.year
-    reload!
-    assert_equal '2002', @tag.year
-  end
-
-  def test_comments
-    @tag.comment = 'New Comment'
-    assert_equal 'New Comment', @tag.comment
-    assert_equal 1, @tag.comment_frames.length
-    one = @tag.comment_frames.first
-    assert_equal 'New Comment', one.text
-    
-    @tag.update!
-    assert_equal 'New Comment', @tag.comment
-    
-    reload!
-    assert_equal 'New Comment', @tag.comment
-  end
-
-  def test_manual_frame
-    @tag << ID3Lib::Frame.new(:TLAN) { |f| f.text = 'zho' }
-    assert_equal 'zho', @tag.frame_text(:TLAN)
-    @tag.update!
-    assert_equal 'zho', @tag.frame_text(:TLAN)
-    reload!
-    assert_equal 'zho', @tag.frame_text(:TLAN)
+    assert_equal 'zho', @tag.text(:TLAN)
   end
 
   def test_apic
-    pic = ID3Lib::Frame.new(:APIC) { |f|
+    pic = @tag.set_frame(:APIC) do |f|
       f.mimetype    = 'image/jpeg'
       f.picturetype = 3
       f.description = 'A pretty picture.'
       f.textenc     = 0
       f.data        = File.read('test/data/cover.jpg')
-    }
-    @tag << pic
+    end
     @tag.update!
     assert_equal pic, @tag.frame(:APIC)
     reload!
@@ -133,11 +85,6 @@ class TestWriting < Test::Unit::TestCase
 
   def test_remove_frame
     @tag.remove_frame(:TIT2)
-    assert_nil @tag.frame(:TIT2)
-  end
-
-  def test_remove_frame_with_direct_access
-    @tag.title = nil
     assert_nil @tag.frame(:TIT2)
   end
 
@@ -171,40 +118,32 @@ class TestWriting < Test::Unit::TestCase
   def test_failing_update
     # Note filename which is a directory -> update! should fail
     @tag = ID3Lib::Tag.new("test/data/")
-    @tag.performer = "Nobody"
+    @tag.set_text(:artist, "Nobody")
     assert_equal nil, @tag.update!
   end
 
-  def test_accessors
-    accessors = %w[
+  def test_frame_names
+    names = %w[
       title performer album genre year track part_of_set comment composer
       grouping bpm subtitle date time language lyrics lyricist band
       conductor interpreted_by publisher encoded_by
     ]
-    do_tests_for_accessors(accessors)
-  end
 
-  def test_accessor_aliases
-    aliases = %w[ artist content_type disc remixed_by ]
-    do_tests_for_accessors(aliases)
-  end
-
-  def do_tests_for_accessors(accessors)
-    accessors.each do |m|
-      @tag.send("#{m}=", "#{m} test")
-      assert_equal "#{m} test", @tag.send(m)
+    names.each do |n|
+      @tag.set_text(n.to_sym, "#{n} test")
+      assert_equal "#{n} test", @tag.text(n.to_sym)
     end
 
     @tag.update!
 
-    accessors.each do |m|
-      assert_equal "#{m} test", @tag.send(m)
+    names.each do |n|
+      assert_equal "#{n} test", @tag.text(n.to_sym)
     end
 
     reload!
 
-    accessors.each do |m|
-      assert_equal "#{m} test", @tag.send(m)
+    names.each do |n|
+      assert_equal "#{n} test", @tag.text(n.to_sym)
     end
   end
 

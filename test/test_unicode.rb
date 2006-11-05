@@ -51,25 +51,23 @@ class TestUnicode < Test::Unit::TestCase
 
   def test_reading
     @tag = ID3Lib::Tag.new('test/data/unicode.mp3', ID3Lib::V2)
-    assert_equal "\x4f\x60\x59\x7d", @tag.title
+    assert_equal "\x4f\x60\x59\x7d", @tag.text(:title)
   end
 
   def test_invalid_data
-    @tag.remove_frame(:TIT2)
-    tit = ID3Lib::Frame.new(:TIT2) { |f|
+    @tag.set_frame(:title) do |f|
       f.text = 1
       f.textenc = 1
-    }
-    @tag << tit
+    end
     assert_raise(TypeError) { @tag.update!(ID3Lib::V2) }
   end
 
   def do_unicode_test(opts)
     frame = ID3Lib::Frame.new(:TIT2)
     opts.each do |field, value|
-      frame.send("#{field}=", value)
+      frame.set_field(field, value)
     end
-    @tag.title = nil
+    @tag.remove_frame(:title)
     @tag << frame
     @tag.update!(ID3Lib::V2)
     assert_equal frame, @tag.frame(:TIT2)

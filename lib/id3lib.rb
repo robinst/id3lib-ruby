@@ -1,7 +1,6 @@
 
 require 'id3lib_api'
 require 'id3lib/info'
-require 'id3lib/accessors'
 
 
 #
@@ -32,112 +31,132 @@ module ID3Lib
   # This class is the main frontend of the library.
   # Use it to read and write ID3 tag data of files.
   #
-  # === Example of use
+  # == Example of use
   #
-  #    tag = ID3Lib::Tag.new('shy_boy.mp3')
+  #   tag = ID3Lib::Tag.new("shy_boy.mp3")
   #
-  #    # Remove comments
-  #    tag.delete_if{ |frame| frame[:id] == :COMM }
+  #   # Get title
+  #   tag.text(:title)  #=> "Shy Boy"
   #
-  #    # Set year
-  #    tag.year   #=> 2000
-  #    tag.year = 2005
+  #   # Set year
+  #   tag.text(:year)   #=> "2000"
+  #   tag.set_text(:year, "2005")
   #
-  #    # Apply changes
-  #    tag.update!
+  #   # Remove comment
+  #   tag.remove_frame(:comment)
   #
-  # === Working with tags
+  #   # Apply changes
+  #   tag.update!
   #
-  # You can use a ID3Lib::Tag object like an array. In fact, it is a subclass
-  # of Array. An ID3Lib::Tag contains frames which are stored as hashes,
-  # with field IDs as keys and field values as values. The frame IDs like TIT2
-  # are the ones specified by the ID3 standard. If you don't know these IDs,
-  # you probably want to use the accessor methods described afterwards, which
-  # have a more natural naming.
+  # == Working with tags
   #
-  #    tag.each do |frame|
-  #      p frame
-  #    end
-  #    #=> {:id => :TIT2, :text => "Shy Boy", :textenc => 0}
-  #    #=> {:id => :TPE1, :text => "Katie Melua", :textenc => 0}
-  #    #=> {:id => :TALB, :text => "Piece By Piece", :textenc => 0}
-  #    #=> {:id => :TRCK, :text => "1/12", :textenc => 0}
-  #    #=> {:id => :TYER, :text => "2005", :textenc => 0}
-  #    #=> {:id => :TCON, :text => "Jazz/Blues", :textenc => 0}
+  # You can use an ID3Lib::Tag object like an array. In fact, it is a subclass
+  # of Array. A Tag contains ID3Lib::Frame objects. Each Frame object has an ID
+  # and holds field data. The frame IDs (e.g. TIT2) are the ones specified by
+  # the ID3 standard. You don't have to know these IDs, we will soon see that
+  # it is also possible to adress frames with their name.
   #
-  # === Get and set frames
+  #   tag.each do |frame|
+  #     p frame
+  #   end
   #
-  # There are a number of accessors for text frames like
-  # title, performer, album, track, year, comment and genre. Have a look
-  # at ID3Lib::Accessors for a complete list.
+  #   # Prints:
   #
-  #    tag.title    #=> "Shy Boi"
+  #   #<ID3Lib::Frame:TIT2 textenc=0, text="Shy Boy">
+  #   #<ID3Lib::Frame:TPE1 textenc=0, text="Katie Melua">
+  #   #<ID3Lib::Frame:TALB textenc=0, text="Piece By Piece">
+  #   #<ID3Lib::Frame:TRCK textenc=0, text="1/12">
+  #   #<ID3Lib::Frame:TYER textenc=0, text="2005">
+  #   #<ID3Lib::Frame:TCON textenc=0, text="Jazz/Blues">
   #
-  #    tag.title = 'Shy Boy'
-  #    tag.title    #=> "Shy Boy"
+  # == Get, set and remove frames
   #
-  #    tag.track    #=> [1,12]
-  #    tag.year     #=> 2005
+  # The methods to do this are:
+  # * text
+  # * set_text
+  # * frame
+  # * set_frame
+  # * remove_frame
   #
-  # You can always read and write the raw text if you want. You just have
-  # to use the "manual access". It is generally encouraged to use the
-  # #frame_text method where possible, because the other two result in
-  # an exception when the frame isn't found.
+  # === Text frames
   #
-  #    tag.frame_text(:TRCK)                  #=> "1/12"
-  #    tag.frame_text(:TLAN)                  #=> nil
+  # The easiest type of frames to work with are text frames (whose IDs all
+  # begin with T). Here are some examples:
   #
-  #    tag.frame(:TRCK)[:text]                #=> "1/12"
-  #    # Raises an exception, because nil[:text] isn't possible:
-  #    tag.frame(:TLAN)[:text]
+  #   tag.text(:title)  #=> "Shai Boi"
   #
-  #    tag.find{ |f| f[:id] == :TRCK }[:text] #=> "1/12"
-  #    # Also raises an exception:
-  #    tag.find{ |f| f[:id] == :TLAN }[:text]
+  #   tag.set_text(:title, "Shy Boy")
+  #   tag.text(:title)  #=> "Shy Boy"
   #
-  # Because only text frames can be set with accessors, you have to add
-  # special frames by hand.
+  #   tag.text(:track)  #=> "1/12"
+  #   tag.text(:year)   #=> "2005"
   #
-  #    # Add two comments
-  #    tag << {:id => :COMM, :text => 'chunky bacon'}
-  #    tag << {:id => :COMM, :text => 'really.'}
+  # Of course it is also possible to use IDs instead of names:
+  # 
+  #   tag.text(:TIT2)  #=> "Shy Boy"
   #
-  #    # Add an attached picture
-  #    cover = {
-  #      :id          => :APIC,
-  #      :mimetype    => 'image/jpeg',
-  #      :picturetype => 3,
-  #      :description => 'A pretty picture',
-  #      :textenc     => 0,
-  #      :data        => File.read('cover.jpg')
-  #    }
-  #    tag << cover
+  # === Removing frames
   #
-  # === Get information about frames
+  # To remove a frame from a tag, use remove_frame as follows. Note that all
+  # frames with the specified ID or name are removed.
   #
-  # In the last example we added an APIC frame. How can we know what data
-  # we have to store in the APIC hash?
+  #   tag.remove_frame(:title)
+  #   tag.remove_frame(:APIC)
   #
-  #    ID3Lib::Info.frame(:APIC)[3]
-  #    #=> [:textenc, :mimetype, :picturetype, :description, :data]
+  # === Other frames
   #
-  # We see, the last element of the info array obtained through
-  # ID3Lib::Info.frame is an array of field IDs needed by APIC.
+  # There are other frames like APIC or SYLT which don't contain text. Or
+  # maybe you want to set the textenc field of a text frame. In these cases,
+  # use the methods frame and set_frame. Again, some examples:
   #
-  # Have a look at the ID3Lib::Info module for detailed information.
+  #   # Set textenc
+  #   tag.frame(:title).textenc = 1
   #
-  # === Write changes to file
+  #   # Set an attached picture frame
+  #   tag.set_frame(:APIC) do |f|
+  #     f.description = "A pretty picture"
+  #     f.textenc     = 0
+  #     f.data        = File.read("cover.jpg")
+  #     f.mimetype    = "image/jpeg"
+  #     f.picturetype = 3
+  #   end
+  #
+  #   # Another way to do the same
+  #   apic_frame = ID3Lib::Frame.new(:APIC)
+  #   apic_frame.description = "A pretty picture"
+  #   # ... (set the rest of the fields)
+  #   tag.remove_frame(:APIC)
+  #   tag << apic_frame
+  #
+  # Note that set_frame removes all other frames with the same ID or name
+  # and then appends the frame.
+  #
+  # === What fields can be set?
+  #
+  # In the last example, we added an APIC frame. But how can we know what
+  # fields we can set? Like this:
+  #
+  #   apic_frame = ID3Lib::Frame.new(:APIC)
+  #   apic_frame.allowed_fields
+  #   #=> [:textenc, :mimetype, :picturetype, :description, :data]
+  #
+  # === What frames can be set?
+  #
+  # A similar question is what frames can be set on a tag. Have a look at
+  # ID3Lib::Info.
+  #
+  # == Writing changes to file
   #
   # When you've finished modifying a tag, don't forget to call #update! to
   # write the modifications back to the file. You have to check the return
   # value of update!, it returns nil on failure. This probably means that
   # the file is not writeable or cannot be created.
   #
-  #    tag.update!
+  #  tag.update!
   #
-  # === Getting rid of a tag
+  # == Getting rid of a tag
   #
-  # Use Tag.strip! to completely remove a tag from a file.
+  # Use the strip! class method to completely remove a tag from a file.
   #
   #    ID3Lib::Tag.strip!("urami_bushi.mp3")
   #
@@ -159,8 +178,6 @@ module ID3Lib
       return tag.strip(type)
     end
 
-
-    include Accessors
 
     attr_accessor :padding
 
@@ -191,53 +208,82 @@ module ID3Lib
     end
 
     #
-    # Simple shortcut for getting a frame by its _id_.
+    # Simple shortcut for getting a frame by its id or name.
     #
     #   tag.frame(:TIT2)
     #   #=> {:id => :TIT2, :text => "Shy Boy", :textenc => 0}
+    #   tag.frame(:title)
+    #   #=> {:id => :TIT2, :text => "Shy Boy", :textenc => 0}
     #
-    # is the same as:
-    #
-    #   tag.find{ |f| f[:id] == :TIT2 }
-    #
-    def frame(id)
+    def frame(id_or_name)
+      id = check_id(id_or_name)
       find{ |f| f.id == id }
     end
 
     #
-    # Get the text of a frame specified by _id_. Returns nil if the
+    # Removes frames with _id_or_name_ and then creates and appends a new
+    # one.
+    #
+    # If a block is given, the new frame is yielded. This is very convenient
+    # for setting the frame's fields.
+    #
+    # Returns the appended frame.
+    #
+    #   tag.set_frame(:PCNT) do |f|
+    #     f.counter = 7
+    #   end
+    #
+    # ... is the same as:
+    #
+    #   tag.remove_frame(:PCNT)
+    #   frame = ID3Lib::Frame.new(:PCNT)
+    #   frame.counter = 7
+    #   tag << frame
+    #
+    def set_frame(id_or_name)
+      id = check_id(id_or_name)
+      delete_if{ |f| f.id == id }
+      frame = Frame.new(id)
+      yield frame if block_given?
+      self << frame
+      frame
+    end
+
+    #
+    # Returns the text of a frame specified by _id_or_name_, or nil if the
     # frame can't be found.
     #
-    #   tag.find{ |f| f[:id] == :TIT2 }[:text]  #=> "Shy Boy"
-    #   tag.frame_text(:TIT2)                   #=> "Shy Boy"
+    #   tag.frame(:title).text  #=> "Shy Boy"
+    #   tag.text(:title)        #=> "Shy Boy"
     #
-    #   tag.find{ |f| f[:id] == :TLAN }         #=> nil
-    #   tag.frame_text(:TLAN)                   #=> nil
+    #   tag.frame(:TLAN).text   # raises NoMethodError (nil.text)
+    #   tag.text(:TLAN)         #=> nil
     #
-    def frame_text(id)
-      f = frame(id)
+    def text(id_or_name)
+      f = frame(id_or_name)
       f ? f.text : nil
     end
 
     #
-    # Set the text of a frame. First, all frames with the specified _id_ are
-    # deleted and then a new frame with _text_ is appended.
+    # Sets the text of a frame. First, all frames with the specified
+    # _id_or_name_ are deleted and then a new frame with _text_ is appended.
     #
-    #   tag.set_frame_text(:TLAN, 'eng')
+    #   tag.set_text(:title, "Mad World")
+    #   tag.set_text(:TLAN, "eng")
     #
-    def set_frame_text(id, text)
-      remove_frame(id)
-      if text
-        f = Frame.new(id)
+    def set_text(id_or_name, text)
+      set_frame(id_or_name) do |f|
         f.text = text.to_s
-        self << f
       end
     end
 
     #
-    # Remove all frames with the specified _id_.
+    # Removes all frames with the specified _id_or_name_.
     #
-    def remove_frame(id)
+    #   tag.remove_frame(:comment)
+    #
+    def remove_frame(id_or_name)
+      id = check_id(id_or_name)
       delete_if{ |f| f.id == id }
     end
 
@@ -313,6 +359,14 @@ module ID3Lib
       while api_frame = @tag.iterator_next_frame(iterator)
         @tag.remove_frame(api_frame)
       end
+    end
+
+    def check_id(id_or_name)
+      info = Info::FramesByID[id_or_name]
+      return info[ID] if info
+      info = Info::FramesByName[id_or_name]
+      return info[ID] if info
+      raise ArgumentError, "Invalid frame ID or name #{id_or_name.inspect}."
     end
 
   end
@@ -484,3 +538,6 @@ module ID3Lib
 
 
 end
+
+
+

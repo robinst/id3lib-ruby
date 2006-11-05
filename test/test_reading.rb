@@ -20,19 +20,30 @@ class TestReading < Test::Unit::TestCase
     assert_equal 'Pop',             @tag[7].text
   end
 
-  def test_direct_access
-    assert_equal 'Dummy Title',   @tag.title
-    assert_equal 'Dummy Artist',  @tag.artist
-    assert_equal 'Dummy Artist',  @tag.performer
-    assert_equal 'Dummy Album',   @tag.album
-    assert_equal '1/10',          @tag.track
-    assert_equal '2000',          @tag.year
-    assert_equal 'Dummy Comment', @tag.comment
-    assert_equal 'Pop',           @tag.genre
+  def test_text
+    assert_equal 'Dummy Title',   @tag.text(:title)
+    assert_equal 'Dummy Artist',  @tag.text(:artist)
+    assert_equal 'Dummy Artist',  @tag.text(:performer)
+    assert_equal 'Dummy Album',   @tag.text(:album)
+    assert_equal '1/10',          @tag.text(:track)
+    assert_equal '2000',          @tag.text(:year)
+    assert_equal 'Dummy Comment', @tag.text(:comment)
+    assert_equal 'Pop',           @tag.text(:genre)
+  end
+
+  def test_frame
+    assert_equal 'Dummy Title',   @tag.frame(:title).text
+    assert_equal 'Dummy Artist',  @tag.frame(:artist).text
+    assert_equal 'Dummy Artist',  @tag.frame(:performer).text
+    assert_equal 'Dummy Album',   @tag.frame(:album).text
+    assert_equal '1/10',          @tag.frame(:track).text
+    assert_equal '2000',          @tag.frame(:year).text
+    assert_equal 'Dummy Comment', @tag.frame(:comment).text
+    assert_equal 'Pop',           @tag.frame(:genre).text
   end
 
   def test_comments
-    one, two = @tag.comment_frames
+    one, two = @tag.select{ |f| f.id == :COMM }
     assert_not_nil one
     assert_not_nil two
     assert_equal 'Dummy Comment',   one.text
