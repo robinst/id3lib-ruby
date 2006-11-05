@@ -1,7 +1,4 @@
 = id3lib-ruby to-do list
 
-* Evaluate an object-oriented way to handle frames, instead of with hashes.
-* Make the update! method intelligent, because the call of strip each time
-  is very slow and stupid.
 * Document CONFIGURE_ARGS="--with-opt-dir=/sw"
 * Add UTF-8 support if id3lib can handle it.
