@@ -6,7 +6,8 @@ require 'id3lib/info'
 
 
 #
-# This module includes all the classes and constants of id3lib-ruby.
+# This module includes all the classes and constants of id3lib-ruby and is
+# the file to require.
 # Have a look at ID3Lib::Tag for an introduction on how to use this library.
 #
 module ID3Lib
