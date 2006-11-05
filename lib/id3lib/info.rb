@@ -35,7 +35,7 @@ module ID3Lib
   #         #=> description according to id3lib
   #
   #   f[3]  #=> [:owner, :data]
-  #         #=> IDs of fields allowed in that frame
+  #         #=> names of allowed fields for frame
   #
   # === Field information
   #
@@ -49,7 +49,7 @@ module ID3Lib
   #          #=> internal ID
   #
   #    f[1]  #=> :text
-  #          #=> field ID
+  #          #=> field name
   #
   #    f[2]  #=> "Text field"
   #          #=> description
@@ -274,7 +274,7 @@ module ID3Lib
       [23, :contenttype, "SYLT content type"]
     ]
 
-    FieldsByID = {
+    FieldsByName = {
       :nofield         => Fields[0],
       :textenc         => Fields[1],
       :text            => Fields[2],
@@ -363,12 +363,12 @@ module ID3Lib
     end
     
     #
-    # Get information of field specified by _id_.
+    # Get information of field specified by _name_.
     #
-    #    ID3Lib::Info.field(:text)  #=> [2, :text, "Text field"]
+    #   ID3Lib::Info.field(:text)  #=> [2, :text, "Text field"]
     #
-    def self.field(id)
-      FieldsByID[id]
+    def self.field(name)
+      FieldsByName[name]
     end
 
     def self.field_num(num)
