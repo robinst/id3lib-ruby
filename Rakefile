@@ -119,6 +119,7 @@ Rake::RDocTask.new :web_doc do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
+desc "Generate syntax-highlighted HTML of usage.rb."
 task :usage_html do
   require 'syntax/convertors/html'
   convertor = Syntax::Convertors::HTML.for_syntax('ruby')

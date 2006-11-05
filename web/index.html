@@ -120,38 +120,35 @@ further explanation.
 <span class="ident">require</span> <span class="punct">'</span><span class="string">id3lib</span><span class="punct">'</span>
 
 <span class="comment"># Load a tag from a file</span>
-<span class="ident">tag</span> <span class="punct">=</span> <span class="constant">ID3Lib</span><span class="punct">::</span><span class="constant">Tag</span><span class="punct">.</span><span class="ident">new</span><span class="punct">('</span><span class="string">talk.mp3</span><span class="punct">')</span>
+<span class="ident">tag</span> <span class="punct">=</span> <span class="constant">ID3Lib</span><span class="punct">::</span><span class="constant">Tag</span><span class="punct">.</span><span class="ident">new</span><span class="punct">(&quot;</span><span class="string">talk.mp3</span><span class="punct">&quot;)</span>
 
-<span class="comment"># Get and set text frames with convenience methods</span>
-<span class="ident">tag</span><span class="punct">.</span><span class="ident">title</span>  <span class="comment">#=&gt; &quot;Talk&quot;</span>
-<span class="ident">tag</span><span class="punct">.</span><span class="ident">album</span> <span class="punct">=</span> <span class="punct">'</span><span class="string">X&amp;Y</span><span class="punct">'</span>
-<span class="ident">tag</span><span class="punct">.</span><span class="ident">track</span> <span class="punct">=</span> <span class="punct">'</span><span class="string">5/13</span><span class="punct">'</span>
+<span class="comment"># Get and set text frames</span>
+<span class="ident">tag</span><span class="punct">.</span><span class="ident">text</span><span class="punct">(</span><span class="symbol">:title</span><span class="punct">)</span>  <span class="comment">#=&gt; &quot;Talk&quot;</span>
+<span class="ident">tag</span><span class="punct">.</span><span class="ident">set_text</span><span class="punct">(</span><span class="symbol">:album</span><span class="punct">,</span> <span class="punct">&quot;</span><span class="string">X&amp;Y</span><span class="punct">&quot;)</span>
+<span class="ident">tag</span><span class="punct">.</span><span class="ident">set_text</span><span class="punct">(</span><span class="symbol">:track</span><span class="punct">,</span> <span class="punct">'</span><span class="string">5/13</span><span class="punct">')</span>
 
-<span class="comment"># Tag is a subclass of Array and each frame is a Hash</span>
-<span class="ident">tag</span><span class="punct">[</span><span class="number">0</span><span class="punct">]</span>
-<span class="comment">#=&gt; { :id =&gt; :TPE1, :textenc =&gt; 0, :text =&gt; &quot;Coldplay&quot; }</span>
+<span class="comment"># Tag is a subclass of Array and holds Frame objects</span>
+<span class="ident">p</span> <span class="ident">tag</span><span class="punct">[</span><span class="number">0</span><span class="punct">]</span>
+<span class="comment">#=&gt; #&lt;ID3Lib::Frame:TPE1 textenc=0, text=&quot;Coldplay&quot;&gt;</span>
 
 <span class="comment"># Get the number of frames</span>
 <span class="ident">tag</span><span class="punct">.</span><span class="ident">length</span>  <span class="comment">#=&gt; 7</span>
 
 <span class="comment"># Remove all comment frames</span>
-<span class="ident">tag</span><span class="punct">.</span><span class="ident">delete_if</span><span class="punct">{</span> <span class="punct">|</span><span class="ident">frame</span><span class="punct">|</span> <span class="ident">frame</span><span class="punct">[</span><span class="symbol">:id</span><span class="punct">]</span> <span class="punct">==</span> <span class="symbol">:COMM</span> <span class="punct">}</span>
+<span class="ident">tag</span><span class="punct">.</span><span class="ident">remove_frame</span><span class="punct">(</span><span class="symbol">:comment</span><span class="punct">)</span>
 
-<span class="comment"># Get info about APIC frame to see which fields are allowed</span>
-<span class="constant">ID3Lib</span><span class="punct">::</span><span class="constant">Info</span><span class="punct">.</span><span class="ident">frame</span><span class="punct">(</span><span class="symbol">:APIC</span><span class="punct">)</span>
-<span class="comment">#=&gt; [ 2, :APIC, &quot;Attached picture&quot;,</span>
-<span class="comment">#=&gt;   [:textenc, :mimetype, :picturetype, :description, :data] ]</span>
+<span class="comment"># Create new APIC frame and find out which fields are allowed</span>
+<span class="ident">apic</span> <span class="punct">=</span> <span class="constant">ID3Lib</span><span class="punct">::</span><span class="constant">Frame</span><span class="punct">.</span><span class="ident">new</span><span class="punct">(</span><span class="symbol">:APIC</span><span class="punct">)</span>
+<span class="ident">p</span> <span class="ident">apic</span><span class="punct">.</span><span class="ident">allowed_fields</span>
+<span class="comment">#=&gt; [:textenc, :mimetype, :picturetype, :description, :data]</span>
 
-<span class="comment"># Add an attached picture frame</span>
-<span class="ident">cover</span> <span class="punct">=</span> <span class="punct">{</span>
-  <span class="symbol">:id</span>          <span class="punct">=&gt;</span> <span class="symbol">:APIC</span><span class="punct">,</span>
-  <span class="symbol">:mimetype</span>    <span class="punct">=&gt;</span> <span class="punct">'</span><span class="string">image/jpeg</span><span class="punct">',</span>
-  <span class="symbol">:picturetype</span> <span class="punct">=&gt;</span> <span class="number">3</span><span class="punct">,</span>
-  <span class="symbol">:description</span> <span class="punct">=&gt;</span> <span class="punct">'</span><span class="string">A pretty picture</span><span class="punct">',</span>
-  <span class="symbol">:textenc</span>     <span class="punct">=&gt;</span> <span class="number">0</span><span class="punct">,</span>
-  <span class="symbol">:data</span>        <span class="punct">=&gt;</span> <span class="constant">File</span><span class="punct">.</span><span class="ident">read</span><span class="punct">('</span><span class="string">cover.jpg</span><span class="punct">')</span>
-<span class="punct">}</span>
-<span class="ident">tag</span> <span class="punct">&lt;&lt;</span> <span class="ident">cover</span>
+<span class="comment"># Set the fields and append to tag</span>
+<span class="ident">apic</span><span class="punct">.</span><span class="ident">description</span> <span class="punct">=</span> <span class="punct">&quot;</span><span class="string">A pretty picture</span><span class="punct">&quot;</span>
+<span class="ident">apic</span><span class="punct">.</span><span class="ident">textenc</span>     <span class="punct">=</span> <span class="number">0</span>
+<span class="ident">apic</span><span class="punct">.</span><span class="ident">data</span>        <span class="punct">=</span> <span class="constant">File</span><span class="punct">.</span><span class="ident">read</span><span class="punct">(&quot;</span><span class="string">cover.jpg</span><span class="punct">&quot;)</span>
+<span class="ident">apic</span><span class="punct">.</span><span class="ident">mimetype</span>    <span class="punct">=</span> <span class="punct">'</span><span class="string">image/jpeg</span><span class="punct">'</span>
+<span class="ident">apic</span><span class="punct">.</span><span class="ident">picturetype</span> <span class="punct">=</span> <span class="number">3</span>
+<span class="ident">tag</span> <span class="punct">&lt;&lt;</span> <span class="ident">apic</span>
 
 <span class="comment"># Last but not least, apply changes</span>
 <span class="ident">tag</span><span class="punct">.</span><span class="ident">update!</span>
