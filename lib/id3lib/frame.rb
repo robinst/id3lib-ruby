@@ -47,6 +47,9 @@ module ID3Lib
     end
 
     def field(name)
+      if not @allowed_fields.include?(name)
+        raise ArgumentError, "invalid field name #{name.inspect}"
+      end
       @fields[name]
     end
 
