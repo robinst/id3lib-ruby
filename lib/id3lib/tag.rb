@@ -153,6 +153,11 @@ module ID3Lib
     end
 
 
+    #
+    # Add padding to the file? Padding is free space (up to 2 KiB) after the
+    # tag data, which enables minimal file write times for future updates.
+    # Padding is on by default.
+    #
     attr_accessor :padding
 
     #
