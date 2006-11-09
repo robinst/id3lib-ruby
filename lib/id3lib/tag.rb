@@ -132,7 +132,7 @@ module ID3Lib
   #
   # Use the strip! class method to completely remove a tag from a file.
   #
-  #    ID3Lib::Tag.strip!("urami_bushi.mp3")
+  #   ID3Lib::Tag.strip!("urami_bushi.mp3")
   #
   class Tag < Array
 

@@ -43,23 +43,23 @@ module ID3Lib
   #
   # The array for a field is:
   #
-  #    f = ID3Lib::Info.field(:text)
+  #   f = ID3Lib::Info.field(:text)
   #
-  #    f[0]  #=> 2
-  #          #=> internal ID
+  #   f[0]  #=> 2
+  #         #=> internal ID
   #
-  #    f[1]  #=> :text
-  #          #=> field name
+  #   f[1]  #=> :text
+  #         #=> field name
   #
-  #    f[2]  #=> "Text field"
-  #          #=> description
+  #   f[2]  #=> "Text field"
+  #         #=> description
   #
   # === Genre information
   #
   # Genre information is useful if you want to set the genre of an ID3v1 tag
   # or to get an overview of genres.
   #
-  #    ID3Lib::Info::Genres.index("Pop")   #=> 13
+  #   ID3Lib::Info::Genres.index("Pop")   #=> 13
   #
   module Info
     
@@ -352,7 +352,7 @@ module ID3Lib
     #
     # Get information of frame specified by _id_.
     #
-    #    ID3Lib::Info.frame(:TIT2)  #=> [47, :TIT2, "Title/songname/content description", [:textenc, :text]]
+    #   ID3Lib::Info.frame(:TIT2)  #=> [47, :TIT2, "Title/songname/content description", [:textenc, :text]]
     #
     def self.frame(id)
       FramesByID[id]
