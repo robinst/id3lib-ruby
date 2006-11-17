@@ -332,7 +332,11 @@ module ID3Lib
 
       info[FIELDS].each do |field_id|
         libfield = field(libframe, field_id)
-        next unless libfield
+        unless libfield
+          warn "id3lib-ruby: Invalid field #{field_id.inspect} in " \
+               "#{frame[:id].inspect}, please report this as a bug."
+          next
+        end
         frame[field_id] =
           case Info::FieldType[libfield.get_type]
           when :integer
