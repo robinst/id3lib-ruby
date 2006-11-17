@@ -83,7 +83,7 @@ module ID3Lib
       [10, :GEOB, "General encapsulated object", [:textenc, :mimetype, :filename, :description, :data]],
       [11, :GRID, "Group identification registration", [:owner, :id, :data]],
       [12, :IPLS, "Involved people list", [:textenc, :text]],
-      [13, :LINK, "Linked information", [:data]],
+      [13, :LINK, "Linked information", [:text, :url, :id]],
       [14, :MCDI, "Music CD identifier", [:data]],
       [15, :MLLT, "MPEG location lookup table", [:data]],
       [16, :OWNE, "Ownership frame", [:data]],

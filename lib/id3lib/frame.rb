@@ -156,7 +156,11 @@ module ID3Lib
         next unless @allowed_fields.include? field_id
 
         api_field = @api_frame.get_field(Info.field(field_id)[NUM])
-        next unless api_field
+        unless api_field
+          warn "id3lib-ruby: Invalid field #{field_id.inspect} in " \
+               "#{@id.inspect}, please report this as a bug."
+          next
+        end
 
         case Info.field_type(api_field.get_type)
         when :integer
