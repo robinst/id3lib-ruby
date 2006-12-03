@@ -72,6 +72,7 @@ class TestWriting < Test::Unit::TestCase
   def test_apic
     pic = @tag.set_frame(:APIC) do |f|
       f.mimetype    = 'image/jpeg'
+      f.imageformat = ''
       f.picturetype = 3
       f.description = 'A pretty picture.'
       f.textenc     = 0
