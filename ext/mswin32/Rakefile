@@ -1,7 +1,7 @@
 require 'rake/clean'
 
 ID3LIB = 'id3lib-3.8.3'
-RUBY   = 'ruby-1.8.4'
+RUBY   = 'ruby-1.8.5'
 
 PREFIX = File.expand_path("./prefix")
 
@@ -13,11 +13,12 @@ task :default => ["id3lib_api.so"]
 
 file "id3lib_api.so" => ["../id3lib_api_wrap.cxx", "prefix/lib/ruby", "prefix/lib/libid3.a"] do
   sh <<-CMD
-    i386-mingw32msvc-c++ -g -Os -DID3LIB_LINKOPTION=1 \
+    mingw32-g++ -Os -DID3LIB_LINKOPTION=1 \
+      -include fstream \
       -I#{PREFIX}/lib/ruby/1.8/i386-mingw32 \
       -I#{PREFIX}/include \
       -c ../id3lib_api_wrap.cxx
-    i386-mingw32msvc-c++ -shared -s -Wl,--enable-auto-import,--export-all \
+    mingw32-g++ -shared -s -Wl,--enable-auto-import,--export-all \
       -L#{PREFIX}/lib -o id3lib_api.so id3lib_api_wrap.o \
       -lmsvcrt-ruby18 -lid3 -lz
   CMD
@@ -26,11 +27,11 @@ end
 file "prefix/lib/ruby" => ["src/#{RUBY}/config.log"] do
   sh <<-CMD
     cd src/#{RUBY}
-    ac_cv_func_getpgrp_void=no ac_cv_func_setpgrp_void=yes \
+    CFLAGS="-Os" \
+      ac_cv_func_getpgrp_void=no ac_cv_func_setpgrp_void=yes \
       rb_cv_negative_time_t=no ac_cv_func_memcmp_working=yes \
       rb_cv_binary_elf=no \
-      ./configure  --host=i386-mingw32msvc \
-      --target=i386-mingw32 --prefix=#{PREFIX}
+      ./configure  --host=mingw32 --prefix=#{PREFIX}
     make && make install
   CMD
 end
@@ -47,9 +48,8 @@ end
 file "prefix/lib/libid3.a" => ["src/#{ID3LIB}/config.log"] do
   sh <<-CMD
     cd src/#{ID3LIB}
-    CFLAGS="-Os" \
-      CXXFLAGS="-DID3LIB_LINKOPTION=1 -Os" \
-      ./configure --host=i386-mingw32msvc --prefix=#{PREFIX}
+    CFLAGS="-Os" CXXFLAGS="-Os -DID3LIB_LINKOPTION=1" \
+      ./configure --host=mingw32 --prefix=#{PREFIX}
     make && make install
   CMD
 end
