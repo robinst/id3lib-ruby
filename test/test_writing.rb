@@ -119,6 +119,7 @@ class TestWriting < Test::Unit::TestCase
     pic = {
       :id           => :APIC,
       :mimetype     => 'image/jpeg',
+      :imageformat  => '',
       :picturetype  => 3,
       :description  => 'A pretty picture.',
       :textenc      => 0,
