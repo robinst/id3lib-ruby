@@ -1,0 +1,17 @@
+= id3lib-ruby installation instructions
+
+== Windows
+
+There are precompiled binary gems available for Windows, so the installation is as simple as typing
+
+  gem install id3lib-ruby
+
+and selecting the newest mswin32 gem.
+
+== OS X with Fink
+
+== Gentoo
+
+== Debian
+
+== Others
