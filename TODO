@@ -2,3 +2,4 @@
 
 * Document CONFIGURE_ARGS="--with-opt-dir=/sw"
 * Add UTF-8 support if id3lib can handle it.
+* Wrap GetMp3HeaderInfo for bitrate, frequency, etc.
