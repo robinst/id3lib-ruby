@@ -2,16 +2,36 @@
 
 == Windows
 
-There are precompiled binary gems available for Windows, so the installation is as simple as typing
+There are precompiled binary gems available for Windows, so the installation
+is as simple as typing the following and selecting the newest mswin32 gem:
 
   gem install id3lib-ruby
 
-and selecting the newest mswin32 gem.
-
 == OS X with Fink
+
+Install id3lib4-dev through fink:
+
+  sudo fink install id3lib4-dev
+
+Fink installs the header and library files in /sw, so this is necessary:
+
+  export CONFIGURE_ARGS="--with-opt-dir=/sw"
+
+Then either use RubyGems or setup.rb.
 
 == Gentoo
 
+  sudo emerge --noreplace id3lib
+
 == Debian
 
+  sudo aptitude install libid3-dev
+
 == Others
+
+Download id3lib from http://id3lib.sourceforge.net and unpack it. Then do:
+
+  ./configure && make
+  sudo make install
+
+  export CONFIGURE_ARGS="--with-opt-dir=/usr/local"
