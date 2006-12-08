@@ -11,7 +11,7 @@ is as simple as typing the following and selecting the newest mswin32 gem:
 
 For other systems, there is a RubyGems package or a compressed archive.
 
-=== Prerequirements
+=== Prerequisites
 
 Before installing id3lib-ruby, you need to install the underlying id3lib
 library and, depending on your system, set CONFIGURE_ARGS.
@@ -47,11 +47,11 @@ Download, compile and install id3lib. When installing in
 
 === Installing id3lib-ruby
 
-Now you're ready to install id3lib-ruby. If you use RubyGems, do:
+Now you're ready to install id3lib-ruby. If you use RubyGems, run the
+following and select the newest version marked "ruby":
 
   sudo gem install id3lib-ruby
-  # select a version marked "ruby"
 
-Or if you install from the archive, unpack it and run the following:
+Or if you install from the archive, unpack it and do:
 
   sudo ruby setup.rb
