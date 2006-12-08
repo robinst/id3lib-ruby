@@ -10,8 +10,6 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 
 
-PKG_VERSION = '0.4.1'
-
 FILES_COMMON = FileList[
   'lib/**/*.rb',
   'test/test_*.rb',
@@ -69,7 +67,7 @@ task :doc => [:rdoc]
 if defined? Gem
   spec = Gem::Specification.new do |s|
     s.name        = 'id3lib-ruby'
-    s.version     = PKG_VERSION
+    s.version     = File.read('lib/id3lib.rb')[/VERSION = '(.*)'/, 1]
     s.summary     =
       'id3lib-ruby provides a Ruby interface to the id3lib C++ library for ' +
       'easily editing ID3 tags (v1 and v2) like with pyid3lib.'
@@ -99,9 +97,9 @@ if defined? Gem
 
   desc "Build mswin32 gem."
   task :gem_mswin32 => [:ext_mswin32] do
-    Gem::Builder.new(spec_mswin32).build
-    mkdir_p "pkg"
-    mv "id3lib-ruby-#{PKG_VERSION}-mswin32.gem", "pkg/"
+    gemfile = Gem::Builder.new(spec_mswin32).build
+    mkpath "pkg"
+    mv gemfile, "pkg/"
   end
 
 end  # defined? Gem

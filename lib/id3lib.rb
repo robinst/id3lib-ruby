@@ -11,6 +11,7 @@ require 'id3lib/info'
 # Have a look at ID3Lib::Tag for an introduction on how to use this library.
 #
 module ID3Lib
+  VERSION = '0.5.0'
 
   # ID3 version 1. The V constants are used with the methods
   # new, update!, strip! and has_tag_type? of ID3Lib::Tag. 
