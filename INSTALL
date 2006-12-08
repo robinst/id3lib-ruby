@@ -1,0 +1,57 @@
+= id3lib-ruby installation instructions
+
+== Binary package (Windows)
+
+There are precompiled binary gems available for Windows, so the installation
+is as simple as typing the following and selecting the newest mswin32 gem:
+
+  gem install id3lib-ruby
+
+== Source package
+
+For other systems, there is a RubyGems package or a compressed archive.
+
+=== Prerequisites
+
+Before installing id3lib-ruby, you need to install the underlying id3lib
+library and, depending on your system, set CONFIGURE_ARGS.
+
+==== Debian
+
+Install <code>libid3-dev</code> and be sure to have <code>ruby1.8-dev</code>
+installed, otherwise you won't be able to build Ruby extensions.
+
+  sudo aptitude install libid3-dev
+
+==== Gentoo
+
+  sudo emerge --noreplace id3lib
+
+==== OS X with Fink
+
+Install <code>id3lib4-dev</code>:
+
+  sudo fink install id3lib4-dev
+
+Fink puts the library and header files in <code>/sw</code>. In order to
+enable the id3lib-ruby install program to find them, do:
+
+  export CONFIGURE_ARGS="--with-opt-dir=/sw"
+
+==== Manual compilation
+
+Download, compile and install id3lib. When installing in
+<code>/usr/local</code>, you have to set CONFIGURE_ARGS:
+
+  export CONFIGURE_ARGS="--with-opt-dir=/usr/local"
+
+=== Installing id3lib-ruby
+
+Now you're ready to install id3lib-ruby. If you use RubyGems, run the
+following and select the newest version marked "ruby":
+
+  sudo gem install id3lib-ruby
+
+Or if you install from the archive, unpack it and do:
+
+  sudo ruby setup.rb

@@ -21,6 +21,10 @@ FILES_COMMON = FileList[
   '*.rb'
 ]
 
+FILES_DOC = FileList[
+  'README', 'INSTALL', 'TODO', 'CHANGES'
+]
+
 FILES_EXT = FileList[
   'ext/*.rb',
   'ext/*.cxx',
@@ -56,8 +60,8 @@ Rake::RDocTask.new :rdoc do |rdoc|
   rdoc.rdoc_dir = 'doc'
   rdoc.title = 'id3lib-ruby'
   rdoc.options = RDOC_OPTS
+  rdoc.rdoc_files.include(FILES_DOC)
   rdoc.rdoc_files.include('lib/**/*.rb')
-  rdoc.rdoc_files.include('README', 'TODO', 'CHANGES')
 end
 task :doc => [:rdoc]
 
@@ -74,7 +78,7 @@ if defined? Gem
     s.extensions  = ['ext/extconf.rb']
     s.test_files  = FileList['test/test_*.rb']
     s.has_rdoc    = true
-    s.extra_rdoc_files = FileList['README', 'CHANGES', 'TODO']
+    s.extra_rdoc_files = FILES_DOC
     s.rdoc_options = RDOC_OPTS
     s.author      = 'Robin Stocker'
     s.email       = 'robinstocker@rubyforge.org'
@@ -115,7 +119,7 @@ Rake::RDocTask.new :web_doc do |rdoc|
   rdoc.title = 'id3lib-ruby'
   rdoc.options = RDOC_OPTS.clone
   rdoc.options << '--main' << 'ID3Lib::Tag'
-  rdoc.rdoc_files.include('README', 'TODO', 'CHANGES')
+  rdoc.rdoc_files.include(FILES_DOC)
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
