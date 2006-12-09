@@ -9,6 +9,15 @@ id3lib_dir = Pathname.new(ARGV.first || '/home/robin/tmp/id3lib-3.8.3')
 globals_file = File.read(id3lib_dir + 'include/id3/globals.h')
 field_file   = File.read(id3lib_dir + 'src/field.cpp')
 
+def field_symbol(enum_name)
+  f = enum_name[/ID3FN_(.*)/, 1].downcase
+  if f == 'id'
+    :identifier
+  else
+    f.to_sym
+  end
+end
+
 
 field_groups   = {}
 allowed_fields = {}
@@ -20,7 +29,7 @@ field_file.scan(/ID3_FieldDef (\w+)[^\{]+\{(.+?)\};/m) do |group, body|
     fields << field_name
   end
   fields.uniq!
-  fields.map!{ |f| f[/ID3FN_(.*)/, 1].downcase.to_sym }
+  fields.map!{ |f| field_symbol(f) }
   field_groups[group] = fields
 end
 
@@ -47,7 +56,7 @@ globals_file.scan(/ID3_ENUM\((\w+)\)\s+\{\s+(.+?)\s+\}/m) do |name, enum|
     enum.scan(/([^\s,]+)(?: = (\d+),|,)\s*\/\*\*< ([^*]+)\s+\*\//m) do |field, newid, description|
       id = newid.to_i if newid
 
-      field = field[/ID3FN_(.*)/, 1].downcase.to_sym
+      field = field_symbol(field)
       field_info << [id, field, description]
 
       id += 1
