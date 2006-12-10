@@ -326,16 +326,16 @@ module ID3Lib
     private
 
     def read_frames
-      iterator = @tag.iterator_new
-      while api_frame = @tag.iterator_next_frame(iterator)
+      iterator = @tag.create_iterator
+      while api_frame = iterator.get_next
         frame = Frame.new(api_frame)
         self << frame
       end
     end
 
     def remove_all_api_frames
-      iterator = @tag.iterator_new
-      while api_frame = @tag.iterator_next_frame(iterator)
+      iterator = @tag.create_iterator
+      while api_frame = iterator.get_next
         @tag.remove_frame(api_frame)
       end
     end

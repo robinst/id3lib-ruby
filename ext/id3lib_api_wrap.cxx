@@ -1810,9 +1810,6 @@ SWIG_AsVal_bool (VALUE obj, bool *val)
   return SWIG_TypeError;
 }
 
-SWIGINTERN ID3_Frame *ID3_Tag_iterator_next_frame(ID3_Tag *self,ID3_Tag::Iterator *iterator){
-			return iterator->GetNext();
-		}
 
 SWIGINTERNINLINE VALUE
 SWIG_From_int  (int value)
@@ -2506,7 +2503,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Tag_iterator_new(int argc, VALUE *argv, VALUE self) {
+_wrap_Tag_create_iterator(int argc, VALUE *argv, VALUE self) {
   ID3_Tag *arg1 = (ID3_Tag *) 0 ;
   ID3_Tag::Iterator *result = 0 ;
   void *argp1 = 0 ;
@@ -2522,44 +2519,43 @@ _wrap_Tag_iterator_new(int argc, VALUE *argv, VALUE self) {
   }
   arg1 = reinterpret_cast< ID3_Tag * >(argp1);
   result = (ID3_Tag::Iterator *)(arg1)->CreateIterator();
-  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_ID3_Tag__Iterator, 0 |  0 );
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_ID3_Tag__Iterator, SWIG_POINTER_OWN |  0 );
   return vresult;
 fail:
   return Qnil;
 }
 
 
+swig_class cTag_Iterator;
+
 SWIGINTERN VALUE
-_wrap_Tag_iterator_next_frame(int argc, VALUE *argv, VALUE self) {
-  ID3_Tag *arg1 = (ID3_Tag *) 0 ;
-  ID3_Tag::Iterator *arg2 = (ID3_Tag::Iterator *) 0 ;
+_wrap_Tag_Iterator_get_next(int argc, VALUE *argv, VALUE self) {
+  ID3_Tag::Iterator *arg1 = (ID3_Tag::Iterator *) 0 ;
   ID3_Frame *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
   VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_ID3_Tag, 0 |  0 );
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_ID3_Tag__Iterator, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "iterator_next_frame" "', argument " "1"" of type '" "ID3_Tag *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetNext" "', argument " "1"" of type '" "ID3_Tag::Iterator *""'"); 
   }
-  arg1 = reinterpret_cast< ID3_Tag * >(argp1);
-  res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_ID3_Tag__Iterator, 0 |  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "iterator_next_frame" "', argument " "2"" of type '" "ID3_Tag::Iterator *""'"); 
-  }
-  arg2 = reinterpret_cast< ID3_Tag::Iterator * >(argp2);
-  result = (ID3_Frame *)ID3_Tag_iterator_next_frame(arg1,arg2);
+  arg1 = reinterpret_cast< ID3_Tag::Iterator * >(argp1);
+  result = (ID3_Frame *)(arg1)->GetNext();
   vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_ID3_Frame, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
 }
 
+
+SWIGINTERN void
+free_ID3_Tag_Iterator(ID3_Tag::Iterator *arg1) {
+    delete arg1;
+}
 
 swig_class cFrame;
 
@@ -3302,11 +3298,18 @@ SWIGEXPORT void Init_id3lib_api(void) {
   rb_define_method(cTag.klass, "set_padding", VALUEFUNC(_wrap_Tag_set_padding), -1);
   rb_define_method(cTag.klass, "size", VALUEFUNC(_wrap_Tag_size), -1);
   rb_define_method(cTag.klass, "find", VALUEFUNC(_wrap_Tag_find), -1);
-  rb_define_method(cTag.klass, "iterator_new", VALUEFUNC(_wrap_Tag_iterator_new), -1);
-  rb_define_method(cTag.klass, "iterator_next_frame", VALUEFUNC(_wrap_Tag_iterator_next_frame), -1);
+  rb_define_method(cTag.klass, "create_iterator", VALUEFUNC(_wrap_Tag_create_iterator), -1);
   cTag.mark = 0;
   cTag.destroy = (void (*)(void *)) free_ID3_Tag;
   cTag.trackObjects = 0;
+  
+  cTag_Iterator.klass = rb_define_class_under(mAPI, "Tag_Iterator", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_ID3_Tag__Iterator, (void *) &cTag_Iterator);
+  rb_undef_alloc_func(cTag_Iterator.klass);
+  rb_define_method(cTag_Iterator.klass, "get_next", VALUEFUNC(_wrap_Tag_Iterator_get_next), -1);
+  cTag_Iterator.mark = 0;
+  cTag_Iterator.destroy = (void (*)(void *)) free_ID3_Tag_Iterator;
+  cTag_Iterator.trackObjects = 0;
   
   cFrame.klass = rb_define_class_under(mAPI, "Frame", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_ID3_Frame, (void *) &cFrame);
