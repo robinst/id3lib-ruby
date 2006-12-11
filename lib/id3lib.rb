@@ -315,8 +315,8 @@ module ID3Lib
     private
 
     def read_frames
-      iterator = @tag.iterator_new
-      while libframe = @tag.iterator_next_frame(iterator)
+      iterator = @tag.create_iterator
+      while libframe = iterator.get_next
         self << Frame.read(libframe)
       end
     end

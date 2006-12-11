@@ -54,17 +54,18 @@ public:
 	%rename (find) Find;
 	ID3_Frame * Find(ID3_FrameID name) const;
 
-	%rename (iterator_new) CreateIterator;
+	%rename (create_iterator) CreateIterator;
+	%newobject CreateIterator;
 	ID3_Tag::Iterator * CreateIterator();
+};
 
-	// Needed because SWIG does not support nested classes yet.
-	%extend
-	{
-		ID3_Frame * iterator_next_frame(ID3_Tag::Iterator *iterator)
-		{
-			return iterator->GetNext();
-		}
-	}
+%rename (Tag_Iterator) ID3_Tag::Iterator;
+class ID3_Tag::Iterator
+{
+public:
+
+	%rename (get_next) GetNext;
+	virtual ID3_Frame * GetNext() = 0;
 };
 
 
