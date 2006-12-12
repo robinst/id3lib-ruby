@@ -31,7 +31,7 @@ won't be able to build Ruby extensions.
 
 Install id3lib4-dev:
 
-  sudo fink install id3lib4-dev
+  sudo apt-get install id3lib4-dev
 
 Fink puts the library and header files in /sw. In order to enable the
 id3lib-ruby install program to find them, do:
