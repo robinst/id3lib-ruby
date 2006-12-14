@@ -25,7 +25,7 @@ won't be able to build Ruby extensions.
 
 ==== Gentoo
 
-  sudo emerge --noreplace id3lib
+  sudo emerge -n id3lib
 
 ==== OS X with Fink
 
