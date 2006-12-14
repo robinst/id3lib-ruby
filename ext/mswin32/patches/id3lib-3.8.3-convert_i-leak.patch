@@ -1,0 +1,30 @@
+--- id3lib-3.8.3.orig/src/utils.cpp	2003-03-02 01:23:00.000000000 +0100
++++ id3lib-3.8.3/src/utils.cpp	2006-12-14 21:51:54.000000000 +0100
+@@ -125,6 +125,7 @@
+     const char* source_str = source.data();
+ #else
+     char *source_str = new char[source.size()+1];
++    char *allocated_source_str = source_str;
+     source.copy(source_str, String::npos);
+     source_str[source.length()] = 0;
+ #endif
+@@ -143,6 +144,9 @@
+       if (nconv == (size_t) -1 && errno != EINVAL && errno != E2BIG)
+       {
+ // errno is probably EILSEQ here, which means either an invalid byte sequence or a valid but unconvertible byte sequence 
++#if !defined(ID3LIB_ICONV_OLDSTYLE)
++        delete [] allocated_source_str;
++#endif
+         return target;
+       }
+       target.append(buf, ID3LIB_BUFSIZ - target_size);
+@@ -150,6 +154,9 @@
+       target_size = ID3LIB_BUFSIZ;
+     }
+     while (source_size > 0);
++#if !defined(ID3LIB_ICONV_OLDSTYLE)
++    delete [] allocated_source_str;
++#endif
+     return target;
+   }
+ 
