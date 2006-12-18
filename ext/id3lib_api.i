@@ -51,6 +51,9 @@ public:
 	%rename (size) Size;
 	size_t Size() const;
 
+	%rename (num_frames) NumFrames;
+	size_t NumFrames() const;
+
 	%rename (find) Find;
 	ID3_Frame * Find(ID3_FrameID name) const;
 

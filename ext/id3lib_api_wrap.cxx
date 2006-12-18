@@ -2471,6 +2471,30 @@ fail:
 
 
 SWIGINTERN VALUE
+_wrap_Tag_num_frames(int argc, VALUE *argv, VALUE self) {
+  ID3_Tag *arg1 = (ID3_Tag *) 0 ;
+  size_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_ID3_Tag, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NumFrames" "', argument " "1"" of type '" "ID3_Tag const *""'"); 
+  }
+  arg1 = reinterpret_cast< ID3_Tag * >(argp1);
+  result = ((ID3_Tag const *)arg1)->NumFrames();
+  vresult = SWIG_From_size_t(static_cast< size_t >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_Tag_find(int argc, VALUE *argv, VALUE self) {
   ID3_Tag *arg1 = (ID3_Tag *) 0 ;
   ID3_FrameID arg2 ;
@@ -3297,6 +3321,7 @@ SWIGEXPORT void Init_id3lib_api(void) {
   rb_define_method(cTag.klass, "get_filename", VALUEFUNC(_wrap_Tag_get_filename), -1);
   rb_define_method(cTag.klass, "set_padding", VALUEFUNC(_wrap_Tag_set_padding), -1);
   rb_define_method(cTag.klass, "size", VALUEFUNC(_wrap_Tag_size), -1);
+  rb_define_method(cTag.klass, "num_frames", VALUEFUNC(_wrap_Tag_num_frames), -1);
   rb_define_method(cTag.klass, "find", VALUEFUNC(_wrap_Tag_find), -1);
   rb_define_method(cTag.klass, "create_iterator", VALUEFUNC(_wrap_Tag_create_iterator), -1);
   cTag.mark = 0;

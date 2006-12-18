@@ -60,4 +60,9 @@ class TestReading < Test::Unit::TestCase
     assert_equal 2038, @tag.size
   end
 
+  def test_num_frames
+    assert_equal 9, @tag.length
+    assert_equal 9, @tag.instance_variable_get(:@tag).num_frames
+  end
+
 end
