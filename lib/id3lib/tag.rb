@@ -179,6 +179,21 @@ module ID3Lib
     end
 
     #
+    # Returns an object on which the following methods can be called to get
+    # MP3 header information:
+    #
+    # layer, version, bitrate, vbr_bitrate, frequency, channelmode, time,
+    # modeext, emphasis, crc, framesize, frames, privatebit, copyrighted,
+    # original
+    #
+    #   tag.header_info.frequency  #=> 48000
+    #   tag.header_info.bitrate    #=> 128000
+    #
+    def header_info
+      @tag.get_mp3_header_info
+    end
+
+    #
     # Returns an estimate of the number of bytes required to store the tag
     # data.
     #

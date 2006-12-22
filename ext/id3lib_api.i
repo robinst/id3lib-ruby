@@ -62,6 +62,9 @@ public:
 	%rename (create_iterator) CreateIterator;
 	%newobject CreateIterator;
 	ID3_Tag::Iterator * CreateIterator();
+
+	%rename (get_mp3_header_info) GetMp3HeaderInfo;
+	const Mp3_Headerinfo * GetMp3HeaderInfo() const;
 };
 
 %rename (Tag_Iterator) ID3_Tag::Iterator;
@@ -180,6 +183,35 @@ protected:
 
 	ID3_Field();
 	~ID3_Field();
+};
+
+
+enum Mpeg_Layers;
+enum Mpeg_Version;
+enum MP3_BitRates;
+enum Mp3_ChannelMode;
+enum Mp3_ModeExt;
+enum Mp3_Emphasis;
+enum Mp3_Crc;
+
+%rename (HeaderInfo) Mp3_Headerinfo;
+struct Mp3_Headerinfo
+{
+	const Mpeg_Layers layer;
+	const Mpeg_Version version;
+	const MP3_BitRates bitrate;
+	const Mp3_ChannelMode channelmode;
+	const Mp3_ModeExt modeext;
+	const Mp3_Emphasis emphasis;
+	const Mp3_Crc crc;
+	const uint32 vbr_bitrate;    // average bitrate from xing header
+	const uint32 frequency;      // samplerate
+	const uint32 framesize;
+	const uint32 frames;         // number of frames
+	const uint32 time;           // number of seconds in song
+	const bool privatebit;
+	const bool copyrighted;
+	const bool original;
 };
 
 // vim: set filetype=cpp sw=4 ts=4 noexpandtab:

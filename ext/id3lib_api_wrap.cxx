@@ -1545,12 +1545,13 @@ SWIG_Ruby_SetModule(swig_module_info *pointer)
 #define SWIGTYPE_p_ID3_Frame swig_types[1]
 #define SWIGTYPE_p_ID3_Tag swig_types[2]
 #define SWIGTYPE_p_ID3_Tag__Iterator swig_types[3]
-#define SWIGTYPE_p_char swig_types[4]
-#define SWIGTYPE_p_unsigned_char swig_types[5]
-#define SWIGTYPE_p_unsigned_int swig_types[6]
-#define SWIGTYPE_p_unsigned_long swig_types[7]
-static swig_type_info *swig_types[9];
-static swig_module_info swig_module = {swig_types, 8, 0, 0, 0, 0};
+#define SWIGTYPE_p_Mp3_Headerinfo swig_types[4]
+#define SWIGTYPE_p_char swig_types[5]
+#define SWIGTYPE_p_unsigned_char swig_types[6]
+#define SWIGTYPE_p_unsigned_int swig_types[7]
+#define SWIGTYPE_p_unsigned_long swig_types[8]
+static swig_type_info *swig_types[10];
+static swig_module_info swig_module = {swig_types, 9, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -2552,6 +2553,30 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_Tag_get_mp3_header_info(int argc, VALUE *argv, VALUE self) {
+  ID3_Tag *arg1 = (ID3_Tag *) 0 ;
+  Mp3_Headerinfo *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_ID3_Tag, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetMp3HeaderInfo" "', argument " "1"" of type '" "ID3_Tag const *""'"); 
+  }
+  arg1 = reinterpret_cast< ID3_Tag * >(argp1);
+  result = (Mp3_Headerinfo *)((ID3_Tag const *)arg1)->GetMp3HeaderInfo();
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Mp3_Headerinfo, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 swig_class cTag_Iterator;
 
 SWIGINTERN VALUE
@@ -3025,6 +3050,405 @@ fail:
 }
 
 
+swig_class cHeaderInfo;
+
+SWIGINTERN VALUE
+_wrap_HeaderInfo_layer_get(int argc, VALUE *argv, VALUE self) {
+  Mp3_Headerinfo *arg1 = (Mp3_Headerinfo *) 0 ;
+  Mpeg_Layers result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Mp3_Headerinfo, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "layer" "', argument " "1"" of type '" "Mp3_Headerinfo *""'"); 
+  }
+  arg1 = reinterpret_cast< Mp3_Headerinfo * >(argp1);
+  result = (Mpeg_Layers)(Mpeg_Layers) ((arg1)->layer);
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_HeaderInfo_version_get(int argc, VALUE *argv, VALUE self) {
+  Mp3_Headerinfo *arg1 = (Mp3_Headerinfo *) 0 ;
+  Mpeg_Version result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Mp3_Headerinfo, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "version" "', argument " "1"" of type '" "Mp3_Headerinfo *""'"); 
+  }
+  arg1 = reinterpret_cast< Mp3_Headerinfo * >(argp1);
+  result = (Mpeg_Version)(Mpeg_Version) ((arg1)->version);
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_HeaderInfo_bitrate_get(int argc, VALUE *argv, VALUE self) {
+  Mp3_Headerinfo *arg1 = (Mp3_Headerinfo *) 0 ;
+  MP3_BitRates result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Mp3_Headerinfo, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "bitrate" "', argument " "1"" of type '" "Mp3_Headerinfo *""'"); 
+  }
+  arg1 = reinterpret_cast< Mp3_Headerinfo * >(argp1);
+  result = (MP3_BitRates)(MP3_BitRates) ((arg1)->bitrate);
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_HeaderInfo_channelmode_get(int argc, VALUE *argv, VALUE self) {
+  Mp3_Headerinfo *arg1 = (Mp3_Headerinfo *) 0 ;
+  Mp3_ChannelMode result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Mp3_Headerinfo, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "channelmode" "', argument " "1"" of type '" "Mp3_Headerinfo *""'"); 
+  }
+  arg1 = reinterpret_cast< Mp3_Headerinfo * >(argp1);
+  result = (Mp3_ChannelMode)(Mp3_ChannelMode) ((arg1)->channelmode);
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_HeaderInfo_modeext_get(int argc, VALUE *argv, VALUE self) {
+  Mp3_Headerinfo *arg1 = (Mp3_Headerinfo *) 0 ;
+  Mp3_ModeExt result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Mp3_Headerinfo, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "modeext" "', argument " "1"" of type '" "Mp3_Headerinfo *""'"); 
+  }
+  arg1 = reinterpret_cast< Mp3_Headerinfo * >(argp1);
+  result = (Mp3_ModeExt)(Mp3_ModeExt) ((arg1)->modeext);
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_HeaderInfo_emphasis_get(int argc, VALUE *argv, VALUE self) {
+  Mp3_Headerinfo *arg1 = (Mp3_Headerinfo *) 0 ;
+  Mp3_Emphasis result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Mp3_Headerinfo, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "emphasis" "', argument " "1"" of type '" "Mp3_Headerinfo *""'"); 
+  }
+  arg1 = reinterpret_cast< Mp3_Headerinfo * >(argp1);
+  result = (Mp3_Emphasis)(Mp3_Emphasis) ((arg1)->emphasis);
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_HeaderInfo_crc_get(int argc, VALUE *argv, VALUE self) {
+  Mp3_Headerinfo *arg1 = (Mp3_Headerinfo *) 0 ;
+  Mp3_Crc result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Mp3_Headerinfo, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "crc" "', argument " "1"" of type '" "Mp3_Headerinfo *""'"); 
+  }
+  arg1 = reinterpret_cast< Mp3_Headerinfo * >(argp1);
+  result = (Mp3_Crc)(Mp3_Crc) ((arg1)->crc);
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_HeaderInfo_vbr_bitrate_get(int argc, VALUE *argv, VALUE self) {
+  Mp3_Headerinfo *arg1 = (Mp3_Headerinfo *) 0 ;
+  uint32 result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Mp3_Headerinfo, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "vbr_bitrate" "', argument " "1"" of type '" "Mp3_Headerinfo *""'"); 
+  }
+  arg1 = reinterpret_cast< Mp3_Headerinfo * >(argp1);
+  result = (uint32)(uint32) ((arg1)->vbr_bitrate);
+  vresult = SWIG_From_unsigned_SS_long(static_cast< unsigned long >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_HeaderInfo_frequency_get(int argc, VALUE *argv, VALUE self) {
+  Mp3_Headerinfo *arg1 = (Mp3_Headerinfo *) 0 ;
+  uint32 result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Mp3_Headerinfo, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "frequency" "', argument " "1"" of type '" "Mp3_Headerinfo *""'"); 
+  }
+  arg1 = reinterpret_cast< Mp3_Headerinfo * >(argp1);
+  result = (uint32)(uint32) ((arg1)->frequency);
+  vresult = SWIG_From_unsigned_SS_long(static_cast< unsigned long >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_HeaderInfo_framesize_get(int argc, VALUE *argv, VALUE self) {
+  Mp3_Headerinfo *arg1 = (Mp3_Headerinfo *) 0 ;
+  uint32 result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Mp3_Headerinfo, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "framesize" "', argument " "1"" of type '" "Mp3_Headerinfo *""'"); 
+  }
+  arg1 = reinterpret_cast< Mp3_Headerinfo * >(argp1);
+  result = (uint32)(uint32) ((arg1)->framesize);
+  vresult = SWIG_From_unsigned_SS_long(static_cast< unsigned long >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_HeaderInfo_frames_get(int argc, VALUE *argv, VALUE self) {
+  Mp3_Headerinfo *arg1 = (Mp3_Headerinfo *) 0 ;
+  uint32 result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Mp3_Headerinfo, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "frames" "', argument " "1"" of type '" "Mp3_Headerinfo *""'"); 
+  }
+  arg1 = reinterpret_cast< Mp3_Headerinfo * >(argp1);
+  result = (uint32)(uint32) ((arg1)->frames);
+  vresult = SWIG_From_unsigned_SS_long(static_cast< unsigned long >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_HeaderInfo_time_get(int argc, VALUE *argv, VALUE self) {
+  Mp3_Headerinfo *arg1 = (Mp3_Headerinfo *) 0 ;
+  uint32 result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Mp3_Headerinfo, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "time" "', argument " "1"" of type '" "Mp3_Headerinfo *""'"); 
+  }
+  arg1 = reinterpret_cast< Mp3_Headerinfo * >(argp1);
+  result = (uint32)(uint32) ((arg1)->time);
+  vresult = SWIG_From_unsigned_SS_long(static_cast< unsigned long >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_HeaderInfo_privatebit_get(int argc, VALUE *argv, VALUE self) {
+  Mp3_Headerinfo *arg1 = (Mp3_Headerinfo *) 0 ;
+  bool result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Mp3_Headerinfo, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "privatebit" "', argument " "1"" of type '" "Mp3_Headerinfo *""'"); 
+  }
+  arg1 = reinterpret_cast< Mp3_Headerinfo * >(argp1);
+  result = (bool)(bool) ((arg1)->privatebit);
+  vresult = SWIG_From_bool(static_cast< bool >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_HeaderInfo_copyrighted_get(int argc, VALUE *argv, VALUE self) {
+  Mp3_Headerinfo *arg1 = (Mp3_Headerinfo *) 0 ;
+  bool result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Mp3_Headerinfo, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "copyrighted" "', argument " "1"" of type '" "Mp3_Headerinfo *""'"); 
+  }
+  arg1 = reinterpret_cast< Mp3_Headerinfo * >(argp1);
+  result = (bool)(bool) ((arg1)->copyrighted);
+  vresult = SWIG_From_bool(static_cast< bool >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_HeaderInfo_original_get(int argc, VALUE *argv, VALUE self) {
+  Mp3_Headerinfo *arg1 = (Mp3_Headerinfo *) 0 ;
+  bool result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Mp3_Headerinfo, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "original" "', argument " "1"" of type '" "Mp3_Headerinfo *""'"); 
+  }
+  arg1 = reinterpret_cast< Mp3_Headerinfo * >(argp1);
+  result = (bool)(bool) ((arg1)->original);
+  vresult = SWIG_From_bool(static_cast< bool >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_HeaderInfo_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_HeaderInfo_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Mp3_Headerinfo);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_HeaderInfo(int argc, VALUE *argv, VALUE self) {
+  Mp3_Headerinfo *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Mp3_Headerinfo *)new Mp3_Headerinfo();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Mp3_Headerinfo(Mp3_Headerinfo *arg1) {
+    delete arg1;
+}
+
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
@@ -3032,6 +3456,7 @@ static swig_type_info _swigt__p_ID3_Field = {"_p_ID3_Field", "ID3_Field *", 0, 0
 static swig_type_info _swigt__p_ID3_Frame = {"_p_ID3_Frame", "ID3_Frame *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_ID3_Tag = {"_p_ID3_Tag", "ID3_Tag *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_ID3_Tag__Iterator = {"_p_ID3_Tag__Iterator", "ID3_Tag::Iterator *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Mp3_Headerinfo = {"_p_Mp3_Headerinfo", "Mp3_Headerinfo *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_char = {"_p_unsigned_char", "unsigned char *|uchar *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "unsigned int *|flags_t *", 0, 0, (void*)0, 0};
@@ -3042,6 +3467,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_ID3_Frame,
   &_swigt__p_ID3_Tag,
   &_swigt__p_ID3_Tag__Iterator,
+  &_swigt__p_Mp3_Headerinfo,
   &_swigt__p_char,
   &_swigt__p_unsigned_char,
   &_swigt__p_unsigned_int,
@@ -3052,6 +3478,7 @@ static swig_cast_info _swigc__p_ID3_Field[] = {  {&_swigt__p_ID3_Field, 0, 0, 0}
 static swig_cast_info _swigc__p_ID3_Frame[] = {  {&_swigt__p_ID3_Frame, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ID3_Tag[] = {  {&_swigt__p_ID3_Tag, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ID3_Tag__Iterator[] = {  {&_swigt__p_ID3_Tag__Iterator, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Mp3_Headerinfo[] = {  {&_swigt__p_Mp3_Headerinfo, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_char[] = {  {&_swigt__p_unsigned_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_int[] = {  {&_swigt__p_unsigned_int, 0, 0, 0},{0, 0, 0, 0}};
@@ -3062,6 +3489,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_ID3_Frame,
   _swigc__p_ID3_Tag,
   _swigc__p_ID3_Tag__Iterator,
+  _swigc__p_Mp3_Headerinfo,
   _swigc__p_char,
   _swigc__p_unsigned_char,
   _swigc__p_unsigned_int,
@@ -3334,6 +3762,7 @@ SWIGEXPORT void Init_id3lib_api(void) {
   rb_define_method(cTag.klass, "num_frames", VALUEFUNC(_wrap_Tag_num_frames), -1);
   rb_define_method(cTag.klass, "find", VALUEFUNC(_wrap_Tag_find), -1);
   rb_define_method(cTag.klass, "create_iterator", VALUEFUNC(_wrap_Tag_create_iterator), -1);
+  rb_define_method(cTag.klass, "get_mp3_header_info", VALUEFUNC(_wrap_Tag_get_mp3_header_info), -1);
   cTag.mark = 0;
   cTag.destroy = (void (*)(void *)) free_ID3_Tag;
   cTag.trackObjects = 0;
@@ -3372,5 +3801,28 @@ SWIGEXPORT void Init_id3lib_api(void) {
   rb_define_method(cField.klass, "set_unicode", VALUEFUNC(_wrap_Field_set_unicode), -1);
   cField.mark = 0;
   cField.trackObjects = 0;
+  
+  cHeaderInfo.klass = rb_define_class_under(mAPI, "HeaderInfo", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Mp3_Headerinfo, (void *) &cHeaderInfo);
+  rb_define_alloc_func(cHeaderInfo.klass, _wrap_HeaderInfo_allocate);
+  rb_define_method(cHeaderInfo.klass, "initialize", VALUEFUNC(_wrap_new_HeaderInfo), -1);
+  rb_define_method(cHeaderInfo.klass, "layer", VALUEFUNC(_wrap_HeaderInfo_layer_get), -1);
+  rb_define_method(cHeaderInfo.klass, "version", VALUEFUNC(_wrap_HeaderInfo_version_get), -1);
+  rb_define_method(cHeaderInfo.klass, "bitrate", VALUEFUNC(_wrap_HeaderInfo_bitrate_get), -1);
+  rb_define_method(cHeaderInfo.klass, "channelmode", VALUEFUNC(_wrap_HeaderInfo_channelmode_get), -1);
+  rb_define_method(cHeaderInfo.klass, "modeext", VALUEFUNC(_wrap_HeaderInfo_modeext_get), -1);
+  rb_define_method(cHeaderInfo.klass, "emphasis", VALUEFUNC(_wrap_HeaderInfo_emphasis_get), -1);
+  rb_define_method(cHeaderInfo.klass, "crc", VALUEFUNC(_wrap_HeaderInfo_crc_get), -1);
+  rb_define_method(cHeaderInfo.klass, "vbr_bitrate", VALUEFUNC(_wrap_HeaderInfo_vbr_bitrate_get), -1);
+  rb_define_method(cHeaderInfo.klass, "frequency", VALUEFUNC(_wrap_HeaderInfo_frequency_get), -1);
+  rb_define_method(cHeaderInfo.klass, "framesize", VALUEFUNC(_wrap_HeaderInfo_framesize_get), -1);
+  rb_define_method(cHeaderInfo.klass, "frames", VALUEFUNC(_wrap_HeaderInfo_frames_get), -1);
+  rb_define_method(cHeaderInfo.klass, "time", VALUEFUNC(_wrap_HeaderInfo_time_get), -1);
+  rb_define_method(cHeaderInfo.klass, "privatebit", VALUEFUNC(_wrap_HeaderInfo_privatebit_get), -1);
+  rb_define_method(cHeaderInfo.klass, "copyrighted", VALUEFUNC(_wrap_HeaderInfo_copyrighted_get), -1);
+  rb_define_method(cHeaderInfo.klass, "original", VALUEFUNC(_wrap_HeaderInfo_original_get), -1);
+  cHeaderInfo.mark = 0;
+  cHeaderInfo.destroy = (void (*)(void *)) free_Mp3_Headerinfo;
+  cHeaderInfo.trackObjects = 0;
 }
 
