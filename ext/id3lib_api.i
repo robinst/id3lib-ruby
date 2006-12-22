@@ -11,6 +11,8 @@ enum ID3_TextEnc;
 enum ID3_TagType;
 
 typedef unsigned int flags_t;
+typedef unsigned long uint32;
+typedef unsigned char uchar;
 
 
 %rename (Tag) ID3_Tag;
@@ -99,7 +101,7 @@ public:
 	ID3_TextEnc GetEncoding() const;
 
 	%rename (get_integer) Get;
-	unsigned long Get() const;
+	uint32 Get() const;
 
 	%rename (get_ascii) GetRawText;
 	const char * GetRawText() const;
@@ -115,7 +117,7 @@ public:
 		{
 			const char *str = (const char *)self->GetRawUnicodeText();
 			if (str == NULL) return rb_str_new("", 0);
-			long size = self->Size();
+			size_t size = self->Size();
 			if (size >= 2 && str[size-2] == '\0' && str[size-1] == '\0') {
 				// id3lib seems to be inconsistent: the Unicode strings
 				// don't always end in 0x0000. If they do, we don't want these
@@ -131,8 +133,8 @@ public:
 	%rename (set_encoding) SetEncoding(ID3_TextEnc);
 	bool SetEncoding(ID3_TextEnc enc);
 
-	%rename (set_integer) Set(unsigned long);
-	void Set(unsigned long i);
+	%rename (set_integer) Set(uint32);
+	void Set(uint32 i);
 
 	%rename (set_ascii) Set(const char *);
 	size_t Set(const char *string);
@@ -142,7 +144,7 @@ public:
 		size_t set_binary(VALUE data)
 		{
 			StringValue(data);
-			return self->Set((const unsigned char *)RSTRING(data)->ptr,
+			return self->Set((const uchar *)RSTRING(data)->ptr,
 			                 RSTRING(data)->len);
 		}
 

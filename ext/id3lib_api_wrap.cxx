@@ -1546,9 +1546,11 @@ SWIG_Ruby_SetModule(swig_module_info *pointer)
 #define SWIGTYPE_p_ID3_Tag swig_types[2]
 #define SWIGTYPE_p_ID3_Tag__Iterator swig_types[3]
 #define SWIGTYPE_p_char swig_types[4]
-#define SWIGTYPE_p_unsigned_int swig_types[5]
-static swig_type_info *swig_types[7];
-static swig_module_info swig_module = {swig_types, 6, 0, 0, 0, 0};
+#define SWIGTYPE_p_unsigned_char swig_types[5]
+#define SWIGTYPE_p_unsigned_int swig_types[6]
+#define SWIGTYPE_p_unsigned_long swig_types[7]
+static swig_type_info *swig_types[9];
+static swig_module_info swig_module = {swig_types, 8, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1823,7 +1825,7 @@ SWIGINTERN VALUE ID3_Field_get_binary(ID3_Field *self){
 SWIGINTERN VALUE ID3_Field_get_unicode(ID3_Field *self){
 			const char *str = (const char *)self->GetRawUnicodeText();
 			if (str == NULL) return rb_str_new("", 0);
-			long size = self->Size();
+			size_t size = self->Size();
 			if (size >= 2 && str[size-2] == '\0' && str[size-1] == '\0') {
 				// id3lib seems to be inconsistent: the Unicode strings
 				// don't always end in 0x0000. If they do, we don't want these
@@ -1834,7 +1836,7 @@ SWIGINTERN VALUE ID3_Field_get_unicode(ID3_Field *self){
 		}
 SWIGINTERN size_t ID3_Field_set_binary(ID3_Field *self,VALUE data){
 			StringValue(data);
-			return self->Set((const unsigned char *)RSTRING(data)->ptr,
+			return self->Set((const uchar *)RSTRING(data)->ptr,
 			                 RSTRING(data)->len);
 		}
 SWIGINTERN size_t ID3_Field_set_unicode(ID3_Field *self,VALUE data){
@@ -2758,7 +2760,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_Field_get_integer(int argc, VALUE *argv, VALUE self) {
   ID3_Field *arg1 = (ID3_Field *) 0 ;
-  unsigned long result;
+  uint32 result;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -2771,7 +2773,7 @@ _wrap_Field_get_integer(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Get" "', argument " "1"" of type '" "ID3_Field const *""'"); 
   }
   arg1 = reinterpret_cast< ID3_Field * >(argp1);
-  result = (unsigned long)((ID3_Field const *)arg1)->Get();
+  result = (uint32)((ID3_Field const *)arg1)->Get();
   vresult = SWIG_From_unsigned_SS_long(static_cast< unsigned long >(result));
   return vresult;
 fail:
@@ -2886,7 +2888,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_Field_set_integer(int argc, VALUE *argv, VALUE self) {
   ID3_Field *arg1 = (ID3_Field *) 0 ;
-  unsigned long arg2 ;
+  uint32 arg2 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   unsigned long val2 ;
@@ -2902,9 +2904,9 @@ _wrap_Field_set_integer(int argc, VALUE *argv, VALUE self) {
   arg1 = reinterpret_cast< ID3_Field * >(argp1);
   ecode2 = SWIG_AsVal_unsigned_SS_long(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Set" "', argument " "2"" of type '" "unsigned long""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Set" "', argument " "2"" of type '" "uint32""'");
   } 
-  arg2 = static_cast< unsigned long >(val2);
+  arg2 = static_cast< uint32 >(val2);
   (arg1)->Set(arg2);
   return Qnil;
 fail:
@@ -3007,7 +3009,9 @@ static swig_type_info _swigt__p_ID3_Frame = {"_p_ID3_Frame", "ID3_Frame *", 0, 0
 static swig_type_info _swigt__p_ID3_Tag = {"_p_ID3_Tag", "ID3_Tag *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_ID3_Tag__Iterator = {"_p_ID3_Tag__Iterator", "ID3_Tag::Iterator *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_unsigned_char = {"_p_unsigned_char", "unsigned char *|uchar *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "unsigned int *|flags_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_unsigned_long = {"_p_unsigned_long", "unsigned long *|uint32 *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_ID3_Field,
@@ -3015,7 +3019,9 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_ID3_Tag,
   &_swigt__p_ID3_Tag__Iterator,
   &_swigt__p_char,
+  &_swigt__p_unsigned_char,
   &_swigt__p_unsigned_int,
+  &_swigt__p_unsigned_long,
 };
 
 static swig_cast_info _swigc__p_ID3_Field[] = {  {&_swigt__p_ID3_Field, 0, 0, 0},{0, 0, 0, 0}};
@@ -3023,7 +3029,9 @@ static swig_cast_info _swigc__p_ID3_Frame[] = {  {&_swigt__p_ID3_Frame, 0, 0, 0}
 static swig_cast_info _swigc__p_ID3_Tag[] = {  {&_swigt__p_ID3_Tag, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ID3_Tag__Iterator[] = {  {&_swigt__p_ID3_Tag__Iterator, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_unsigned_char[] = {  {&_swigt__p_unsigned_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_int[] = {  {&_swigt__p_unsigned_int, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_unsigned_long[] = {  {&_swigt__p_unsigned_long, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_ID3_Field,
@@ -3031,7 +3039,9 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_ID3_Tag,
   _swigc__p_ID3_Tag__Iterator,
   _swigc__p_char,
+  _swigc__p_unsigned_char,
   _swigc__p_unsigned_int,
+  _swigc__p_unsigned_long,
 };
 
 
