@@ -27,9 +27,13 @@ won't be able to build Ruby extensions.
 
   sudo emerge -n id3lib
 
-==== OS X with Fink
+==== OS X
 
-Install id3lib4-dev:
+If you use the Ruby distribution provided by OS X, you need to have Apple's
+Xcode installed in order to be able to build extensions.
+
+Now, either do a manual compilation (see below) or install through Fink or
+DarwinPorts. With Fink, you need the id3lib4-dev package:
 
   sudo apt-get install id3lib4-dev
 
