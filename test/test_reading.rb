@@ -65,4 +65,26 @@ class TestReading < Test::Unit::TestCase
     assert_equal 9, @tag.instance_variable_get(:@tag).num_frames
   end
 
+  def test_header_info
+    assert_nil @tag.header_info
+
+    tag = ID3Lib::Tag.new('test/data/unicode.mp3')
+    info = tag.header_info
+    assert_equal  3, info.layer
+    assert_equal  3, info.version
+    assert_equal  0, info.bitrate
+    assert_equal  0, info.channelmode
+    assert_equal -1, info.modeext
+    assert_equal  1, info.emphasis
+    assert_equal  0, info.crc
+    assert_equal  0, info.vbr_bitrate
+    assert_equal  0, info.framesize
+    assert_equal  0, info.frames
+    assert_equal  0, info.time
+    assert_equal 48000, info.frequency
+    assert_equal  true, info.privatebit
+    assert_equal false, info.copyrighted
+    assert_equal  true, info.original
+  end
+
 end
