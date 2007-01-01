@@ -112,7 +112,12 @@ module ID3Lib
     def inspect
       [ "#<#{self.class}:#{@id} ",
         @allowed_fields.map{ |f|
-          "#{f}=#{@fields[f].inspect}"
+          s = @fields[f]
+          if f == :data and s.length > 5
+            "#{f}=#{s[0,5].inspect}..."
+          else
+            "#{f}=#{s.inspect}"
+          end
         }.join(', '),
         ">" ].join
     end

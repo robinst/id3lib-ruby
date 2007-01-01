@@ -78,6 +78,9 @@ class TestWriting < Test::Unit::TestCase
       f.textenc     = 0
       f.data        = File.read('test/data/cover.jpg')
     end
+    assert_block "Long data field should be truncated on inspect." do
+      pic.inspect.length < 160
+    end
     @tag.update!
     assert_equal pic, @tag.frame(:APIC)
     reload!
