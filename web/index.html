@@ -89,6 +89,9 @@ further explanation.
 <span class="ident">tag</span><span class="punct">.</span><span class="ident">set_text</span><span class="punct">(</span><span class="symbol">:album</span><span class="punct">,</span> <span class="punct">&quot;</span><span class="string">X&amp;Y</span><span class="punct">&quot;)</span>
 <span class="ident">tag</span><span class="punct">.</span><span class="ident">set_text</span><span class="punct">(</span><span class="symbol">:track</span><span class="punct">,</span> <span class="punct">'</span><span class="string">5/13</span><span class="punct">')</span>
 
+<span class="comment"># Get MP3 header information</span>
+<span class="ident">tag</span><span class="punct">.</span><span class="ident">header_info</span><span class="punct">.</span><span class="ident">bitrate</span>  <span class="comment">#=&gt; 128000</span>
+
 <span class="comment"># Tag is a subclass of Array and holds Frame objects</span>
 <span class="ident">p</span> <span class="ident">tag</span><span class="punct">[</span><span class="number">0</span><span class="punct">]</span>
 <span class="comment">#=&gt; #&lt;ID3Lib::Frame:TPE1 textenc=0, text=&quot;Coldplay&quot;&gt;</span>

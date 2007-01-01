@@ -43,6 +43,10 @@ module ID3Lib
   #   #<ID3Lib::Frame:TYER textenc=0, text="2005">
   #   #<ID3Lib::Frame:TCON textenc=0, text="Jazz/Blues">
   #
+  # It's also possible to read MP3 header information, using header_info:
+  #
+  #   tag.header_info.bitrate  #=> 128000
+  #
   # == Get, set and remove frames
   #
   # The methods to do this are:

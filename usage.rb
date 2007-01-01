@@ -10,6 +10,9 @@ tag.text(:title)  #=> "Talk"
 tag.set_text(:album, "X&Y")
 tag.set_text(:track, '5/13')
 
+# Get MP3 header information
+tag.header_info.bitrate  #=> 128000
+
 # Tag is a subclass of Array and holds Frame objects
 p tag[0]
 #=> #<ID3Lib::Frame:TPE1 textenc=0, text="Coldplay">
