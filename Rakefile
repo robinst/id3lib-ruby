@@ -70,7 +70,7 @@ if defined? Gem
     s.version     = File.read('lib/id3lib.rb')[/VERSION = '(.*)'/, 1]
     s.summary     =
       'id3lib-ruby provides a Ruby interface to the id3lib C++ library for ' +
-      'easily editing ID3 tags (v1 and v2) like with pyid3lib.'
+      'easily editing ID3 tags (v1 and v2) of MP3 audio files.'
     s.requirements << 'id3lib C++ library'
     s.files       = FILES_COMMON + FILES_EXT
     s.extensions  = ['ext/extconf.rb']
