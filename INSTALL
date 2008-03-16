@@ -16,20 +16,20 @@ For other systems, there is a RubyGems package or a compressed archive.
 Before installing id3lib-ruby, you need to install the underlying id3lib
 library and, depending on your system, set CONFIGURE_ARGS.
 
-==== Debian
+==== Debian Linux
 
 Install libid3-dev and be sure to have ruby1.8-dev installed, otherwise you
 won't be able to build Ruby extensions.
 
   sudo aptitude install libid3-dev
 
-==== Gentoo
+==== Gentoo Linux
 
   sudo emerge -n id3lib
 
-==== OS X
+==== Mac OS X
 
-If you use the Ruby distribution provided by OS X, you need to have Apple's
+If you use the Ruby distribution provided by Mac OS X, you need to have Apple's
 Xcode installed in order to be able to build extensions.
 
 Now, either do a manual compilation (see below) or install through Fink or
@@ -59,3 +59,13 @@ following and select the newest version marked "ruby":
 Or if you install from the archive, unpack it and do:
 
   sudo ruby setup.rb
+
+On Mac OS X 10.5, Ruby tries to compile the extension for both the i386 and ppc
+architectures (universal build) and fails. You have to specify the architecture
+manually. For Intel processors, do:
+
+  sudo env ARCHFLAGS="-arch i386" gem install id3lib-ruby
+
+And for PPC processors:
+
+  sudo env ARCHFLAGS="-arch ppc" gem install id3lib-ruby
