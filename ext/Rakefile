@@ -13,7 +13,7 @@ file 'id3lib_api.bundle' => ['id3lib_api_wrap.cxx', 'Makefile'] do
 end
 
 file 'id3lib_api_wrap.cxx' => ['id3lib_api.i'] do
-  sh "swig -c++ -ruby -feature id3lib_api id3lib_api.i"
+  sh "swig -c++ -ruby -initname id3lib_api id3lib_api.i"
 end
 
 file 'Makefile' do
