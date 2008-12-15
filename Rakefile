@@ -85,27 +85,49 @@ if defined? Gem
   if defined? Rake::ExtensionTask
 
     host = 'i586-mingw32msvc'
-    prefix = "#{Dir.pwd}/ext/mswin32/prefix"
+    tmp = "#{Dir.pwd}/tmp/#{host}"
     cflags = "'-Os -DID3LIB_LINKOPTION=1'"
+    id3lib = 'id3lib-3.8.3'
+    id3lib_url = "http://dl.sf.net/sourceforge/id3lib/#{id3lib}.tar.gz"
+    patches = FileList["#{Dir.pwd}/ext/mswin32/patches/*patch"]
 
     Rake::ExtensionTask.new('id3lib_api', spec) do |ext|
       ext.cross_compile = true
       ext.cross_platform = host
-      ext.cross_config_options << "--with-opt-dir=#{prefix}"
+      ext.cross_config_options << "--with-opt-dir=#{tmp}"
       ext.cross_config_options << "--with-cflags=#{cflags}"
     end
 
-    task :cross => ["#{prefix}/lib/libid3.a"] do
+    task :cross => ["#{tmp}/lib/libid3.a"] do
       # Mkmf just uses "g++" as C++ compiler, despite what's in rbconfig.rb.
       # So, we need to hack around it by setting CXX to the cross compiler.
       ENV["CXX"] = "#{host}-g++"
     end
 
-    file "#{prefix}/lib/libid3.a" do
-      chdir "ext/mswin32" do
-        sh "rake"
+    file "#{tmp}/lib/libid3.a" => ["#{tmp}/#{id3lib}/config.log"] do
+      chdir "#{tmp}/#{id3lib}" do
+        env = "CFLAGS=#{cflags} CXXFLAGS=#{cflags}"
+        sh "#{env} ./configure --host=#{host} --prefix=#{tmp}"
+        sh "make && make install"
       end
     end
+
+    file "#{tmp}/#{id3lib}/config.log" => ["#{tmp}/#{id3lib}.tar.gz"] do
+      chdir tmp do
+        sh "tar xzf #{id3lib}.tar.gz"
+        patches.each do |patch|
+          sh "patch -p0 < #{patch}"
+        end
+      end
+    end
+
+    file "#{tmp}/#{id3lib}.tar.gz" => [tmp] do
+      chdir tmp do
+        sh "wget #{id3lib_url}"
+      end
+    end
+
+    directory tmp
 
   end  # defined? Rake::ExtensionTask
 
