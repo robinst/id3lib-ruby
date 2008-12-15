@@ -6,6 +6,13 @@ rescue Exception
   nil
 end
 
+begin
+  require 'rake/extensiontask'
+rescue LoadError
+  warn "Could not load 'rake/extensiontask' (available through " +
+       "rake-compiler), you'll have to compile extensions manually."
+end
+
 require 'rake/testtask'
 require 'rake/rdoctask'
 
@@ -24,24 +31,9 @@ FILES_DOC = FileList[
 ]
 
 FILES_EXT = FileList[
-  'ext/*.rb',
-  'ext/*.cxx',
-  'ext/*.i',
-  'ext/Rakefile'
+  'ext/id3lib_api/*.{rb,cxx,i}',
+  'ext/id3lib_api/Rakefile'
 ]
-
-
-desc "Build extension."
-task :ext do
-  sh "cd ext && rake"
-  puts "(end)"
-end
-
-desc "Build mswin32 extension."
-task :ext_mswin32 do
-  sh 'cd ext/mswin32; rake'
-  puts "(end)"
-end
 
 
 Rake::TestTask.new do |t|
@@ -65,6 +57,7 @@ task :doc => [:rdoc]
 
 
 if defined? Gem
+
   spec = Gem::Specification.new do |s|
     s.name        = 'id3lib-ruby'
     s.version     = File.read('lib/id3lib.rb')[/VERSION = '(.*)'/, 1]
@@ -73,8 +66,8 @@ if defined? Gem
       'easily editing ID3 tags (v1 and v2) of MP3 audio files.'
     s.requirements << 'id3lib C++ library'
     s.files       = FILES_COMMON + FILES_EXT
-    s.extensions  = ['ext/extconf.rb']
     s.test_files  = FileList['test/test_*.rb']
+    s.extensions  << 'ext/id3lib_api/extconf.rb'
     s.has_rdoc    = true
     s.extra_rdoc_files = FILES_DOC
     s.rdoc_options = RDOC_OPTS
@@ -89,18 +82,32 @@ if defined? Gem
     pkg.need_zip = true
   end
 
-  spec_mswin32 = spec.clone
-  spec_mswin32.files = FILES_COMMON + FileList['ext/mswin32/id3lib_api.so']
-  spec_mswin32.extensions = []
-  spec_mswin32.require_paths = ['lib', 'ext/mswin32']
-  spec_mswin32.platform = Gem::Platform::WIN32
+  if defined? Rake::ExtensionTask
 
-  desc "Build mswin32 gem."
-  task :gem_mswin32 => [:ext_mswin32] do
-    gemfile = Gem::Builder.new(spec_mswin32).build
-    mkpath "pkg"
-    mv gemfile, "pkg/"
-  end
+    host = 'i586-mingw32msvc'
+    prefix = "#{Dir.pwd}/ext/mswin32/prefix"
+    cflags = "'-Os -DID3LIB_LINKOPTION=1'"
+
+    Rake::ExtensionTask.new('id3lib_api', spec) do |ext|
+      ext.cross_compile = true
+      ext.cross_platform = host
+      ext.cross_config_options << "--with-opt-dir=#{prefix}"
+      ext.cross_config_options << "--with-cflags=#{cflags}"
+    end
+
+    task :cross => ["#{prefix}/lib/libid3.a"] do
+      # Mkmf just uses "g++" as C++ compiler, despite what's in rbconfig.rb.
+      # So, we need to hack around it by setting CXX to the cross compiler.
+      ENV["CXX"] = "#{host}-g++"
+    end
+
+    file "#{prefix}/lib/libid3.a" do
+      chdir "ext/mswin32" do
+        sh "rake"
+      end
+    end
+
+  end  # defined? Rake::ExtensionTask
 
 end  # defined? Gem
 

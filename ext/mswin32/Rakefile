@@ -1,55 +1,20 @@
 require 'rake/clean'
 
 ID3LIB = 'id3lib-3.8.3'
-RUBY   = 'ruby-1.8.5-p2'
 
 PREFIX = File.expand_path("./prefix")
 
 CLEAN.include "*.o", "src", "prefix"
-CLOBBER.include "id3lib_api.so", "tars"
+CLOBBER.include "tars"
 
 
-task :default => ["id3lib_api.so"]
-
-file "id3lib_api.so" => ["../id3lib_api_wrap.cxx", "prefix/lib/ruby", "prefix/lib/libid3.a"] do
-  sh <<-CMD
-    mingw32-g++ -Os -DID3LIB_LINKOPTION=1 \
-      -include fstream \
-      -I#{PREFIX}/lib/ruby/1.8/i386-mingw32 \
-      -I#{PREFIX}/include \
-      -c ../id3lib_api_wrap.cxx
-    mingw32-g++ -shared -s -Wl,--enable-auto-import,--export-all \
-      -L#{PREFIX}/lib -o id3lib_api.so id3lib_api_wrap.o \
-      -lmsvcrt-ruby18 -lid3 -lz
-  CMD
-end
-
-file "prefix/lib/ruby" => ["src/#{RUBY}/config.log"] do
-  sh <<-CMD
-    cd src/#{RUBY}
-    CFLAGS="-Os" \
-      ac_cv_func_getpgrp_void=no ac_cv_func_setpgrp_void=yes \
-      rb_cv_negative_time_t=no ac_cv_func_memcmp_working=yes \
-      rb_cv_binary_elf=no \
-      ./configure  --host=mingw32 --prefix=#{PREFIX}
-    make && make install
-  CMD
-end
-
-file "src/#{RUBY}/config.log" => ["tars/#{RUBY}.tar.gz"] do
-  sh "mkdir src; cd src; tar xzf ../tars/#{RUBY}.tar.gz"
-end
-
-file "tars/#{RUBY}.tar.gz" do
-  sh "mkdir tars; cd tars; wget ftp://ftp.ruby-lang.org/pub/ruby/#{RUBY}.tar.gz"
-end
-
+task :default => ["prefix/lib/libid3.a"]
 
 file "prefix/lib/libid3.a" => ["src/#{ID3LIB}/config.log"] do
   sh <<-CMD
     cd src/#{ID3LIB}
     CFLAGS="-Os" CXXFLAGS="-Os -DID3LIB_LINKOPTION=1" \
-      ./configure --host=mingw32 --prefix=#{PREFIX}
+      ./configure --host=i586-mingw32msvc --prefix=#{PREFIX}
     make && make install
   CMD
 end
@@ -62,5 +27,5 @@ file "src/#{ID3LIB}/config.log" => ["tars/#{ID3LIB}.tar.gz"] do
 end
 
 file "tars/#{ID3LIB}.tar.gz" do
-  sh "mkdir tars; cd tars; wget http://switch.dl.sourceforge.net/sourceforge/id3lib/#{ID3LIB}.tar.gz"
+  sh "mkdir tars; cd tars; wget http://dl.sourceforge.net/sourceforge/id3lib/#{ID3LIB}.tar.gz"
 end
