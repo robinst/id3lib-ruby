@@ -85,7 +85,8 @@ if defined? Gem
   if defined? Rake::ExtensionTask
 
     host = 'i586-mingw32msvc'
-    tmp = "#{Dir.pwd}/tmp/#{host}"
+    plat = 'i386-mswin32'
+    tmp = "#{Dir.pwd}/tmp/#{plat}"
     cflags = "'-Os -DID3LIB_LINKOPTION=1'"
     id3lib = 'id3lib-3.8.3'
     id3lib_url = "http://dl.sf.net/sourceforge/id3lib/#{id3lib}.tar.gz"
@@ -93,7 +94,7 @@ if defined? Gem
 
     Rake::ExtensionTask.new('id3lib_api', spec) do |ext|
       ext.cross_compile = true
-      ext.cross_platform = host
+      ext.cross_platform = plat
       ext.cross_config_options << "--with-opt-dir=#{tmp}"
       ext.cross_config_options << "--with-cflags=#{cflags}"
     end
