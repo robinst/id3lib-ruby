@@ -109,7 +109,7 @@ if defined? Gem
     file "#{tmp}/lib/libid3.a" => ["#{tmp}/#{id3lib}/config.log"] do
       chdir "#{tmp}/#{id3lib}" do
         env = "CFLAGS=#{cflags} CXXFLAGS=#{cflags}"
-        sh "./configure --host=#{host} --prefix=#{tmp} #{env}"
+        sh "sh configure --host=#{host} --prefix=#{tmp} #{env}"
         sh "make && make install"
       end
     end
