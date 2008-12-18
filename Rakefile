@@ -15,6 +15,7 @@ end
 
 require 'rake/testtask'
 require 'rake/rdoctask'
+require 'open-uri'
 
 
 FILES_COMMON = FileList[
@@ -122,9 +123,14 @@ if defined? Gem
       end
     end
 
-    file "#{tmp}/#{id3lib}.tar.gz" => [tmp] do
+    file "#{tmp}/#{id3lib}.tar.gz" => [tmp] do |t|
+      puts "Downloading #{id3lib_url}"
+      data = open(id3lib_url).read()
+      break if data == nil
       chdir tmp do
-        sh "wget #{id3lib_url}"
+        open(File.basename(t.name), 'wb') do |f|
+          f.write(data)
+        end
       end
     end
 
