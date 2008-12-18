@@ -110,7 +110,8 @@ if defined? Gem
       chdir "#{tmp}/#{id3lib}" do
         env = "CFLAGS=#{cflags} CXXFLAGS=#{cflags}"
         sh "sh configure --host=#{host} --prefix=#{tmp} #{env}"
-        sh "make && make install"
+        sh "make"
+        sh "make install"
       end
     end
 
