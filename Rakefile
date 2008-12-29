@@ -89,6 +89,7 @@ if defined? Gem
     plat = 'i386-mswin32'
     tmp = "#{Dir.pwd}/tmp/#{plat}"
     cflags = "'-Os -DID3LIB_LINKOPTION=1'"
+    config_options = ["--with-opt-dir=#{tmp}", "--with-cflags=#{cflags}"]
     id3lib = 'id3lib-3.8.3'
     id3lib_url = "http://dl.sf.net/sourceforge/id3lib/#{id3lib}.tar.gz"
     patches = FileList["#{Dir.pwd}/ext/mswin32/patches/*patch"]
@@ -96,15 +97,26 @@ if defined? Gem
     Rake::ExtensionTask.new('id3lib_api', spec) do |ext|
       ext.cross_compile = true
       ext.cross_platform = plat
-      ext.cross_config_options << "--with-opt-dir=#{tmp}"
-      ext.cross_config_options << "--with-cflags=#{cflags}"
+      ext.cross_config_options.concat(config_options)
+      if RUBY_PLATFORM =~ /mingw/
+        ext.config_options.concat(config_options)
+      end
     end
 
-    task :cross => ["#{tmp}/lib/libid3.a"] do
+    task :cross => [:id3lib] do
       # Mkmf just uses "g++" as C++ compiler, despite what's in rbconfig.rb.
       # So, we need to hack around it by setting CXX to the cross compiler.
       ENV["CXX"] = "#{host}-g++"
     end
+
+    # Linking to the DLLs provided by id3lib.sf.net doesn't seem to work on
+    # Windows, so we download and compile it automatically (the same as when
+    # cross compiling).
+    if RUBY_PLATFORM =~ /mingw/
+      Rake::Task[:compile].prerequisites.unshift(:id3lib)
+    end
+
+    task :id3lib => ["#{tmp}/lib/libid3.a"]
 
     file "#{tmp}/lib/libid3.a" => ["#{tmp}/#{id3lib}/config.log"] do
       chdir "#{tmp}/#{id3lib}" do
