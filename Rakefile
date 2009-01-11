@@ -86,7 +86,7 @@ if defined? Gem
   if defined? Rake::ExtensionTask
 
     host = 'i586-mingw32msvc'
-    plat = 'i386-mswin32'
+    plat = 'x86-mswin32-60'
     tmp = "#{Dir.pwd}/tmp/#{plat}"
     cflags = "'-Os -DID3LIB_LINKOPTION=1'"
     config_options = ["--with-opt-dir=#{tmp}", "--with-cflags=#{cflags}"]
