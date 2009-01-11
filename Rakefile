@@ -9,8 +9,7 @@ end
 begin
   require 'rake/extensiontask'
 rescue LoadError
-  warn "Could not load 'rake/extensiontask' (available through " +
-       "rake-compiler), you'll have to compile extensions manually."
+  # Compiling of extension will have to be done manually.
 end
 
 require 'rake/testtask'
