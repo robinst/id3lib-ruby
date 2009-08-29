@@ -37,7 +37,7 @@ FILES_EXT = FileList[
 
 
 Rake::TestTask.new do |t|
-  t.libs = ['lib', 'ext']
+  t.libs = ['lib', 'ext/id3lib_api']
   t.test_files = FileList['test/test_*.rb']
   t.verbose = true
 end
