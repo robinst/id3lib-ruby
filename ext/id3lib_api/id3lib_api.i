@@ -144,8 +144,8 @@ public:
 		size_t set_binary(VALUE data)
 		{
 			StringValue(data);
-			return self->Set((const uchar *)RSTRING(data)->ptr,
-			                 RSTRING(data)->len);
+			return self->Set((const uchar *)RSTRING_PTR(data),
+			                 RSTRING_LEN(data));
 		}
 
 		size_t set_unicode(VALUE data)
@@ -155,14 +155,14 @@ public:
 			long len;
 			unicode_t *unicode;
 
-			len = RSTRING(data)->len / sizeof(unicode_t);
+			len = RSTRING_LEN(data) / sizeof(unicode_t);
 			unicode = (unicode_t *)malloc(sizeof(unicode_t) * (len+1));
 
 			if (unicode == NULL) {
 				rb_raise(rb_eNoMemError, "Couldn't allocate memory for Unicode data.");
 			}
 
-			memcpy(unicode, RSTRING(data)->ptr, sizeof(unicode_t) * len);
+			memcpy(unicode, RSTRING_PTR(data), sizeof(unicode_t) * len);
 			// Unicode strings need 0x0000 at the end.
 			unicode[len] = 0;
 			size_t retval = self->Set(unicode);
