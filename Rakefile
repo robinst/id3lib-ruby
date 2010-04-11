@@ -64,6 +64,7 @@ if defined? Gem
     s.summary     =
       'id3lib-ruby provides a Ruby interface to the id3lib C++ library for ' +
       'easily editing ID3 tags (v1 and v2) of MP3 audio files.'
+    s.description = File.read('README')
     s.requirements << 'id3lib C++ library'
     s.files       = FILES_COMMON + FILES_EXT
     s.test_files  = FileList['test/test_*.rb']
