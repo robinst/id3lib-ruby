@@ -16,12 +16,16 @@ For other systems, there is a RubyGems package or a compressed archive.
 Before installing id3lib-ruby, you need to install the underlying id3lib
 library and, depending on your system, set CONFIGURE_ARGS.
 
-==== Debian Linux
+==== Ubuntu and Debian Linux
 
-Install libid3-dev and be sure to have ruby1.8-dev installed, otherwise you
+Install libid3-dev and be sure to have ruby-dev installed, otherwise you
 won't be able to build Ruby extensions.
 
-  sudo aptitude install libid3-dev
+  sudo aptitude install libid3-dev ruby-dev g++
+
+==== Fedora Linux
+
+  sudo yum install id3lib-devel ruby-devel gcc-c++
 
 ==== Gentoo Linux
 
