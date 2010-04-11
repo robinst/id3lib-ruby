@@ -175,7 +175,7 @@ class TestWriting < Test::Unit::TestCase
     assert_equal 2176, File.size(Temp)
     @tag.padding = false
     @tag.update!
-    assert_equal 348, File.size(Temp)
+    assert_equal 416, File.size(Temp)
   end
 
   def test_failing_update

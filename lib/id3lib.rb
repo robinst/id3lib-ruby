@@ -207,6 +207,21 @@ module ID3Lib
     end
 
     #
+    # Get the text of a user frame specified by _description_.
+    # Returns nil if the frame can't be found.
+    #
+    #    tag.user_frame_text('MusicBrainz Album Id')
+    #    #=> "f0d6c31f-8f9f-47fe-b5f5-3b96746b48fa"
+    #
+    #    tag.user_frame_text('MusicBrainz Album Artist Id')
+    #    #=> nil
+    #
+    def user_frame_text(description)
+      f = find{ |f| f[:id] == :TXXX && f[:description] == description }
+      f ? f[:text] : nil
+    end
+
+    #
     # Set the text of a frame. First, all frames with the specified _id_ are
     # deleted and then a new frame with _text_ is appended.
     #

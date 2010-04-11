@@ -31,6 +31,12 @@ class TestReading < Test::Unit::TestCase
     assert_equal 'Pop',           @tag.genre
   end
 
+  def test_user_frame_text
+    album_id = @tag.user_frame_text('MusicBrainz Album Id')
+    assert_equal '992dc19a-5631-40f5-b252-fbfedbc328a9', album_id
+    assert_equal nil, @tag.user_frame_text('Inexistent')
+  end
+
   def test_comments
     one, two = @tag.comment_frames
     assert_not_nil one

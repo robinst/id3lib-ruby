@@ -11,16 +11,14 @@ void AddTextFrame(ID3_Tag & tag, ID3_FrameID frameid, char * text) {
 }
 
 int main(int argc, char ** argv) {
-	const char * filename;
-	ID3_Tag tag;
-
 	if (argc != 2) {
 		cout << "usage: " << argv[0] << " output.mp3" << endl;
 		return 1;
 	}
 
-	filename = argv[1];
+	const char * filename = argv[1];
 
+	ID3_Tag tag;
 	tag.Link(filename);
 
 	AddTextFrame(tag, ID3FID_TITLE, "Dummy Title");
@@ -31,6 +29,11 @@ int main(int argc, char ** argv) {
 	AddTextFrame(tag, ID3FID_COMMENT, "Dummy Comment");
 	AddTextFrame(tag, ID3FID_COMMENT, "Dummy Comment 2");
 	AddTextFrame(tag, ID3FID_CONTENTTYPE, "Pop");
+
+	ID3_Frame userFrame(ID3FID_USERTEXT);
+	userFrame.Field(ID3FN_DESCRIPTION).Set("MusicBrainz Album Id");
+	userFrame.Field(ID3FN_TEXT).Set("992dc19a-5631-40f5-b252-fbfedbc328a9");
+	tag.AddFrame(userFrame);
 	
 	tag.Update();
 	return 0;
