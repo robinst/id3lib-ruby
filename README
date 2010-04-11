@@ -16,8 +16,6 @@ The class documentation starts at ID3Lib::Tag.
 * UTF-16 support (warning: id3lib writes broken UTF-16 frames)
 * Windows binary gem available
 
-See TODO for planned features.
-
 The CHANGES file contains a list of changes between versions.
 
 
