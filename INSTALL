@@ -36,22 +36,16 @@ won't be able to build Ruby extensions.
 If you use the Ruby distribution provided by Mac OS X, you need to have Apple's
 Xcode installed in order to be able to build extensions.
 
-Now, either do a manual compilation (see below) or install through Fink or
-DarwinPorts. With Fink, you need the id3lib4-dev package:
+Now, either install id3lib through MacPorts or Fink, or by downloading and
+compiling manually.
+
+===== MacPorts
+
+  sudo port install id3lib
+
+===== Fink
 
   sudo apt-get install id3lib4-dev
-
-Fink puts the library and header files in /sw. In order to enable the
-id3lib-ruby install program to find them, do:
-
-  export CONFIGURE_ARGS="--with-opt-dir=/sw"
-
-==== Manual compilation
-
-Download, compile and install id3lib. When installing in /usr/local, you
-have to set CONFIGURE_ARGS:
-
-  export CONFIGURE_ARGS="--with-opt-dir=/usr/local"
 
 === Installing id3lib-ruby
 
@@ -64,9 +58,15 @@ Or if you install from the archive, unpack it and do:
 
   sudo ruby setup.rb
 
-On Mac OS X 10.5, Ruby tries to compile the extension for both the i386 and ppc
-architectures (universal build) and fails. You have to specify the architecture
-manually. For Intel processors, do:
+==== Mac OS X
+
+On Mac OS X 10.5 and later, Ruby tries to compile the extension for multiple
+architectures (universal build) and fails. You have to specify the right
+architecture manually. For 64 bit Intel processors, do:
+
+  sudo env ARCHFLAGS="-arch x86_64" gem install id3lib-ruby
+
+For 32 bit Intel processors:
 
   sudo env ARCHFLAGS="-arch i386" gem install id3lib-ruby
 
