@@ -31,6 +31,17 @@ class TestReading < Test::Unit::TestCase
     assert_equal 'Pop',           @tag.genre
   end
 
+  def test_frame_text
+    assert_equal 'Dummy Title',   @tag.frame_text(:TIT2)
+    assert_equal 'Dummy Artist',  @tag.frame_text(:TPE1)
+    assert_equal 'Dummy Album',   @tag.frame_text(:TALB)
+    assert_equal '1/10',          @tag.frame_text(:TRCK)
+    assert_equal '2000',          @tag.frame_text(:TYER)
+    assert_equal 'Dummy Comment', @tag.frame_text(:COMM)
+    assert_equal 'Pop',           @tag.frame_text(:TCON)
+    assert_equal nil,             @tag.frame_text(:AENC)
+  end
+
   def test_user_frame_text
     album_id = @tag.user_frame_text('MusicBrainz Album Id')
     assert_equal '992dc19a-5631-40f5-b252-fbfedbc328a9', album_id
