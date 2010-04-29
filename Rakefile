@@ -90,8 +90,10 @@ if defined? Gem
     tmp = "#{Dir.pwd}/tmp/#{plat}"
     cflags = "'-Os -DID3LIB_LINKOPTION=1'"
     config_options = ["--with-opt-dir=#{tmp}", "--with-cflags=#{cflags}"]
-    id3lib = 'id3lib-3.8.3'
-    id3lib_url = "http://dl.sf.net/sourceforge/id3lib/#{id3lib}.tar.gz"
+    id3lib_version = '3.8.3'
+    id3lib = "id3lib-#{id3lib_version}"
+    id3lib_url = "http://downloads.sourceforge.net/project/" +
+                 "id3lib/id3lib/#{id3lib_version}/#{id3lib}.tar.gz"
     patches = FileList["#{Dir.pwd}/ext/mswin32/patches/*patch"]
 
     Rake::ExtensionTask.new('id3lib_api', spec) do |ext|
