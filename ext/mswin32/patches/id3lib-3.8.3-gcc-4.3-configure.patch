@@ -1,0 +1,11 @@
+diff -Naur id3lib-3.8.3-orig/configure id3lib-3.8.3/configure
+--- id3lib-3.8.3-orig/configure	2003-03-02 01:23:00.000000000 +0100
++++ id3lib-3.8.3/configure	2010-04-29 23:53:24.000000000 +0200
+@@ -10296,7 +10296,6 @@
+ 
+ for ac_header in \
+   string                        \
+-  iomanip.h                     \
+ 
+ do
+ as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
