@@ -1,5 +1,6 @@
 /ext/id3lib_api/Makefile
 /ext/id3lib_api/id3lib_api.bundle
+/ext/id3lib_api/id3lib_api.so
 /ext/id3lib_api/id3lib_api_wrap.o
 /ext/id3lib_api/mkmf.log
 /pkg
