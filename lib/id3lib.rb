@@ -69,7 +69,8 @@ module ID3Lib
   #
   # There are a number of accessors for text frames like
   # title, performer, album, track, year, comment and genre. Have a look
-  # at ID3Lib::Accessors for a complete list.
+  # at ID3Lib::Accessors for a complete list. They can only be used for
+  # text that is encoded with ISO-8859-1.
   #
   #    tag.title    #=> "Shy Boi"
   #
@@ -95,12 +96,16 @@ module ID3Lib
   #    # Also raises an exception:
   #    tag.find{ |f| f[:id] == :TLAN }[:text]
   #
-  # Because only text frames can be set with accessors, you have to add
-  # special frames by hand.
+  # Because only ISO-8859-1 encoded text frames can be set with accessors, you
+  # have to add special frames by hand.
   #
   #    # Add two comments
   #    tag << {:id => :COMM, :text => 'chunky bacon'}
   #    tag << {:id => :COMM, :text => 'really.'}
+  #
+  #    # Add an UTF-16 text frame with BOM (byte order mark)
+  #    tag << {:id => :TIT2, :text => "\xff\xfe\x60\x4f\x7d\x59",
+  #            :textenc => 1}
   #
   #    # Add an attached picture
   #    cover = {
