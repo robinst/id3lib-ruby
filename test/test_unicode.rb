@@ -54,6 +54,16 @@ class TestUnicode < Test::Unit::TestCase
     assert_equal "\x4f\x60\x59\x7d", @tag.title
   end
 
+  def test_reading_lyrics
+    @tag = ID3Lib::Tag.new('test/data/unicode.mp3', ID3Lib::V2)
+    lyrics = @tag.find{ |f| f[:id] == :USLT }
+    assert_equal 1, lyrics[:textenc]
+    assert_equal "zho", lyrics[:language]
+    # This is "U+6771 U+4EAC" (Tokyo) in UTF-16BE
+    tokyo = "\x67\x71\x4e\xac"
+    assert_equal tokyo, lyrics[:text]
+  end
+
   def test_invalid_data
     nonstr = 1
     @tag.reject!{ |f| f[:id] == :TIT2 }
