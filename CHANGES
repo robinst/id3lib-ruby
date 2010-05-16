@@ -1,6 +1,6 @@
 = id3lib-ruby changes
 
-=== 0.6.0
+=== 0.6.0 (2010-05-16)
 
 * Added convenience method user_frame_text to Tag for finding a
   TXXX frame given a description (e.g. "MusicBrainz Album Id")

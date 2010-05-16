@@ -9,7 +9,7 @@ require 'id3lib/accessors'
 # Have a look at ID3Lib::Tag for an introduction on how to use this library.
 #
 module ID3Lib
-  VERSION = '0.5.0'
+  VERSION = '0.6.0'
 
   # ID3 version 1. All V constants can be used with the methods
   # new, update! or strip! of ID3Lib::Tag. 
