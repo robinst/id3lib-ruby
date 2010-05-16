@@ -1,5 +1,9 @@
 = id3lib-ruby to-do list
 
+The underlying C++ library id3lib is no longer maintained and outdated (no
+support for ID3v2.4). Therefore id3lib-ruby is no longer actively developed.
+Here's the old to-do list anyway:
+
 * Evaluate an object-oriented way to handle frames, instead of with hashes.
 * Make the update! method intelligent, because the call of strip each time
   is very slow and stupid.
