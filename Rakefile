@@ -27,7 +27,7 @@ FILES_COMMON = FileList[
 ]
 
 FILES_DOC = FileList[
-  'README', 'INSTALL', 'TODO', 'CHANGES'
+  'README.rdoc', 'INSTALL', 'TODO', 'CHANGES'
 ]
 
 FILES_EXT = FileList[
@@ -43,7 +43,7 @@ Rake::TestTask.new do |t|
 end
 
 
-RDOC_OPTS = ['--inline-source', '--line-numbers', '--main', 'README']
+RDOC_OPTS = ['--inline-source', '--line-numbers', '--main', 'README.rdoc']
 
 desc "Generate RDOC documentation."
 Rake::RDocTask.new :rdoc do |rdoc|
@@ -64,7 +64,7 @@ if defined? Gem
     s.summary     =
       'id3lib-ruby provides a Ruby interface to the id3lib C++ library for ' +
       'easily editing ID3 tags (v1 and v2) of MP3 audio files.'
-    s.description = File.read('README')
+    s.description = File.read('README.rdoc')
     s.requirements << 'id3lib C++ library'
     s.files       = FILES_COMMON + FILES_EXT
     s.test_files  = FileList['test/test_*.rb']
